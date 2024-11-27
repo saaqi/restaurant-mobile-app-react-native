@@ -21,12 +21,7 @@ export default function Onboarding({ navigation }) {
   const [userEmail, onchangeUesrEmail] = useState('')
 
   return (
-    <View style={[
-      styles.container,
-      {
-        backgroundColor: '#F6FCDF'
-      }
-    ]}>
+    <View style={styles.container}>
       <View style={styles.innerContainer}>
 
         <View style={{ flex: .2, paddingBottom: 30}}>
@@ -82,16 +77,18 @@ export default function Onboarding({ navigation }) {
               </Text>
               <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
                 <Pressable
-                  // onPress={() => navigation.push('')}
+                  onPress={() => navigation.navigate('Profile')}
                   disabled={userName === '' || !ValidateEmailField(userEmail)}
-                  style={{ flex: 1, alignSelf: 'end' }}
+                  style={[
+                    userName === '' || !ValidateEmailField(userEmail) ?
+                      styles.subButtonDisabled : styles.subButton,
+                    { flex: 1, alignSelf: 'end' }
+                  ]}
                 >
-
-                  <Text style={userName === '' || !ValidateEmailField(userEmail) ? styles.subButtonDisabled : styles.subButton}>
                   <View style={styles.iconStyle}>
-                      Next <Ionicons name="log-in-outline" size='18px' />
+                    <Text style={styles.buttonText}>Next</Text>
+                    <Ionicons style={styles.buttonText} name="log-in-outline" />
                   </View>
-                  </Text>
                 </Pressable>
               </View>
             </ScrollView>
@@ -107,6 +104,7 @@ export default function Onboarding({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "#F6FCDF"
     // alignItems: 'center',
     // justifyContent: 'center',
   },
@@ -132,9 +130,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#31511E',
     padding: 10,
     borderRadius: 5,
-    textAlign: 'center',
-    color: '#F6FCDF',
-    fontWeight: 'bold',
     marginBottom: 10,
   },
 
@@ -142,15 +137,17 @@ const styles = StyleSheet.create({
     backgroundColor: 'grey',
     padding: 10,
     borderRadius: 5,
-    textAlign: 'center',
-    color: 'white',
-    fontWeight: 'bold',
     marginBottom: 10,
-    // alignSelf: 'center'
   },
-
+  buttonText: {
+    color: 'white',
+    fontWeight: 500,
+    fontSize: 18
+  },
   iconStyle: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
+    gap: 5
   },
 });
