@@ -11,19 +11,30 @@ import {
   Image,
 } from 'react-native'
 import { useState } from 'react'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ValidateEmailField } from '../validators/ValidateEmailField'
 import Ionicons from '@expo/vector-icons/Ionicons'
 
 
 export default function Onboarding({ navigation }) {
 
+
   const [userName, onchangeUserName] = useState('')
   const [userEmail, onchangeUesrEmail] = useState('')
+  const [userLoggedIn, setUserLoggedIn] = useState(false);
+
+  const handleLogin = async () => {
+    try {
+      await AsyncStorage.setItem('userLoggedIn', 'true');
+      setUserLoggedIn(true);
+    } catch (error) {
+      console.error('Error storing userLoggedIn:', error);
+    }
+  };
 
   return (
     <View style={styles.container}>
       <View style={styles.innerContainer}>
-
         <View style={{ flex: .2, paddingBottom: 30}}>
           <Image
             source={require('../assets/littleLemonLogo.png')}
@@ -77,7 +88,10 @@ export default function Onboarding({ navigation }) {
               </Text>
               <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
                 <Pressable
-                  onPress={() => navigation.navigate('Profile')}
+                  onPress={() => {
+                    handleLogin(),
+                    navigation.navigate('Profile')
+                  }}
                   disabled={userName === '' || !ValidateEmailField(userEmail)}
                   style={[
                     userName === '' || !ValidateEmailField(userEmail) ?

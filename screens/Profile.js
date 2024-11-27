@@ -1,13 +1,7 @@
 import {
   Text,
-  TextInput,
   StyleSheet,
-  KeyboardAvoidingView,
-  ScrollView,
   View,
-  Platform,
-  Pressable,
-  Image,
 } from 'react-native'
 
 const Profile = () => {
