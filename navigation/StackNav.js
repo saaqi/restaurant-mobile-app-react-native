@@ -1,5 +1,5 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
-import { Image, AppState } from 'react-native'
+import { Image } from 'react-native'
 import SplashScreen from '../screens/SplashScreen'
 import Onboarding from '../screens/Onboarding'
 import Profile from '../screens/Profile'
@@ -43,10 +43,6 @@ const StackNav = () => {
   //     />
   //   )
   // }
-
-
-  // AppState.currentState
-
   return (
     <Stack.Navigator
       initialRouteName="Welcome"
