@@ -1,33 +1,24 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, SafeAreaView, useColorScheme } from 'react-native';
+import { SafeAreaView } from 'react-native';
+import StackNav from './navigation/StackNav';
+import { NavigationContainer } from '@react-navigation/native'
 
+/*
+App Colors ----
+Primary: #31511E
+Secondary: #859F3D
+Dark: #1A1A19
+Light: #F6FCDF
+*/
 
 export default function App() {
-  const isDark = useColorScheme() === 'dark';
 
   return (
-    <SafeAreaView style={[
-      styles.container,
-      {
-        backgroundColor: isDark ? '#1A1A19' : '#F6FCDF'
-      }
-    ]}>
-      <View style={styles.innerContainer}>
-        <Text style={{ color: isDark ? '#F6FCDF' : '#1A1A19' }}>Hello World! This is Saqib Islam.</Text>
-        <StatusBar style="auto" />
-      </View>
-    </SafeAreaView>
+    <NavigationContainer>
+      <SafeAreaView style={{ flex: 1 }}>
+        <StackNav />
+      </SafeAreaView>
+    </NavigationContainer>
+
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-      alignItems: 'center',
-    justifyContent: 'center',
-  },
-
-  innerContainer: {
-    padding: 20,
-  },
-});
