@@ -11,6 +11,8 @@ import {
   Image,
 } from 'react-native'
 import { useState } from 'react'
+import { ValidateEmailField } from '../validators/ValidateEmailField'
+import Ionicons from '@expo/vector-icons/Ionicons'
 
 
 export default function Onboarding({ navigation }) {
@@ -75,17 +77,20 @@ export default function Onboarding({ navigation }) {
               <Text style={{ color: 'red', marginVertical: 10 }}>
                 {
                   userName === '' ? 'Please Enter your Name' :
-                    userEmail === '' ? 'Please Enter your Email to continue' : ''
+                    !ValidateEmailField(userEmail) ? 'Please Enter your Email to continue' : ''
                 }
               </Text>
               <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
                 <Pressable
                   // onPress={() => navigation.push('')}
-                  disabled={userName === '' || userEmail === ''}
+                  disabled={userName === '' || !ValidateEmailField(userEmail)}
                   style={{ flex: 1, alignSelf: 'end' }}
                 >
-                  <Text style={userName === '' || userEmail === '' ? styles.subButtonDisabled : styles.subButton}>
-                    {"Next >"}
+
+                  <Text style={userName === '' || !ValidateEmailField(userEmail) ? styles.subButtonDisabled : styles.subButton}>
+                  <View style={styles.iconStyle}>
+                      Next <Ionicons name="log-in-outline" size='18px' />
+                  </View>
                   </Text>
                 </Pressable>
               </View>
@@ -141,5 +146,11 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight: 'bold',
     marginBottom: 10,
+    // alignSelf: 'center'
+  },
+
+  iconStyle: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
 });
