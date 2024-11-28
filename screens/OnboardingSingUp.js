@@ -50,7 +50,7 @@ export default function OnboardingSingUp({ navigation }) {
               style={{
                 alignSelf: 'center',
                 height: 546,
-                width: deviceWidth,
+                width: deviceWidth - 40,
                 flex: .5,
               }}
               resizeMode={'contain'}
@@ -142,6 +142,9 @@ export default function OnboardingSingUp({ navigation }) {
               }}
               style={styles.singUpButton}
             >
+              <View>
+                <Text style={styles.bodyText}>Already have an account? Login up instead! </Text>
+              </View>
               <View style={styles.iconStyle}>
                 <Text style={styles.signUpbuttonText}>Login!</Text>
                 <Ionicons style={styles.signUpbuttonText} name="log-in-outline" />
@@ -150,7 +153,6 @@ export default function OnboardingSingUp({ navigation }) {
           </View>
         </View>
       )}
-
 
       <StatusBar style="auto" />
     </View>
@@ -174,8 +176,10 @@ const styles = StyleSheet.create({
   },
 
   bodyText: {
-    fontSize: 18,
-    fontWeight: '500',
+    fontSize: 16,
+    fontWeight: '400',
+    textAlign: 'center',
+    paddingBottom: 20
   },
 
   alert: {
