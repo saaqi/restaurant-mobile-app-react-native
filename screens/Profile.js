@@ -5,26 +5,30 @@ import {
   ScrollView,
   ActivityIndicator,
   Pressable,
+  Image,
+  Dimensions
 } from 'react-native'
 import { useState, useEffect } from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import AsyncStorageRenderAllItems from '../validators/AsyncStorageRenderAllItems';
+// import AsyncStorageRenderAllItems from '../validators/AsyncStorageRenderAllItems';
 
 
 const Profile = () => {
 
+  const windowWidth = Dimensions.get('window').width
+
   const [isLoading, setLoading] = useState(false)
 
   const [userName, setUserName] = useState('')
-  const [userEmail, setUserEmail] = useState('')
+  // const [userEmail, setUserEmail] = useState('')
 
   const getUserData = async () => {
     try {
       setLoading(true);
       const userNameRecoded = await AsyncStorage.getItem('userName');
-      const userEmailRecorded = await AsyncStorage.getItem('userEmail');
+      // const userEmailRecorded = await AsyncStorage.getItem('userEmail');
       userNameRecoded !== '' ? setUserName(userNameRecoded) : ''
-      userEmailRecorded !== '' ? setUserEmail(userEmailRecorded) : ''
+      // userEmailRecorded !== '' ? setUserEmail(userEmailRecorded) : ''
     } catch (error) {
       console.error('Error retrieving User Data:', error);
     } finally {
@@ -51,7 +55,21 @@ const Profile = () => {
     <View style={styles.container}>
       {isLoading ? (<ActivityIndicator />) : (
         <ScrollView>
+
           <Text style={styles.headingText}>Welcome {userName}!</Text>
+          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+            <Image
+              source={require('../assets/user.png')}
+              style={{
+                maxHeight: 100,
+                width: windowWidth / 3,
+               alignSelf: 'start'
+              }}
+              resizeMode={'contain'}
+              accessible={true}
+              accessibilityLabel={"Little Lemon's Logo"}
+            />
+          </View>
           <Pressable onPress={() =>
             setLogout()
           }>
