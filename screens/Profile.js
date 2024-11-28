@@ -15,6 +15,7 @@ import { useState, useEffect } from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Ionicons from '@expo/vector-icons/Ionicons'
 import { ValidateEmailField } from '../validators/ValidateEmailField'
+import { ValidatePhoneNumberField } from '../validators/ValidatePhoneNumberField'
 
 
 // import AsyncStorageRenderAllItems from '../validators/AsyncStorageRenderAllItems';
@@ -28,12 +29,19 @@ const Profile = () => {
 
   const [userName, setUserName] = useState('')
   const [userEmail, setUserEmail] = useState('')
+  const [userPhone, setUserPhone] = useState('')
+
+  const [orderStatus, setOrderStatus] = useState('')
+  const [passwordChanges, setPasswordChanges] = useState('')
+  const [specialOffers, setSpecialOffers] = useState('')
+  const [newsLetter, setNewsLetter] = useState('')
 
   const handleUserDetails = async () => {
     try {
       await AsyncStorage.multiSet([
         ['userName', userName],
-        ['userEmail', userEmail]
+        ['userEmail', userEmail],
+        ['userPhone', userPhone]
       ]);
       setLoading(true);
     } catch (error) {
@@ -48,8 +56,10 @@ const Profile = () => {
       setLoading(true);
       const userNameRecoded = await AsyncStorage.getItem('userName');
       const userEmailRecorded = await AsyncStorage.getItem('userEmail');
+      const userPhoneRecorded = await AsyncStorage.getItem('userPhone');
       userNameRecoded && userNameRecoded !== '' ? setUserName(userNameRecoded) : ''
       userEmailRecorded && userEmailRecorded !== '' ? setUserEmail(userEmailRecorded) : ''
+      userPhoneRecorded && userPhoneRecorded !== '' ? setUserPhone(userPhoneRecorded) : ''
     } catch (error) {
       console.error('Error retrieving User Data:', error);
     } finally {
@@ -88,7 +98,7 @@ const Profile = () => {
               }}
               resizeMode={'contain'}
               accessible={true}
-              accessibilityLabel={"Little Lemon's Logo"}
+              accessibilityLabel={"User Avatar"}
             />
             <Pressable style={[styles.primaryButton,
             {
@@ -96,8 +106,8 @@ const Profile = () => {
             }
             ]}>
               <View style={styles.iconStyle}>
-                <Ionicons style={styles.darkButtonText} name="log-in-outline" />
-                <Text style={styles.darkButtonText}>Login!</Text>
+                <Ionicons style={styles.darkButtonText} name="person-add-outline" />
+                <Text style={styles.darkButtonText}>Change Avatar</Text>
               </View>
             </Pressable>
             <Pressable style={[styles.darkButton,
@@ -106,8 +116,8 @@ const Profile = () => {
             }
             ]}>
               <View style={styles.iconStyle}>
-                <Ionicons style={styles.darkButtonText} name="log-in-outline" />
-                <Text style={styles.darkButtonText}>Login!</Text>
+                <Ionicons style={styles.darkButtonText} name="person-remove-outline" />
+                <Text style={styles.darkButtonText}>Remove Avatar</Text>
               </View>
             </Pressable>
           </View>
@@ -135,24 +145,37 @@ const Profile = () => {
                 keyboardType='email-address'
                 value={userEmail}
               />
-              {(!ValidateEmailField(userEmail) || userName === '') && (
-                <Text style={styles.alert}>
-                  {
-                    userName === '' ? 'Please Enter your full name to contiue.' :
-                      !ValidateEmailField(userEmail) ? 'Please Enter your Email to continue' :
-                        ""
-                  }
-                </Text>
-              )}
+              <TextInput
+                style={styles.inputField}
+                onChangeText={setUserPhone}
+                placeholder='Your Phone Number'
+                secureTextEntry={false}
+                keyboardType='number-pad'
+                value={userPhone}
+              />
+              {(
+                !ValidateEmailField(userEmail) ||
+                !ValidatePhoneNumberField(userPhone) ||
+                userName === ''
+              ) && (
+                  <Text style={styles.alert}>
+                    {
+                      userName === '' ? 'Please Enter your full name to contiue.' :
+                        !ValidateEmailField(userEmail) ? 'Please Enter your Email to continue' :
+                        !ValidatePhoneNumberField(userPhone) ? 'Please enter your phone number in the format: (123) 456-7890 or +1 (123) 456-7890.' :
+                            ""
+                    }
+                  </Text>
+                )}
               <Pressable
                 onPress={() => {
                   handleUserDetails();
                 }}
                 disabled={
-                  userName === '' || !ValidateEmailField(userEmail)
+                  userName === '' || !ValidateEmailField(userEmail) || !ValidatePhoneNumberField(userPhone)
                 }
                 style={[
-                  userName === '' || !ValidateEmailField(userEmail) ?
+                  userName === '' || !ValidateEmailField(userEmail) || !ValidatePhoneNumberField(userPhone) ?
                     styles.subButtonDisabled : styles.primaryButton,
                   { flex: 1 }
                 ]}
@@ -164,16 +187,17 @@ const Profile = () => {
               </Pressable>
             </ScrollView>
           </KeyboardAvoidingView>
+          <Text style={styles.headingText}>E-Mail Notifications</Text>
           <Pressable
             style={[
               styles.darkButton,
-              { alignSelf: 'center', backgroundColor: 'red' }
+              { alignSelf: 'center', backgroundColor: '#842029' }
             ]} onPress={() =>
-            setLogout()
-          }>
+              setLogout()
+            }>
             <View style={styles.iconStyle}>
-              <Ionicons style={styles.darkButtonText} name="log-out" />
-              <Text style={styles.darkButtonText}>Logout</Text>
+              <Ionicons style={{ color: "#F8D7DA", fontSize: 16, fontWeight: 500 }} name="log-out" />
+              <Text style={{ color: "#F8D7DA", fontSize: 16, fontWeight: 500 }}>Logout</Text>
             </View>
           </Pressable>
           {/* <AsyncStorageRenderAllItems /> */}

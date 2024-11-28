@@ -34,7 +34,7 @@ const LoggedInNavigation = () => {
         }}
         resizeMode={'contain'}
         accessible={true}
-        accessibilityLabel={"Little Lemon's Logo"}
+        accessibilityLabel={"User Avatar"}
       />
     )
   }
