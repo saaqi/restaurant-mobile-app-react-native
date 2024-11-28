@@ -45,7 +45,7 @@ export default function OnboardingLogin({ navigation }) {
     try {
       setLoading(true);
       const userEmailRecorded = await AsyncStorage.getItem('userEmail');
-      userEmailRecorded !== '' ? setUserEmail(userEmailRecorded) : ''
+      userEmailRecorded && userEmailRecorded !== '' ? setUserEmail(userEmailRecorded) : ''
     } catch (error) {
       console.error('Error retrieving User Data:', error);
     } finally {

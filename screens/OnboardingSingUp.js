@@ -23,7 +23,6 @@ export default function OnboardingSingUp({ navigation }) {
 
   const deviceWidth = Dimensions.get('window').width
 
-  const [userName, setUserName] = useState('')
   const [userEmail, setUserEmail] = useState('')
   const [userPassword, setUserPassword] = useState('')
   const [userPasswordConfirm, setUserPasswordConfirm] = useState('')
@@ -47,10 +46,8 @@ export default function OnboardingSingUp({ navigation }) {
   const getUserData = async () => {
     try {
       setLoading(true);
-      const userNameRecoded = await AsyncStorage.getItem('userName');
       const userEmailRecorded = await AsyncStorage.getItem('userEmail');
-      userNameRecoded !== '' ? setUserName(userNameRecoded) : ''
-      userEmailRecorded !== '' ? setUserEmail(userEmailRecorded) : ''
+      userEmailRecorded && userEmailRecorded !== '' ? setUserEmail(userEmailRecorded) : ''
     } catch (error) {
       console.error('Error retrieving User Data:', error);
     } finally {

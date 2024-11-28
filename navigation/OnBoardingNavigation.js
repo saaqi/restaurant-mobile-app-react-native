@@ -15,6 +15,7 @@ const OnBoardingNavigation = () => {
         source={require('../assets/littleLemonLogo.png')}
         style={{
           height: 40,
+          width: 147,
           alignSelf: 'center',
           marginVertical: 10,
         }}

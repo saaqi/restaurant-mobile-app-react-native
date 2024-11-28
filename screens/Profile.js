@@ -3,6 +3,9 @@ import {
   StyleSheet,
   View,
   ScrollView,
+  TextInput,
+  KeyboardAvoidingView,
+  Platform,
   ActivityIndicator,
   Pressable,
   Image,
@@ -11,6 +14,8 @@ import {
 import { useState, useEffect } from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Ionicons from '@expo/vector-icons/Ionicons'
+import { ValidateEmailField } from '../validators/ValidateEmailField'
+
 
 // import AsyncStorageRenderAllItems from '../validators/AsyncStorageRenderAllItems';
 
@@ -22,15 +27,29 @@ const Profile = () => {
   const [isLoading, setLoading] = useState(false)
 
   const [userName, setUserName] = useState('')
-  // const [userEmail, setUserEmail] = useState('')
+  const [userEmail, setUserEmail] = useState('')
+
+  const handleUserDetails = async () => {
+    try {
+      await AsyncStorage.multiSet([
+        ['userName', userName],
+        ['userEmail', userEmail]
+      ]);
+      setLoading(true);
+    } catch (error) {
+      console.error('Error storing user data:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const getUserData = async () => {
     try {
       setLoading(true);
       const userNameRecoded = await AsyncStorage.getItem('userName');
-      // const userEmailRecorded = await AsyncStorage.getItem('userEmail');
-      userNameRecoded !== '' ? setUserName(userNameRecoded) : ''
-      // userEmailRecorded !== '' ? setUserEmail(userEmailRecorded) : ''
+      const userEmailRecorded = await AsyncStorage.getItem('userEmail');
+      userNameRecoded && userNameRecoded !== '' ? setUserName(userNameRecoded) : ''
+      userEmailRecorded && userEmailRecorded !== '' ? setUserEmail(userEmailRecorded) : ''
     } catch (error) {
       console.error('Error retrieving User Data:', error);
     } finally {
@@ -59,7 +78,7 @@ const Profile = () => {
         <ScrollView>
 
           <Text style={styles.headingText}>Welcome {userName}!</Text>
-          <View style={{ flexDirection: 'row', gap: 20}}>
+          <View style={{ flexDirection: 'row', gap: 20, marginBottom: 20 }}>
             <Image
               source={require('../assets/user.png')}
               style={{
@@ -71,33 +90,91 @@ const Profile = () => {
               accessible={true}
               accessibilityLabel={"Little Lemon's Logo"}
             />
-            <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 10 }}>
-              <Pressable style={[styles.darkButton,
-              {
-                alignSelf: 'center',
-              }
-              ]}>
-                <View style={styles.iconStyle}>
-                  <Ionicons style={styles.darkButtonText} name="log-in-outline" />
-                  <Text style={styles.darkButtonText}>Login!</Text>
-                </View>
-              </Pressable>
-              <Pressable style={[styles.darkButton,
-              {
-                alignSelf: 'center',
-              }
-              ]}>
-                <View style={styles.iconStyle}>
-                  <Ionicons style={styles.darkButtonText} name="log-in-outline" />
-                  <Text style={styles.darkButtonText}>Login!</Text>
-                </View>
-              </Pressable>
-            </View>
+            <Pressable style={[styles.primaryButton,
+            {
+              alignSelf: 'center',
+            }
+            ]}>
+              <View style={styles.iconStyle}>
+                <Ionicons style={styles.darkButtonText} name="log-in-outline" />
+                <Text style={styles.darkButtonText}>Login!</Text>
+              </View>
+            </Pressable>
+            <Pressable style={[styles.darkButton,
+            {
+              alignSelf: 'center',
+            }
+            ]}>
+              <View style={styles.iconStyle}>
+                <Ionicons style={styles.darkButtonText} name="log-in-outline" />
+                <Text style={styles.darkButtonText}>Login!</Text>
+              </View>
+            </Pressable>
           </View>
-          <Pressable onPress={() =>
+          <KeyboardAvoidingView
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          >
+            <ScrollView
+              horizontal={false}
+              indicatorStyle={'#333'}
+              keyboardDismissMode="on-drag"
+            >
+              <TextInput
+                style={styles.inputField}
+                onChangeText={setUserName}
+                placeholder='Your Name'
+                secureTextEntry={false}
+                keyboardType='default'
+                value={userName}
+              />
+              <TextInput
+                style={styles.inputField}
+                onChangeText={setUserEmail}
+                placeholder='Your Email'
+                secureTextEntry={false}
+                keyboardType='email-address'
+                value={userEmail}
+              />
+              {(!ValidateEmailField(userEmail) || userName === '') && (
+                <Text style={styles.alert}>
+                  {
+                    userName === '' ? 'Please Enter your full name to contiue.' :
+                      !ValidateEmailField(userEmail) ? 'Please Enter your Email to continue' :
+                        ""
+                  }
+                </Text>
+              )}
+              <Pressable
+                onPress={() => {
+                  handleUserDetails();
+                }}
+                disabled={
+                  userName === '' || !ValidateEmailField(userEmail)
+                }
+                style={[
+                  userName === '' || !ValidateEmailField(userEmail) ?
+                    styles.subButtonDisabled : styles.primaryButton,
+                  { flex: 1 }
+                ]}
+              >
+                <View style={styles.iconStyle}>
+                  <Ionicons style={styles.darkButtonText} name="save" />
+                  <Text style={styles.darkButtonText}>Save Changes</Text>
+                </View>
+              </Pressable>
+            </ScrollView>
+          </KeyboardAvoidingView>
+          <Pressable
+            style={[
+              styles.darkButton,
+              { alignSelf: 'center', backgroundColor: 'red' }
+            ]} onPress={() =>
             setLogout()
           }>
-            <Text>Logout</Text>
+            <View style={styles.iconStyle}>
+              <Ionicons style={styles.darkButtonText} name="log-out" />
+              <Text style={styles.darkButtonText}>Logout</Text>
+            </View>
           </Pressable>
           {/* <AsyncStorageRenderAllItems /> */}
         </ScrollView>
@@ -121,14 +198,43 @@ const styles = StyleSheet.create({
     marginBottom: 20
   },
 
+  inputField: {
+    borderColor: '#999',
+    borderWidth: 1,
+    borderRadius: 5,
+    padding: 10,
+    marginBottom: 10,
+  },
+
+
+  alert: {
+    color: '#842029',
+    backgroundColor: '#f8d7da',
+    borderColor: '#f5c2c7',
+    borderWidth: 2,
+    borderRadius: 5,
+    marginBottom: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 30,
+    textAlign: 'center'
+  },
+
   bodyText: {
     fontSize: 16,
     color: "#1A1A19",
     marginBottom: 10
   },
 
-  darkButton: {
+  primaryButton: {
     backgroundColor: '#31511E',
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    borderRadius: 5,
+    marginBottom: 10,
+  },
+
+  darkButton: {
+    backgroundColor: '#1A1A19',
     paddingVertical: 10,
     paddingHorizontal: 15,
     borderRadius: 5,
@@ -139,6 +245,13 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight: 500,
     fontSize: 16
+  },
+
+  subButtonDisabled: {
+    backgroundColor: 'grey',
+    padding: 10,
+    borderRadius: 5,
+    marginBottom: 10,
   },
 
   iconStyle: {
