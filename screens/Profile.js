@@ -50,14 +50,13 @@ const Profile = () => {
     <View style={styles.container}>
       <View style={styles.innerContainer}>
         <Text style={styles.bodyText}>Welcome {userName} Profile Page</Text>
-
-        <AsyncStorageRenderAllItems />
-       <Pressable onPress={() =>
+      </View>
+        {/* <Pressable onPress={() =>
           setLogout()
         }>
           <Text>Logout</Text>
-        </Pressable>
-      </View>
+        </Pressable> */}
+      {/* <AsyncStorageRenderAllItems /> */}
     </View>
   )
 }

@@ -13,10 +13,8 @@ const LoggedInNavigation = () => {
       <Image
         source={require('../assets/littleLemonLogo.png')}
         style={{
-          height: 546,
-          width: 2000,
+          height: 40,
           alignSelf: 'center',
-          flex: 1,
           marginVertical: 10
         }}
         resizeMode={'contain'}
@@ -29,11 +27,11 @@ const LoggedInNavigation = () => {
     <Stack.Navigator
       initialRouteName="Welcome"
       screenOptions={{
-        headerStyle: { backgroundColor: '#859F3D' },
+        headerStyle: { backgroundColor: '#F6FCDF' },
         headerTintColor: '#F6FCDF',
         headerTitleAlign: 'center',
         headerTitleStyle: { fontWeight: 'bold' },
-        // headerTitle: () => <HeaderLogo />,
+        headerTitle: () => <HeaderLogo />,
       }}
     >
       <Stack.Screen name="Profile" options={{ title: 'Your Profile Page' }} component={Profile} />
