@@ -31,14 +31,19 @@ export default function OnboardingSingUp({ navigation }) {
 
   const handleLogin = async () => {
     try {
-      await AsyncStorage.setItem('userLoggedIn', 'true')
-      setLoading(true)
+      await AsyncStorage.multiSet([
+        ['userLoggedIn', 'true'],
+        ['userName', userName],
+        ['userEmail', userEmail]
+      ]);
+      setLoading(true);
     } catch (error) {
-      console.error('Error storing userLoggedIn:', error)
+      console.error('Error storing user data:', error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   };
+
 
   return (
     <View style={styles.container}>

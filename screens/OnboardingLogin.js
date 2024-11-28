@@ -29,8 +29,11 @@ export default function OnboardingLogin({ navigation }) {
 
   const handleLogin = async () => {
     try {
-      await AsyncStorage.setItem('userLoggedIn', 'true')
       setLoading(true)
+      await AsyncStorage.multiSet([
+        ['userLoggedIn', 'true'],
+        ['userEmail', userEmail]
+      ]);
     } catch (error) {
       console.error('Error storing userLoggedIn:', error)
     } finally {
