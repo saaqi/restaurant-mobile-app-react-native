@@ -17,6 +17,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Ionicons from '@expo/vector-icons/Ionicons'
 import { ValidateEmailField } from '../validators/ValidateEmailField'
 import { ValidatePhoneNumberField } from '../validators/ValidatePhoneNumberField'
+import * as ImagePicker from 'expo-image-picker'
 
 
 // import AsyncStorageRenderAllItems from '../validators/AsyncStorageRenderAllItems';
@@ -32,10 +33,29 @@ const Profile = () => {
   const [userEmail, setUserEmail] = useState('')
   const [userPhone, setUserPhone] = useState('')
 
+  const [image, setImage] = useState('../assets/user.png');
+
   const [orderStatus, setOrderStatus] = useState(true)
   const [passwordChanges, setPasswordChanges] = useState(true)
   const [specialOffers, setSpecialOffers] = useState(true)
   const [newsLetter, setNewsLetter] = useState(true)
+
+
+  const pickImage = async () => {
+    // No permissions request is necessary for launching the image library
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ['images', 'videos'],
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    console.log(result);
+
+    if (!result.canceled) {
+      setImage(result.assets[0].uri);
+    }
+  };
 
   const handleUserDetails = async () => {
     try {
@@ -136,8 +156,8 @@ const Profile = () => {
 
           <Text style={styles.headingText}>Welcome {userName}!</Text>
           <View style={{ flexDirection: 'row', gap: 20, marginBottom: 20 }}>
-            <Image
-              source={require('../assets/user.png')}
+            {image && <Image
+              source={{ uri: image }}
               style={{
                 maxHeight: 100,
                 width: windowWidth / 4,
@@ -146,12 +166,13 @@ const Profile = () => {
               resizeMode={'contain'}
               accessible={true}
               accessibilityLabel={"User Avatar"}
-            />
-            <Pressable style={[styles.primaryButton,
-            {
-              alignSelf: 'center',
-            }
-            ]}>
+            />}
+            <Pressable
+              onPress={pickImage}
+              style={[
+                styles.primaryButton,
+                { alignSelf: 'center' }
+              ]}>
               <View style={styles.iconStyle}>
                 <Ionicons style={styles.darkButtonText} name="person-add-outline" />
                 <Text style={styles.darkButtonText}>Change Avatar</Text>
