@@ -14,6 +14,7 @@ import {
 } from 'react-native'
 import { useState } from 'react'
 import { ValidateEmailField } from '../validators/ValidateEmailField'
+import { ValidatePasswordField } from '../validators/ValidatePasswordField'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -25,6 +26,7 @@ export default function OnboardingSingUp({ navigation }) {
   const [userName, setUserName] = useState('')
   const [userEmail, setUserEmail] = useState('')
   const [userPassword, setUserPassword] = useState('')
+  const [userPasswordConfirm, setUserPasswordConfirm] = useState('')
   const [isLoading, setLoading] = useState(false)
 
   const handleLogin = async () => {
@@ -91,10 +93,23 @@ export default function OnboardingSingUp({ navigation }) {
                   keyboardType='default'
                   value={userPassword}
                 />
+                <TextInput
+                  style={styles.inputField}
+                  onChangeText={setUserPasswordConfirm}
+                  placeholder='Re-enter Password'
+                  secureTextEntry={true}
+                  keyboardType='default'
+                  value={userPasswordConfirm}
+                />
                 {
-                  (!ValidateEmailField(userEmail) || userPassword === '') && (
+                  (!ValidateEmailField(userEmail) || !ValidatePasswordField(userPassword) || userName === '' || userPassword !== userPasswordConfirm) && (
                     <Text style={styles.alert}>
-                      {!ValidateEmailField(userEmail) ? 'Please Enter your Email to continue' : 'Please enter your password to continue'}
+                      {
+                        userName === '' ? 'Please Enter your full name to contiue.' :
+                          !ValidateEmailField(userEmail) ? 'Please Enter your Email to continue' :
+                            !ValidatePasswordField(userPassword) ? 'Please enter a password with at least 8 characters, including one uppercase letter, one lowercase letter, one number, and one special character.' :
+                              userPassword !== userPasswordConfirm ? 'Passwords do not match' : ''
+                      }
                     </Text>
                   )
                 }
@@ -104,9 +119,11 @@ export default function OnboardingSingUp({ navigation }) {
                       handleLogin()
                       navigation.navigate('Profile')
                     }}
-                    disabled={userPassword === '' || !ValidateEmailField(userEmail)}
+                    disabled={
+                      userName === '' || !ValidateEmailField(userEmail) || !ValidatePasswordField(userPassword) || userPassword !== userPasswordConfirm
+                    }
                     style={[
-                      userPassword === '' || !ValidateEmailField(userEmail) ?
+                      userName === '' || !ValidateEmailField(userEmail) || !ValidatePasswordField(userPassword) || userPassword !== userPasswordConfirm ?
                         styles.subButtonDisabled : styles.subButton,
                       { flex: 1, alignSelf: 'end' }
                     ]}
