@@ -9,7 +9,8 @@ import {
   ActivityIndicator,
   Pressable,
   Image,
-  Dimensions
+  Dimensions,
+  CheckBox
 } from 'react-native'
 import { useState, useEffect } from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -31,17 +32,21 @@ const Profile = () => {
   const [userEmail, setUserEmail] = useState('')
   const [userPhone, setUserPhone] = useState('')
 
-  const [orderStatus, setOrderStatus] = useState('')
-  const [passwordChanges, setPasswordChanges] = useState('')
-  const [specialOffers, setSpecialOffers] = useState('')
-  const [newsLetter, setNewsLetter] = useState('')
+  const [orderStatus, setOrderStatus] = useState(true)
+  const [passwordChanges, setPasswordChanges] = useState(true)
+  const [specialOffers, setSpecialOffers] = useState(true)
+  const [newsLetter, setNewsLetter] = useState(true)
 
   const handleUserDetails = async () => {
     try {
       await AsyncStorage.multiSet([
         ['userName', userName],
         ['userEmail', userEmail],
-        ['userPhone', userPhone]
+        ['userPhone', userPhone],
+        ['orderStatus', orderStatus ? 'true' : 'false'],
+        ['passwordChanges', passwordChanges ? 'true' : 'false'],
+        ['specialOffers', specialOffers ? 'true' : 'false'],
+        ['newsLetter', newsLetter ? 'true' : 'false'],
       ]);
       setLoading(true);
     } catch (error) {
@@ -49,6 +54,10 @@ const Profile = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleCheckboxChange = (isChecked, setIsChecked) => {
+    setIsChecked(!isChecked);
   };
 
   const getUserData = async () => {
@@ -60,6 +69,16 @@ const Profile = () => {
       userNameRecoded && userNameRecoded !== '' ? setUserName(userNameRecoded) : ''
       userEmailRecorded && userEmailRecorded !== '' ? setUserEmail(userEmailRecorded) : ''
       userPhoneRecorded && userPhoneRecorded !== '' ? setUserPhone(userPhoneRecorded) : ''
+
+      const orderStatusRecorded = await AsyncStorage.getItem('orderStatus');
+      const passwordChangesRecorded = await AsyncStorage.getItem('passwordChanges');
+      const specialOffersRecorded = await AsyncStorage.getItem('specialOffers');
+      const newsLetterRecorded = await AsyncStorage.getItem('newsLetter');
+      orderStatusRecorded && orderStatusRecorded === 'flase' ? setOrderStatus(false) : ''
+      passwordChangesRecorded && passwordChangesRecorded === 'false' ? setPasswordChanges(false) : ''
+      specialOffersRecorded && specialOffersRecorded === 'false' ? setSpecialOffers(false) : ''
+      newsLetterRecorded && newsLetterRecorded === 'false' ? setNewsLetter(false) : ''
+
     } catch (error) {
       console.error('Error retrieving User Data:', error);
     } finally {
@@ -162,32 +181,67 @@ const Profile = () => {
                     {
                       userName === '' ? 'Please Enter your full name to contiue.' :
                         !ValidateEmailField(userEmail) ? 'Please Enter your Email to continue' :
-                        !ValidatePhoneNumberField(userPhone) ? 'Please enter your phone number in the format: (123) 456-7890 or +1 (123) 456-7890.' :
+                          !ValidatePhoneNumberField(userPhone) ? 'Please enter your phone number in the format: (123) 456-7890 or +1 (123) 456-7890.' :
                             ""
                     }
                   </Text>
                 )}
-              <Pressable
-                onPress={() => {
-                  handleUserDetails();
-                }}
-                disabled={
-                  userName === '' || !ValidateEmailField(userEmail) || !ValidatePhoneNumberField(userPhone)
-                }
-                style={[
-                  userName === '' || !ValidateEmailField(userEmail) || !ValidatePhoneNumberField(userPhone) ?
-                    styles.subButtonDisabled : styles.primaryButton,
-                  { flex: 1 }
-                ]}
-              >
-                <View style={styles.iconStyle}>
-                  <Ionicons style={styles.darkButtonText} name="save" />
-                  <Text style={styles.darkButtonText}>Save Changes</Text>
-                </View>
-              </Pressable>
             </ScrollView>
           </KeyboardAvoidingView>
+
+
           <Text style={styles.headingText}>E-Mail Notifications</Text>
+
+          <View style={{ flexDirection: 'row', gap: 10 }}>
+            <CheckBox
+              value={orderStatus}
+              onValueChange={(value) => handleCheckboxChange(orderStatus, setOrderStatus)}
+            />
+            <Text style={styles.bodyText}>Order Statuses</Text>
+          </View>
+          <View style={{ flexDirection: 'row', gap: 10 }}>
+            <CheckBox
+              value={passwordChanges}
+              onValueChange={(value) => handleCheckboxChange(passwordChanges, setPasswordChanges)}
+            />
+            <Text style={styles.bodyText}>Passwrod Changes</Text>
+          </View>
+          <View style={{ flexDirection: 'row', gap: 10 }}>
+            <CheckBox
+              value={specialOffers}
+              onValueChange={(value) => handleCheckboxChange(specialOffers, setSpecialOffers)}
+            />
+            <Text style={styles.bodyText}>Special Offers</Text>
+          </View>
+          <View style={{ flexDirection: 'row', gap: 10 }}>
+            <CheckBox
+              value={newsLetter}
+              onValueChange={(value) => handleCheckboxChange(newsLetter, setNewsLetter)}
+            />
+            <Text style={styles.bodyText}>Newsletter</Text>
+          </View>
+
+          <Pressable
+            onPress={() => {
+              handleUserDetails();
+            }}
+            disabled={
+              userName === '' || !ValidateEmailField(userEmail) || !ValidatePhoneNumberField(userPhone)
+            }
+            style={[
+              userName === '' || !ValidateEmailField(userEmail) || !ValidatePhoneNumberField(userPhone) ?
+                styles.subButtonDisabled : styles.primaryButton,
+              { flex: 1 }
+            ]}
+          >
+            <View style={styles.iconStyle}>
+              <Ionicons style={styles.darkButtonText} name="save" />
+              <Text style={styles.darkButtonText}>Save Changes</Text>
+            </View>
+          </Pressable>
+
+
+
           <Pressable
             style={[
               styles.darkButton,
