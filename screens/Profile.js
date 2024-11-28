@@ -10,6 +10,8 @@ import {
 } from 'react-native'
 import { useState, useEffect } from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Ionicons from '@expo/vector-icons/Ionicons'
+
 // import AsyncStorageRenderAllItems from '../validators/AsyncStorageRenderAllItems';
 
 
@@ -57,18 +59,40 @@ const Profile = () => {
         <ScrollView>
 
           <Text style={styles.headingText}>Welcome {userName}!</Text>
-          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+          <View style={{ flexDirection: 'row', gap: 20}}>
             <Image
               source={require('../assets/user.png')}
               style={{
                 maxHeight: 100,
-                width: windowWidth / 3,
-               alignSelf: 'start'
+                width: windowWidth / 4,
+                alignSelf: 'start'
               }}
               resizeMode={'contain'}
               accessible={true}
               accessibilityLabel={"Little Lemon's Logo"}
             />
+            <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 10 }}>
+              <Pressable style={[styles.darkButton,
+              {
+                alignSelf: 'center',
+              }
+              ]}>
+                <View style={styles.iconStyle}>
+                  <Ionicons style={styles.darkButtonText} name="log-in-outline" />
+                  <Text style={styles.darkButtonText}>Login!</Text>
+                </View>
+              </Pressable>
+              <Pressable style={[styles.darkButton,
+              {
+                alignSelf: 'center',
+              }
+              ]}>
+                <View style={styles.iconStyle}>
+                  <Ionicons style={styles.darkButtonText} name="log-in-outline" />
+                  <Text style={styles.darkButtonText}>Login!</Text>
+                </View>
+              </Pressable>
+            </View>
           </View>
           <Pressable onPress={() =>
             setLogout()
@@ -101,7 +125,28 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#1A1A19",
     marginBottom: 10
-  }
+  },
+
+  darkButton: {
+    backgroundColor: '#31511E',
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    borderRadius: 5,
+    marginBottom: 10,
+  },
+
+  darkButtonText: {
+    color: 'white',
+    fontWeight: 500,
+    fontSize: 16
+  },
+
+  iconStyle: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 5
+  },
 
 });
 
