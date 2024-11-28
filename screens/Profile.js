@@ -48,15 +48,17 @@ const Profile = () => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.innerContainer}>
-        <Text style={styles.bodyText}>Welcome {userName} Profile Page</Text>
-      </View>
-        {/* <Pressable onPress={() =>
-          setLogout()
-        }>
-          <Text>Logout</Text>
-        </Pressable> */}
-      {/* <AsyncStorageRenderAllItems /> */}
+      {isLoading ? (<ActivityIndicator />) : (
+        <View>
+          <Text style={styles.bodyText}>Welcome {userName} Profile Page</Text>
+          <Pressable onPress={() =>
+            setLogout()
+          }>
+            <Text>Logout</Text>
+          </Pressable>
+          {/* <AsyncStorageRenderAllItems /> */}
+        </View>
+      )}
     </View>
   )
 }
@@ -65,13 +67,10 @@ const Profile = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    padding: 20,
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: "#F6FCDF"
-  },
-
-  innerContainer: {
-    padding: 20,
   },
 
   bodyText: {

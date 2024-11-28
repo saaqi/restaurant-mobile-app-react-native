@@ -12,7 +12,7 @@ import {
   Dimensions,
   ActivityIndicator,
 } from 'react-native'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { ValidateEmailField } from '../validators/ValidateEmailField'
 import { ValidatePasswordField } from '../validators/ValidatePasswordField'
 import Ionicons from '@expo/vector-icons/Ionicons'
@@ -44,11 +44,29 @@ export default function OnboardingSingUp({ navigation }) {
     }
   };
 
+  const getUserData = async () => {
+    try {
+      setLoading(true);
+      const userNameRecoded = await AsyncStorage.getItem('userName');
+      const userEmailRecorded = await AsyncStorage.getItem('userEmail');
+      userNameRecoded !== '' ? setUserName(userNameRecoded) : ''
+      userEmailRecorded !== '' ? setUserEmail(userEmailRecorded) : ''
+    } catch (error) {
+      console.error('Error retrieving User Data:', error);
+    } finally {
+      setLoading(false)
+    }
+  };
+
+  useEffect(() => {
+    getUserData();
+  }, []);
+
 
   return (
     <View style={styles.container}>
       {isLoading ? (<ActivityIndicator />) : (
-        <View style={{ flex: 1, justifyContent: 'center' }}>
+        <ScrollView>
           <View style={{ flex: .4 }}>
             <Image
               source={require('../assets/littleLemonLogo.png')}
@@ -156,7 +174,7 @@ export default function OnboardingSingUp({ navigation }) {
               </View>
             </Pressable>
           </View>
-        </View>
+        </ScrollView>
       )}
 
       <StatusBar style="auto" />
@@ -168,7 +186,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#F6FCDF",
-    justifyContent: 'center',
+    // justifyContent: 'center',
     padding: 20,
   },
 

@@ -1,5 +1,4 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
-import OnboardingWelcome from '../screens/OnboardingWelcome'
 
 import { Image } from 'react-native'
 import Profile from '../screens/Profile'
@@ -23,6 +22,22 @@ const LoggedInNavigation = () => {
       />
     )
   }
+
+  const HeaderUser = () => {
+    return (
+      <Image
+        source={require('../assets/user.png')}
+        style={{
+          height: 40,
+          width: 40,
+          marginRight: 20
+        }}
+        resizeMode={'contain'}
+        accessible={true}
+        accessibilityLabel={"Little Lemon's Logo"}
+      />
+    )
+  }
   return (
     <Stack.Navigator
       initialRouteName="Welcome"
@@ -34,7 +49,14 @@ const LoggedInNavigation = () => {
         headerTitle: () => <HeaderLogo />,
       }}
     >
-      <Stack.Screen name="Profile" options={{ title: 'Your Profile Page' }} component={Profile} />
+      <Stack.Screen
+        name="Profile"
+        options={{
+          title: 'Your Profile Page',
+          headerRight: () => <HeaderUser />
+        }}
+        component={Profile}
+      />
     </Stack.Navigator>
   )
 }
