@@ -14,7 +14,7 @@ const LoggedInNavigation = () => {
         style={{
           height: 40,
           alignSelf: 'center',
-          marginVertical: 10
+          marginVertical: 10,
         }}
         resizeMode={'contain'}
         accessible={true}
@@ -30,7 +30,7 @@ const LoggedInNavigation = () => {
         style={{
           height: 40,
           width: 40,
-          marginRight: 20
+          marginRight: 11
         }}
         resizeMode={'contain'}
         accessible={true}

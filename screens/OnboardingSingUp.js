@@ -149,25 +149,23 @@ export default function OnboardingSingUp({ navigation }) {
                   ]}
                 >
                   <View style={styles.iconStyle}>
-                    <Text style={styles.buttonText}>Sign Up</Text>
                     <Ionicons style={styles.buttonText} name="person-add" />
+                    <Text style={styles.buttonText}>Sign Up</Text>
                   </View>
                 </Pressable>
               </View>
             </ScrollView>
           </KeyboardAvoidingView>
+          <Text style={styles.bodyText}>Already have an account? Login instead! </Text>
           <Pressable
             onPress={() => {
               navigation.navigate('Login')
             }}
             style={styles.singUpButton}
           >
-            <View>
-              <Text style={styles.bodyText}>Already have an account? Login up instead! </Text>
-            </View>
             <View style={styles.iconStyle}>
-              <Text style={styles.signUpbuttonText}>Login!</Text>
               <Ionicons style={styles.signUpbuttonText} name="log-in-outline" />
+              <Text style={styles.signUpbuttonText}>Login!</Text>
             </View>
           </Pressable>
         </ScrollView>
@@ -198,7 +196,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '400',
     textAlign: 'center',
-    paddingBottom: 20
+    marginBottom: 10
   },
 
   alert: {
@@ -239,7 +237,7 @@ const styles = StyleSheet.create({
   },
   signUpbuttonText: {
     color: '#31511E',
-    fontWeight: 400,
+    fontWeight: 500,
     fontSize: 16
   },
   iconStyle: {

@@ -1,5 +1,5 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
-// import { Image } from 'react-native'
+import { Image } from 'react-native'
 import OnboardingWelcome from '../screens/OnboardingWelcome'
 import OnboardingLogin from '../screens/OnboardingLogin'
 import OnboardingSingUp from '../screens/OnboardingSingUp'
@@ -9,14 +9,31 @@ const OnBoardingNavigation = () => {
 
   const Stack = createNativeStackNavigator()
 
+  const HeaderLogo = () => {
+    return (
+      <Image
+        source={require('../assets/littleLemonLogo.png')}
+        style={{
+          height: 40,
+          alignSelf: 'center',
+          marginVertical: 10,
+        }}
+        resizeMode={'contain'}
+        accessible={true}
+        accessibilityLabel={"Little Lemon's Logo"}
+      />
+    )
+  }
+
   return (
     <Stack.Navigator
       initialRouteName="Welcome"
       screenOptions={{
-        headerStyle: { backgroundColor: '#859F3D' },
-        headerTintColor: '#F6FCDF',
+        headerStyle: { backgroundColor: '#F6FCDF' },
+        headerTintColor: '#1A1A19',
         headerTitleAlign: 'center',
         headerTitleStyle: { fontWeight: 'bold' },
+        headerTitle: () => <HeaderLogo />,
       }}
     >
       <Stack.Screen name="Welcome" options={{ title: 'Welcome to Little Lemon' }} component={OnboardingWelcome} />

@@ -2,6 +2,7 @@ import {
   Text,
   StyleSheet,
   View,
+  ScrollView,
   ActivityIndicator,
   Pressable,
 } from 'react-native'
@@ -49,15 +50,15 @@ const Profile = () => {
   return (
     <View style={styles.container}>
       {isLoading ? (<ActivityIndicator />) : (
-        <View>
-          <Text style={styles.bodyText}>Welcome {userName} Profile Page</Text>
+        <ScrollView>
+          <Text style={styles.headingText}>Welcome {userName}!</Text>
           <Pressable onPress={() =>
             setLogout()
           }>
             <Text>Logout</Text>
           </Pressable>
           {/* <AsyncStorageRenderAllItems /> */}
-        </View>
+        </ScrollView>
       )}
     </View>
   )
@@ -68,14 +69,20 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
     backgroundColor: "#F6FCDF"
+  },
+
+  headingText: {
+    fontSize: 20,
+    fontWeight: 500,
+    color: "#1A1A19",
+    marginBottom: 20
   },
 
   bodyText: {
     fontSize: 16,
-    color: "#1A1A19"
+    color: "#1A1A19",
+    marginBottom: 10
   }
 
 });
