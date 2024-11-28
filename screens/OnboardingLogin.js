@@ -61,90 +61,87 @@ export default function OnboardingLogin({ navigation }) {
     <View style={styles.container}>
       {isLoading ? (<ActivityIndicator />) : (
         <ScrollView>
-          <View style={{ flex: .4 }}>
-            <Image
-              source={require('../assets/littleLemonLogo.png')}
-              style={{
-                alignSelf: 'center',
-                height: 546,
-                width: deviceWidth -40,
-                flex: .5,
-              }}
-              resizeMode={'contain'}
-              accessible={true}
-              accessibilityLabel={"Saaqi's Logo"}
-            />
-          </View>
+          <Image
+            source={require('../assets/littleLemonLogo.png')}
+            style={{
+              alignSelf: 'center',
+              height: 100,
+              maxWidth: deviceWidth - 40,
+              marginBottom: 20
+            }}
+            resizeMode={'contain'}
+            accessible={true}
+            accessibilityLabel={"Saaqi's Logo"}
+          />
 
-          <View style={{ flex: .8 }}>
-            <KeyboardAvoidingView
-              style={styles.innerContainer}
-              behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          <KeyboardAvoidingView
+            style={styles.innerContainer}
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          >
+            <ScrollView
+              horizontal={false}
+              indicatorStyle={'#333'}
+              keyboardDismissMode="on-drag"
             >
-              <ScrollView
-                horizontal={false}
-                indicatorStyle={'#333'}
-                keyboardDismissMode="on-drag"
-              >
-                <TextInput
-                  style={styles.inputField}
-                  onChangeText={setUserEmail}
-                  placeholder='Your Email'
-                  secureTextEntry={false}
-                  keyboardType='email-address'
-                  value={userEmail}
-                />
-                <TextInput
-                  style={styles.inputField}
-                  onChangeText={setUserPassword}
-                  placeholder='Your Password'
-                  secureTextEntry={true}
-                  keyboardType='default'
-                  value={userPassword}
-                />
-                {
-                  (!ValidateEmailField(userEmail) || userPassword === '') && (
-                    <Text style={styles.alert}>
-                      {!ValidateEmailField(userEmail) ? 'Please Enter your Email to continue' : 'Please enter your password to continue'}
-                    </Text>
-                  )
-                }
-                <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-                  <Pressable
-                    onPress={() => {
-                      handleLogin();
-                      navigation.navigate('Profile');
-                    }}
-                    disabled={userPassword === '' || !ValidateEmailField(userEmail)}
-                    style={[
-                      userPassword === '' || !ValidateEmailField(userEmail) ?
-                        styles.subButtonDisabled : styles.subButton,
-                      { flex: 1, alignSelf: 'end' }
-                    ]}
-                  >
-                    <View style={styles.iconStyle}>
-                      <Text style={styles.buttonText}>Login</Text>
-                      <Ionicons style={styles.buttonText} name="log-in-outline" />
-                    </View>
-                  </Pressable>
-                </View>
-              </ScrollView>
-            </KeyboardAvoidingView>
-            <Pressable
-              onPress={() => {
-                navigation.navigate('Signup')
-              }}
-              style={styles.singUpButton}
-            >
-              <View style={{textAlign: 'center'}}>
-                <Text style={styles.bodyText}>Don't have an account yet? Sing up instead! </Text>
+              <TextInput
+                style={styles.inputField}
+                onChangeText={setUserEmail}
+                placeholder='Your Email'
+                secureTextEntry={false}
+                keyboardType='email-address'
+                value={userEmail}
+              />
+              <TextInput
+                style={styles.inputField}
+                onChangeText={setUserPassword}
+                placeholder='Your Password'
+                secureTextEntry={true}
+                keyboardType='default'
+                value={userPassword}
+              />
+              {
+                (!ValidateEmailField(userEmail) || userPassword === '') && (
+                  <Text style={styles.alert}>
+                    {!ValidateEmailField(userEmail) ? 'Please Enter your Email to continue' : 'Please enter your password to continue'}
+                  </Text>
+                )
+              }
+              <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+                <Pressable
+                  onPress={() => {
+                    handleLogin();
+                    navigation.navigate('Profile');
+                  }}
+                  disabled={userPassword === '' || !ValidateEmailField(userEmail)}
+                  style={[
+                    userPassword === '' || !ValidateEmailField(userEmail) ?
+                      styles.subButtonDisabled : styles.subButton,
+                    { flex: 1, alignSelf: 'end' }
+                  ]}
+                >
+                  <View style={styles.iconStyle}>
+                    <Text style={styles.buttonText}>Login</Text>
+                    <Ionicons style={styles.buttonText} name="log-in-outline" />
+                  </View>
+                </Pressable>
               </View>
-              <View style={styles.iconStyle}>
-                <Text style={styles.signUpbuttonText}>SignUp!</Text>
-                <Ionicons style={styles.signUpbuttonText} name="person-add" />
-              </View>
-            </Pressable>
-          </View>
+            </ScrollView>
+          </KeyboardAvoidingView>
+          <Pressable
+            onPress={() => {
+              navigation.navigate('Signup')
+            }}
+            style={styles.singUpButton}
+          >
+            <View style={{ textAlign: 'center' }}>
+              <Text style={styles.bodyText}>Don't have an account yet? Sing up instead! </Text>
+            </View>
+            <View style={styles.iconStyle}>
+              <Text style={styles.signUpbuttonText}>{"Sign Up!"}</Text>
+              <Ionicons style={styles.signUpbuttonText} name="person-add" />
+            </View>
+          </Pressable>
+
         </ScrollView>
       )}
 

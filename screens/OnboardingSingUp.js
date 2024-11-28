@@ -67,113 +67,109 @@ export default function OnboardingSingUp({ navigation }) {
     <View style={styles.container}>
       {isLoading ? (<ActivityIndicator />) : (
         <ScrollView>
-          <View style={{ flex: .4 }}>
-            <Image
-              source={require('../assets/littleLemonLogo.png')}
-              style={{
-                alignSelf: 'center',
-                height: 546,
-                width: deviceWidth - 40,
-                flex: .5,
-              }}
-              resizeMode={'contain'}
-              accessible={true}
-              accessibilityLabel={"Saaqi's Logo"}
-            />
-          </View>
+          <Image
+            source={require('../assets/littleLemonLogo.png')}
+            style={{
+              alignSelf: 'center',
+              height: 100,
+              maxWidth: deviceWidth - 40,
+              marginBottom: 20
+            }}
+            resizeMode={'contain'}
+            accessible={true}
+            accessibilityLabel={"Saaqi's Logo"}
+          />
 
-          <View style={{ flex: .8 }}>
-            <KeyboardAvoidingView
-              style={styles.innerContainer}
-              behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          <KeyboardAvoidingView
+            style={styles.innerContainer}
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          >
+            <ScrollView
+              horizontal={false}
+              indicatorStyle={'#333'}
+              keyboardDismissMode="on-drag"
             >
-              <ScrollView
-                horizontal={false}
-                indicatorStyle={'#333'}
-                keyboardDismissMode="on-drag"
-              >
-                <TextInput
-                  style={styles.inputField}
-                  onChangeText={setUserName}
-                  placeholder='Your Name'
-                  secureTextEntry={false}
-                  keyboardType='default'
-                  value={userName}
-                />
-                <TextInput
-                  style={styles.inputField}
-                  onChangeText={setUserEmail}
-                  placeholder='Your Email'
-                  secureTextEntry={false}
-                  keyboardType='email-address'
-                  value={userEmail}
-                />
-                <TextInput
-                  style={styles.inputField}
-                  onChangeText={setUserPassword}
-                  placeholder='Your Password'
-                  secureTextEntry={true}
-                  keyboardType='default'
-                  value={userPassword}
-                />
-                <TextInput
-                  style={styles.inputField}
-                  onChangeText={setUserPasswordConfirm}
-                  placeholder='Re-enter Password'
-                  secureTextEntry={true}
-                  keyboardType='default'
-                  value={userPasswordConfirm}
-                />
-                {
-                  (!ValidateEmailField(userEmail) || !ValidatePasswordField(userPassword) || userName === '' || userPassword !== userPasswordConfirm) && (
-                    <Text style={styles.alert}>
-                      {
-                        userName === '' ? 'Please Enter your full name to contiue.' :
-                          !ValidateEmailField(userEmail) ? 'Please Enter your Email to continue' :
-                            !ValidatePasswordField(userPassword) ? 'Please enter a password with at least 8 characters, including one uppercase letter, one lowercase letter, one number, and one special character.' :
-                              userPassword !== userPasswordConfirm ? 'Passwords do not match' : ''
-                      }
-                    </Text>
-                  )
-                }
-                <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-                  <Pressable
-                    onPress={() => {
-                      handleLogin();
-                      navigation.navigate('Profile');
-                    }}
-                    disabled={
-                      userName === '' || !ValidateEmailField(userEmail) || !ValidatePasswordField(userPassword) || userPassword !== userPasswordConfirm
+              <TextInput
+                style={styles.inputField}
+                onChangeText={setUserName}
+                placeholder='Your Name'
+                secureTextEntry={false}
+                keyboardType='default'
+                value={userName}
+              />
+              <TextInput
+                style={styles.inputField}
+                onChangeText={setUserEmail}
+                placeholder='Your Email'
+                secureTextEntry={false}
+                keyboardType='email-address'
+                value={userEmail}
+              />
+              <TextInput
+                style={styles.inputField}
+                onChangeText={setUserPassword}
+                placeholder='Your Password'
+                secureTextEntry={true}
+                keyboardType='default'
+                value={userPassword}
+              />
+              <TextInput
+                style={styles.inputField}
+                onChangeText={setUserPasswordConfirm}
+                placeholder='Re-enter Password'
+                secureTextEntry={true}
+                keyboardType='default'
+                value={userPasswordConfirm}
+              />
+              {
+                (!ValidateEmailField(userEmail) || !ValidatePasswordField(userPassword) || userName === '' || userPassword !== userPasswordConfirm) && (
+                  <Text style={styles.alert}>
+                    {
+                      userName === '' ? 'Please Enter your full name to contiue.' :
+                        !ValidateEmailField(userEmail) ? 'Please Enter your Email to continue' :
+                          !ValidatePasswordField(userPassword) ? 'Please enter a password with at least 8 characters, including one uppercase letter, one lowercase letter, one number, and one special character.' :
+                            userPassword !== userPasswordConfirm ? 'Passwords do not match' : ''
                     }
-                    style={[
-                      userName === '' || !ValidateEmailField(userEmail) || !ValidatePasswordField(userPassword) || userPassword !== userPasswordConfirm ?
-                        styles.subButtonDisabled : styles.subButton,
-                      { flex: 1, alignSelf: 'end' }
-                    ]}
-                  >
-                    <View style={styles.iconStyle}>
-                      <Text style={styles.buttonText}>Sign Up</Text>
-                      <Ionicons style={styles.buttonText} name="person-add" />
-                    </View>
-                  </Pressable>
-                </View>
-              </ScrollView>
-            </KeyboardAvoidingView>
-            <Pressable
-              onPress={() => {
-                navigation.navigate('Login')
-              }}
-              style={styles.singUpButton}
-            >
-              <View>
-                <Text style={styles.bodyText}>Already have an account? Login up instead! </Text>
+                  </Text>
+                )
+              }
+              <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+                <Pressable
+                  onPress={() => {
+                    handleLogin();
+                    navigation.navigate('Profile');
+                  }}
+                  disabled={
+                    userName === '' || !ValidateEmailField(userEmail) || !ValidatePasswordField(userPassword) || userPassword !== userPasswordConfirm
+                  }
+                  style={[
+                    userName === '' || !ValidateEmailField(userEmail) || !ValidatePasswordField(userPassword) || userPassword !== userPasswordConfirm ?
+                      styles.subButtonDisabled : styles.subButton,
+                    { flex: 1, alignSelf: 'end' }
+                  ]}
+                >
+                  <View style={styles.iconStyle}>
+                    <Text style={styles.buttonText}>Sign Up</Text>
+                    <Ionicons style={styles.buttonText} name="person-add" />
+                  </View>
+                </Pressable>
               </View>
-              <View style={styles.iconStyle}>
-                <Text style={styles.signUpbuttonText}>Login!</Text>
-                <Ionicons style={styles.signUpbuttonText} name="log-in-outline" />
-              </View>
-            </Pressable>
-          </View>
+            </ScrollView>
+          </KeyboardAvoidingView>
+          <Pressable
+            onPress={() => {
+              navigation.navigate('Login')
+            }}
+            style={styles.singUpButton}
+          >
+            <View>
+              <Text style={styles.bodyText}>Already have an account? Login up instead! </Text>
+            </View>
+            <View style={styles.iconStyle}>
+              <Text style={styles.signUpbuttonText}>Login!</Text>
+              <Ionicons style={styles.signUpbuttonText} name="log-in-outline" />
+            </View>
+          </Pressable>
         </ScrollView>
       )}
 
