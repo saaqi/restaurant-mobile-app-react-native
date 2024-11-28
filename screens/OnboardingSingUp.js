@@ -31,7 +31,7 @@ export default function OnboardingSingUp({ navigation }) {
 
   const handleLogin = async () => {
     try {
-      await AsyncStorage.setItem('userLoggedIn', true)
+      await AsyncStorage.setItem('userLoggedIn', 'true')
       setLoading(true)
     } catch (error) {
       console.error('Error storing userLoggedIn:', error)
@@ -116,8 +116,8 @@ export default function OnboardingSingUp({ navigation }) {
                 <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
                   <Pressable
                     onPress={() => {
-                      handleLogin()
-                      navigation.navigate('Profile')
+                      handleLogin();
+                      navigation.navigate('Profile');
                     }}
                     disabled={
                       userName === '' || !ValidateEmailField(userEmail) || !ValidatePasswordField(userPassword) || userPassword !== userPasswordConfirm

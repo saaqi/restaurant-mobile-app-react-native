@@ -16,12 +16,13 @@ Light: #F6FCDF
 export default function App() {
 
   const [userLoggedIn, setUserLoggedIn] = useState(false)
-  const [isLoading, setLoading] = useState(true)
+  const [isLoading, setLoading] = useState(false)
 
   const getUserLoggedIn = async () => {
     try {
+      setLoading(true);
       const value = await AsyncStorage.getItem('userLoggedIn');
-      if (!value) {
+      if (value === 'true') {
         setUserLoggedIn(true);
       }
     } catch (error) {
@@ -39,7 +40,7 @@ export default function App() {
     <SafeAreaView style={{ flex: 1, justifyContent: 'center' }}>
       <NavigationContainer>
         {isLoading ? (<ActivityIndicator />) : (
-          userLoggedIn ? (<OnBoardingNavigation />) : (<OnBoardingNavigation />)
+          userLoggedIn ? (<LoggedInNavigation />) : (<OnBoardingNavigation />)
         )}
       </NavigationContainer>
     </SafeAreaView>

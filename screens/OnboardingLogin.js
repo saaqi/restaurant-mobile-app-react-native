@@ -12,10 +12,11 @@ import {
   Dimensions,
   ActivityIndicator,
 } from 'react-native'
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { ValidateEmailField } from '../validators/ValidateEmailField'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 
 export default function OnboardingLogin({ navigation }) {
@@ -28,7 +29,7 @@ export default function OnboardingLogin({ navigation }) {
 
   const handleLogin = async () => {
     try {
-      await AsyncStorage.setItem('userLoggedIn', true)
+      await AsyncStorage.setItem('userLoggedIn', 'true')
       setLoading(true)
     } catch (error) {
       console.error('Error storing userLoggedIn:', error)
@@ -92,8 +93,8 @@ export default function OnboardingLogin({ navigation }) {
                 <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
                   <Pressable
                     onPress={() => {
-                      handleLogin()
-                      navigation.navigate('Profile')
+                      handleLogin();
+                      navigation.navigate('Profile');
                     }}
                     disabled={userPassword === '' || !ValidateEmailField(userEmail)}
                     style={[
