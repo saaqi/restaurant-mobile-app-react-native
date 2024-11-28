@@ -86,6 +86,34 @@ const Profile = () => {
     }
   };
 
+  const removeUserData = async () => {
+    try {
+      setLoading(true);
+      await AsyncStorage.multiSet([
+        ['userName', ''],
+        ['userEmail', ''],
+        ['userPhone', ''],
+        ['orderStatus', 'true'],
+        ['passwordChanges', 'true'],
+        ['specialOffers', 'true'],
+        ['newsLetter', 'true'],
+      ]);
+      setUserName('')
+      setUserEmail('')
+      setUserPhone('')
+
+      setOrderStatus(true)
+      setPasswordChanges(true)
+      setSpecialOffers(true)
+      setNewsLetter(true)
+
+    } catch (error) {
+      console.error('Error retrieving User Data:', error);
+    } finally {
+      setLoading(false)
+    }
+  };
+
   useEffect(() => {
     getUserData();
   }, []);
@@ -189,6 +217,15 @@ const Profile = () => {
             </ScrollView>
           </KeyboardAvoidingView>
 
+          <Pressable
+            style={styles.darkButton} onPress={() =>
+              setLogout()
+            }>
+            <View style={styles.iconStyle}>
+              <Ionicons style={styles.darkButtonText} name="log-out" />
+              <Text style={styles.darkButtonText}>Logout</Text>
+            </View>
+          </Pressable>
 
           <Text style={styles.headingText}>E-Mail Notifications</Text>
 
@@ -221,39 +258,38 @@ const Profile = () => {
             <Text style={styles.bodyText}>Newsletter</Text>
           </View>
 
-          <Pressable
-            onPress={() => {
-              handleUserDetails();
-            }}
-            disabled={
-              userName === '' || !ValidateEmailField(userEmail) || !ValidatePhoneNumberField(userPhone)
-            }
-            style={[
-              userName === '' || !ValidateEmailField(userEmail) || !ValidatePhoneNumberField(userPhone) ?
-                styles.subButtonDisabled : styles.primaryButton,
-              { flex: 1 }
-            ]}
-          >
-            <View style={styles.iconStyle}>
-              <Ionicons style={styles.darkButtonText} name="save" />
-              <Text style={styles.darkButtonText}>Save Changes</Text>
-            </View>
-          </Pressable>
+          <View style={{ flexDirection: 'row', gap: 10 }}>
 
+            <Pressable
+              onPress={() => {
+                handleUserDetails();
+              }}
+              disabled={
+                userName === '' || !ValidateEmailField(userEmail) || !ValidatePhoneNumberField(userPhone)
+              }
+              style={[
+                userName === '' || !ValidateEmailField(userEmail) || !ValidatePhoneNumberField(userPhone) ?
+                  styles.subButtonDisabled : styles.primaryButton
+              ]}
+            >
+              <View style={styles.iconStyle}>
+                <Ionicons style={styles.darkButtonText} name="save" />
+                <Text style={styles.darkButtonText}>Save Changes</Text>
+              </View>
+            </Pressable>
+            <Pressable
+              onPress={() => {
+                removeUserData();
+              }}
+              style={styles.dangerButton}
+            >
+              <View style={styles.iconStyle}>
+                <Ionicons style={styles.dangerButtonText} name="trash" />
+                <Text style={styles.dangerButtonText}>Discard Details</Text>
+              </View>
+            </Pressable>
+          </View>
 
-
-          <Pressable
-            style={[
-              styles.darkButton,
-              { alignSelf: 'center', backgroundColor: '#842029' }
-            ]} onPress={() =>
-              setLogout()
-            }>
-            <View style={styles.iconStyle}>
-              <Ionicons style={{ color: "#F8D7DA", fontSize: 16, fontWeight: 500 }} name="log-out" />
-              <Text style={{ color: "#F8D7DA", fontSize: 16, fontWeight: 500 }}>Logout</Text>
-            </View>
-          </Pressable>
           {/* <AsyncStorageRenderAllItems /> */}
         </ScrollView>
       )}
@@ -319,8 +355,30 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
 
+  dangerButton: {
+    backgroundColor: '#842029',
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    borderRadius: 5,
+    marginBottom: 10,
+  },
+
+  darkButton: {
+    backgroundColor: '#1A1A19',
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    borderRadius: 5,
+    marginBottom: 10,
+  },
+
   darkButtonText: {
     color: 'white',
+    fontWeight: 500,
+    fontSize: 16
+  },
+
+  dangerButtonText: {
+    color: '#F8D7DA',
     fontWeight: 500,
     fontSize: 16
   },
