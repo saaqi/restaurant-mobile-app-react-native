@@ -149,10 +149,11 @@ const Profile = () => {
   return (
     <View style={styles.container}>
       {isLoading ? (<ActivityIndicator />) : (
-        <ScrollView>
-
-          <Text style={styles.headingText}>Welcome {userName}!</Text>
-          <View style={{ flexDirection: 'row', gap: 20, marginBottom: 20 }}>
+        <ScrollView style={{paddingHorizontal: 10}}>
+          <Text style={[styles.headingText, { textAlign: 'center' }]}>
+            Welcome {userName}, It is nice to have you.
+          </Text>
+          <View style={{ flexDirection: 'row', gap: 20, marginBottom: 20, justifyContent: 'center' }}>
             {userAvatar ? <Image
               source={{ uri: userAvatar }}
               style={{
@@ -164,34 +165,36 @@ const Profile = () => {
               accessible={true}
               accessibilityLabel={"User Avatar"}
             /> : <Ionicons style={{ fontSize: 100 }} name="person-circle" />}
-            <Pressable
-              onPress={pickImage}
-              style={[
-                styles.primaryButton,
-                { alignSelf: 'center' }
-              ]}>
-              <View style={styles.iconStyle}>
-                <Ionicons style={styles.darkButtonText} name="person-add-outline" />
-                <Text style={styles.darkButtonText}>{userAvatar ? 'Change Avatar' : 'Set Avatar'}</Text>
-              </View>
-            </Pressable>
-            <Pressable
-              onPress={() => setUserAvatar('')}
-              style={[
-                styles.darkButton,
-                { alignSelf: 'center' }
-              ]}>
-              <View style={styles.iconStyle}>
-                <Ionicons style={styles.darkButtonText} name="person-remove-outline" />
-                <Text style={styles.darkButtonText}>Remove Avatar</Text>
-              </View>
-            </Pressable>
+            <View>
+              <Pressable
+                onPress={pickImage}
+                style={[
+                  styles.primaryButton,
+                  { alignSelf: 'center' }
+                ]}>
+                <View style={styles.iconStyle}>
+                  <Ionicons style={styles.darkButtonText} name="person-add-outline" />
+                  <Text style={styles.darkButtonText}>{userAvatar ? 'Change Avatar' : 'Set Avatar'}</Text>
+                </View>
+              </Pressable>
+              <Pressable
+                onPress={() => setUserAvatar('')}
+                style={[
+                  styles.darkButton,
+                  { alignSelf: 'center' }
+                ]}>
+                <View style={styles.iconStyle}>
+                  <Ionicons style={styles.darkButtonText} name="person-remove-outline" />
+                  <Text style={styles.darkButtonText}>Remove Avatar</Text>
+                </View>
+              </Pressable>
+            </View>
           </View>
           <KeyboardAvoidingView
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
           >
             <ScrollView
-              style={{ marginBottom: 20, paddingHorizontal: 10 }}
+              style={{ marginBottom: 20 }}
               horizontal={false}
               // indicatorStyle={'#333'}
               keyboardDismissMode="on-drag"
@@ -237,7 +240,6 @@ const Profile = () => {
             </ScrollView>
           </KeyboardAvoidingView>
 
-
           <View style={{ marginBottom: 30 }}>
             <Text style={styles.headingText}>Select the notifications you would like to receive:</Text>
 
@@ -282,7 +284,7 @@ const Profile = () => {
               }
               style={[
                 userName === '' || !ValidateEmailField(userEmail) || !ValidatePhoneNumberField(userPhone) ?
-                  styles.subButtonDisabled : styles.primaryButton, {flex: .5}
+                  styles.subButtonDisabled : styles.primaryButton, { flex: .5 }
               ]}
             >
               <View style={styles.iconStyle}>
@@ -294,7 +296,7 @@ const Profile = () => {
               onPress={() => {
                 removeUserData();
               }}
-              style={[styles.dangerButton, {flex: .5}]}
+              style={[styles.dangerButton, { flex: .5 }]}
             >
               <View style={styles.iconStyle}>
                 <Ionicons style={styles.dangerButtonText} name="trash-outline" />
