@@ -10,6 +10,7 @@ import {
   Pressable,
   Image
 } from 'react-native'
+import { useNavigation } from '@react-navigation/native'
 import CheckBox from 'expo-checkbox';
 import { useState, useEffect } from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -35,6 +36,8 @@ const Profile = () => {
   const [specialOffers, setSpecialOffers] = useState(false)
   const [newsLetter, setNewsLetter] = useState(false)
 
+  const navigation = useNavigation()
+
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -43,11 +46,12 @@ const Profile = () => {
       aspect: [1, 1],
       quality: 1,
     })
-    if (!result.canceled) setUserAvatar(result.assets[0].uri)
+    !result.canceled && setUserAvatar(result.assets[0].uri)
   }
 
   const handleUserDetails = async () => {
     try {
+      setLoading(true)
       await AsyncStorage.multiSet([
         ['userAvatar', userAvatar],
         ['userName', userName],
@@ -58,11 +62,10 @@ const Profile = () => {
         ['specialOffers', specialOffers ? 'true' : 'false'],
         ['newsLetter', newsLetter ? 'true' : 'false'],
       ])
-      setLoading(true)
     } catch (error) {
       console.error('Error storing user data:', error);
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
   }
 
@@ -138,51 +141,51 @@ const Profile = () => {
   const setLogout = async () => {
     try {
       setLoading(true);
+      removeUserData()
       await AsyncStorage.setItem('userLoggedIn', 'false')
     } catch (error) {
       console.error('Error retrieving User Data:', error);
     } finally {
       setLoading(false)
+      navigation.navigate('Welcome')
     }
   }
 
+
   return (
     <View style={styles.container}>
+
+      {/* <AsyncStorageRenderAllItems /> */}
+
       {isLoading ? (<ActivityIndicator />) : (
-        <ScrollView style={{paddingHorizontal: 10}}>
+        <ScrollView style={{ paddingHorizontal: 10 }}>
           <Text style={[styles.headingText, { textAlign: 'center' }]}>
             Welcome {userName}, It is nice to have you.
           </Text>
           <View style={{ flexDirection: 'row', gap: 20, marginBottom: 20, justifyContent: 'center' }}>
-            {userAvatar ? <Image
-              source={{ uri: userAvatar }}
-              style={{
-                height: 100,
-                width: 100,
-                alignSelf: 'start'
-              }}
-              resizeMode={'contain'}
-              accessible={true}
-              accessibilityLabel={"User Avatar"}
-            /> : <Ionicons style={{ fontSize: 100 }} name="person-circle" />}
+            <Pressable onPress={pickImage}>
+              {userAvatar ? <Image
+                source={{ uri: userAvatar }}
+                style={{
+                  height: 100,
+                  width: 100,
+                  alignSelf: 'start'
+                }}
+                resizeMode={'contain'}
+                accessible={true}
+                accessibilityLabel={"User Avatar"}
+              /> : <Ionicons style={{ fontSize: 100 }} name="person-circle" />}
+            </Pressable>
+
             <View>
-              <Pressable
-                onPress={pickImage}
-                style={[
-                  styles.primaryButton,
-                  { alignSelf: 'center' }
-                ]}>
+              <Pressable onPress={pickImage} style={styles.primaryButton}>
                 <View style={styles.iconStyle}>
                   <Ionicons style={styles.darkButtonText} name="person-add-outline" />
                   <Text style={styles.darkButtonText}>{userAvatar ? 'Change Avatar' : 'Set Avatar'}</Text>
                 </View>
               </Pressable>
               <Pressable
-                onPress={() => setUserAvatar('')}
-                style={[
-                  styles.darkButton,
-                  { alignSelf: 'center' }
-                ]}>
+                onPress={() => setUserAvatar('')} style={styles.darkButton}>
                 <View style={styles.iconStyle}>
                   <Ionicons style={styles.darkButtonText} name="person-remove-outline" />
                   <Text style={styles.darkButtonText}>Remove Avatar</Text>
@@ -196,7 +199,6 @@ const Profile = () => {
             <ScrollView
               style={{ marginBottom: 20 }}
               horizontal={false}
-              // indicatorStyle={'#333'}
               keyboardDismissMode="on-drag"
             >
               <TextInput
@@ -277,13 +279,17 @@ const Profile = () => {
 
             <Pressable
               onPress={() => {
-                handleUserDetails();
+                handleUserDetails()
               }}
               disabled={
-                userName === '' || !ValidateEmailField(userEmail) || !ValidatePhoneNumberField(userPhone)
+                userName === '' ||
+                !ValidateEmailField(userEmail) ||
+                !ValidatePhoneNumberField(userPhone)
               }
               style={[
-                userName === '' || !ValidateEmailField(userEmail) || !ValidatePhoneNumberField(userPhone) ?
+                userName === '' ||
+                  !ValidateEmailField(userEmail) ||
+                  !ValidatePhoneNumberField(userPhone) ?
                   styles.subButtonDisabled : styles.primaryButton, { flex: .5 }
               ]}
             >
@@ -314,7 +320,6 @@ const Profile = () => {
             </View>
           </Pressable>
 
-          {/* <AsyncStorageRenderAllItems /> */}
         </ScrollView>
       )}
     </View>

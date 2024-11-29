@@ -180,7 +180,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#F6FCDF",
-    // justifyContent: 'center',
     padding: 20,
   },
 
@@ -196,7 +195,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '400',
     textAlign: 'center',
-    marginBottom: 10
+    marginTop: 10
   },
 
   alert: {

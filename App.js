@@ -21,10 +21,8 @@ export default function App() {
   const getUserLoggedIn = async () => {
     try {
       setLoading(true);
-      const value = await AsyncStorage.getItem('userLoggedIn');
-      if (value === 'true') {
-        setUserLoggedIn(true);
-      }
+      const userLoggedInRecorded = await AsyncStorage.getItem('userLoggedIn');
+      userLoggedInRecorded === 'true' && setUserLoggedIn(true)
     } catch (error) {
       console.error('Error retrieving userLoggedIn:', error);
     } finally {
@@ -39,9 +37,9 @@ export default function App() {
   return (
     <SafeAreaView style={{ flex: 1, justifyContent: 'center' }}>
       <NavigationContainer>
-        {isLoading ? (<ActivityIndicator />) : (
-          userLoggedIn ? (<LoggedInNavigation />) : (<OnBoardingNavigation />)
-        )}
+        {isLoading ? <ActivityIndicator /> :
+          userLoggedIn ? <LoggedInNavigation /> : <OnBoardingNavigation />
+        }
       </NavigationContainer>
     </SafeAreaView>
 

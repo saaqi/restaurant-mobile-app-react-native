@@ -29,9 +29,7 @@ const OnBoardingNavigation = () => {
   }
 
   const HeaderUser = () => {
-    return (
-      <Ionicons style={{ fontSize: 40, marginRight: 11 }} name="person-circle" />
-    )
+    return <Ionicons style={{ fontSize: 40, marginRight: 11 }} name="person-circle" />
   }
 
   return (
