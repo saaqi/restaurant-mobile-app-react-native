@@ -33,7 +33,7 @@ const Profile = () => {
   const [userEmail, setUserEmail] = useState('')
   const [userPhone, setUserPhone] = useState('')
 
-  const [image, setImage] = useState('../assets/user.png');
+  const [userAvatar, setUserAvatar] = useState();
 
   const [orderStatus, setOrderStatus] = useState(true)
   const [passwordChanges, setPasswordChanges] = useState(true)
@@ -50,10 +50,8 @@ const Profile = () => {
       quality: 1,
     });
 
-    console.log(result);
-
     if (!result.canceled) {
-      setImage(result.assets[0].uri);
+      setUserAvatar(result.assets[0].uri);
     }
   };
 
@@ -113,6 +111,7 @@ const Profile = () => {
         ['userName', ''],
         ['userEmail', ''],
         ['userPhone', ''],
+        ['setUserAvatar', ''],
         ['orderStatus', 'true'],
         ['passwordChanges', 'true'],
         ['specialOffers', 'true'],
@@ -156,17 +155,17 @@ const Profile = () => {
 
           <Text style={styles.headingText}>Welcome {userName}!</Text>
           <View style={{ flexDirection: 'row', gap: 20, marginBottom: 20 }}>
-            {image && <Image
-              source={{ uri: image }}
+            {userAvatar ? <Image
+              source={{ uri: userAvatar }}
               style={{
-                maxHeight: 100,
-                width: windowWidth / 4,
+                height: 100,
+                width: 100,
                 alignSelf: 'start'
               }}
               resizeMode={'contain'}
               accessible={true}
               accessibilityLabel={"User Avatar"}
-            />}
+            /> : <Ionicons style={{ fontSize: 100 }} name="person-circle" />}
             <Pressable
               onPress={pickImage}
               style={[
@@ -178,11 +177,12 @@ const Profile = () => {
                 <Text style={styles.darkButtonText}>Change Avatar</Text>
               </View>
             </Pressable>
-            <Pressable style={[styles.darkButton,
-            {
-              alignSelf: 'center',
-            }
-            ]}>
+            <Pressable
+              onPress={() => setUserAvatar()}
+              style={[
+                styles.darkButton,
+                { alignSelf: 'center' }
+              ]}>
               <View style={styles.iconStyle}>
                 <Ionicons style={styles.darkButtonText} name="person-remove-outline" />
                 <Text style={styles.darkButtonText}>Remove Avatar</Text>
