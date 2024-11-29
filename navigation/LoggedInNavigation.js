@@ -1,11 +1,28 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 
-import { Image } from 'react-native'
+import { Image, View } from 'react-native'
 import Profile from '../screens/Profile'
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useState, useEffect } from 'react'
+import Ionicons from '@expo/vector-icons/Ionicons'
 
 const LoggedInNavigation = () => {
 
   const Stack = createNativeStackNavigator()
+  const [userAvatar, setUserAvatar] = useState('')
+
+  const getUserData = async () => {
+    try {
+      const userAvatarRecorded = await AsyncStorage.getItem('userAvatar')
+      userAvatarRecorded && userAvatarRecorded !== '' && setUserAvatar(userAvatarRecorded)
+    } catch (error) {
+      console.error('Error retrieving User Data:', error);
+    }
+  }
+
+  useEffect(() => {
+    getUserData();
+  }, [])
 
   const HeaderLogo = () => {
     return (
@@ -25,17 +42,21 @@ const LoggedInNavigation = () => {
 
   const HeaderUser = () => {
     return (
-      <Image
-        source={require('../assets/user.png')}
-        style={{
-          height: 40,
-          width: 40,
-          marginRight: 20
-        }}
-        resizeMode={'contain'}
-        accessible={true}
-        accessibilityLabel={"User Avatar"}
-      />
+      <View>
+        {userAvatar ? <Image
+          source={{ uri: userAvatar }
+          }
+          style={{
+            height: 40,
+            width: 40,
+            marginRight: 20
+          }
+          }
+          resizeMode={'contain'}
+          accessible={true}
+          accessibilityLabel={"User Avatar"}
+        /> : <Ionicons style={{ fontSize: 40, marginRight: 20 }} name="person-circle" />
+        }</View>
     )
   }
   return (

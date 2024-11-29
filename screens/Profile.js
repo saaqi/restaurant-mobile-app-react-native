@@ -17,9 +17,7 @@ import Ionicons from '@expo/vector-icons/Ionicons'
 import { ValidateEmailField } from '../validators/ValidateEmailField'
 import { ValidatePhoneNumberField } from '../validators/ValidatePhoneNumberField'
 import * as ImagePicker from 'expo-image-picker'
-
-
-import AsyncStorageRenderAllItems from '../validators/AsyncStorageRenderAllItems';
+// import AsyncStorageRenderAllItems from '../validators/AsyncStorageRenderAllItems'
 
 
 const Profile = () => {
@@ -30,7 +28,7 @@ const Profile = () => {
   const [userEmail, setUserEmail] = useState('')
   const [userPhone, setUserPhone] = useState('')
 
-  const [userAvatar, setUserAvatar] = useState('');
+  const [userAvatar, setUserAvatar] = useState('')
 
   const [deliveryStatus, setDeliveryStatus] = useState(true)
   const [passwordChanges, setPasswordChanges] = useState(true)
@@ -39,18 +37,14 @@ const Profile = () => {
 
 
   const pickImage = async () => {
-    // No permissions request is necessary for launching the image library
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ['images'],
       allowsEditing: true,
       aspect: [1, 1],
       quality: 1,
-    });
-
-    if (!result.canceled) {
-      setUserAvatar(result.assets[0].uri);
-    }
-  };
+    })
+    if (!result.canceled) setUserAvatar(result.assets[0].uri)
+  }
 
   const handleUserDetails = async () => {
     try {
@@ -63,18 +57,18 @@ const Profile = () => {
         ['passwordChanges', passwordChanges ? 'true' : 'false'],
         ['specialOffers', specialOffers ? 'true' : 'false'],
         ['newsLetter', newsLetter ? 'true' : 'false'],
-      ]);
-      setLoading(true);
+      ])
+      setLoading(true)
     } catch (error) {
       console.error('Error storing user data:', error);
     } finally {
       setLoading(false);
     }
-  };
+  }
 
   const handleCheckboxChange = (isChecked, setIsChecked) => {
     setIsChecked(!isChecked);
-  };
+  }
 
   const getUserData = async () => {
     try {
@@ -106,7 +100,7 @@ const Profile = () => {
     } finally {
       setLoading(false)
     }
-  };
+  }
 
   const removeUserData = async () => {
     try {
@@ -136,11 +130,11 @@ const Profile = () => {
     } finally {
       setLoading(false)
     }
-  };
+  }
 
   useEffect(() => {
     getUserData();
-  }, []);
+  }, [])
 
   const setLogout = async () => {
     try {
@@ -151,7 +145,7 @@ const Profile = () => {
     } finally {
       setLoading(false)
     }
-  };
+  }
 
   return (
     <View style={styles.container}>
