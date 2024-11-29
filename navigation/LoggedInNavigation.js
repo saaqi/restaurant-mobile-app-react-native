@@ -49,12 +49,12 @@ const LoggedInNavigation = () => {
           style={{
             height: 40,
             width: 40,
-            marginRight: 10
+            marginRight: 11
           }}
           resizeMode={'contain'}
           accessible={true}
           accessibilityLabel={"User Avatar"}
-        /> : <Ionicons style={{ fontSize: 40, marginRight: 20 }} name="person-circle" />
+        /> : <Ionicons style={{ fontSize: 40, marginRight: 11 }} name="person-circle" />
         }</View>
     )
   }

@@ -191,9 +191,9 @@ const Profile = () => {
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
           >
             <ScrollView
-              style={{ marginBottom: 20 }}
+              style={{ marginBottom: 20, paddingHorizontal: 10 }}
               horizontal={false}
-              indicatorStyle={'#333'}
+              // indicatorStyle={'#333'}
               keyboardDismissMode="on-drag"
             >
               <TextInput
