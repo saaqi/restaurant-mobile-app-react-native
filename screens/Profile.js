@@ -19,7 +19,7 @@ import { ValidatePhoneNumberField } from '../validators/ValidatePhoneNumberField
 import * as ImagePicker from 'expo-image-picker'
 
 
-// import AsyncStorageRenderAllItems from '../validators/AsyncStorageRenderAllItems';
+import AsyncStorageRenderAllItems from '../validators/AsyncStorageRenderAllItems';
 
 
 const Profile = () => {
@@ -34,8 +34,8 @@ const Profile = () => {
 
   const [deliveryStatus, setDeliveryStatus] = useState(true)
   const [passwordChanges, setPasswordChanges] = useState(true)
-  const [specialOffers, setSpecialOffers] = useState(true)
-  const [newsLetter, setNewsLetter] = useState(true)
+  const [specialOffers, setSpecialOffers] = useState(false)
+  const [newsLetter, setNewsLetter] = useState(false)
 
 
   const pickImage = async () => {
@@ -114,8 +114,8 @@ const Profile = () => {
         ['userPhone', ''],
         ['deliveryStatus', 'true'],
         ['passwordChanges', 'true'],
-        ['specialOffers', 'true'],
-        ['newsLetter', 'true'],
+        ['specialOffers', 'false'],
+        ['newsLetter', 'false'],
       ]);
       setUserAvatar('')
       setUserName('')
@@ -124,8 +124,8 @@ const Profile = () => {
 
       setDeliveryStatus(true)
       setPasswordChanges(true)
-      setSpecialOffers(true)
-      setNewsLetter(true)
+      setSpecialOffers(false)
+      setNewsLetter(false)
 
     } catch (error) {
       console.error('Error retrieving User Data:', error);
@@ -313,7 +313,7 @@ const Profile = () => {
             </Pressable>
           </View>
 
-          {/* <AsyncStorageRenderAllItems /> */}
+          <AsyncStorageRenderAllItems />
         </ScrollView>
       )}
     </View>
