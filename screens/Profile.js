@@ -8,9 +8,9 @@ import {
   Platform,
   ActivityIndicator,
   Pressable,
-  Image,
-  CheckBox
+  Image
 } from 'react-native'
+import CheckBox from 'expo-checkbox';
 import { useState, useEffect } from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Ionicons from '@expo/vector-icons/Ionicons'

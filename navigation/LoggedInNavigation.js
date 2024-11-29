@@ -30,8 +30,8 @@ const LoggedInNavigation = () => {
         source={require('../assets/littleLemonLogo.png')}
         style={{
           height: 40,
+          width: 147,
           alignSelf: 'center',
-          marginVertical: 10,
         }}
         resizeMode={'contain'}
         accessible={true}
@@ -49,9 +49,8 @@ const LoggedInNavigation = () => {
           style={{
             height: 40,
             width: 40,
-            marginRight: 20
-          }
-          }
+            marginRight: 10
+          }}
           resizeMode={'contain'}
           accessible={true}
           accessibilityLabel={"User Avatar"}
