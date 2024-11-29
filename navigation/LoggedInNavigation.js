@@ -22,7 +22,7 @@ const LoggedInNavigation = () => {
 
   useEffect(() => {
     getUserData();
-  }, [])
+  }, [userAvatar])
 
   const HeaderLogo = () => {
     return (

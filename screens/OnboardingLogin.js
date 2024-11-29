@@ -51,11 +51,10 @@ export default function OnboardingLogin({ navigation }) {
     } finally {
       setLoading(false)
     }
-  };
-
+  }
   useEffect(() => {
-    getUserData();
-  }, []);
+    getUserData()
+  }, [])
 
   return (
     <View style={styles.container}>

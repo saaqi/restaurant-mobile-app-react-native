@@ -101,6 +101,9 @@ const Profile = () => {
       setLoading(false)
     }
   }
+  useEffect(() => {
+    getUserData()
+  }, [])
 
   const removeUserData = async () => {
     try {
@@ -131,10 +134,6 @@ const Profile = () => {
       setLoading(false)
     }
   }
-
-  useEffect(() => {
-    getUserData();
-  }, [])
 
   const setLogout = async () => {
     try {
@@ -287,7 +286,7 @@ const Profile = () => {
               ]}
             >
               <View style={styles.iconStyle}>
-                <Ionicons style={styles.darkButtonText} name="save" />
+                <Ionicons style={styles.darkButtonText} name="save-outline" />
                 <Text style={styles.darkButtonText}>Save Details</Text>
               </View>
             </Pressable>
@@ -298,7 +297,7 @@ const Profile = () => {
               style={[styles.dangerButton, {flex: .5}]}
             >
               <View style={styles.iconStyle}>
-                <Ionicons style={styles.dangerButtonText} name="trash" />
+                <Ionicons style={styles.dangerButtonText} name="trash-outline" />
                 <Text style={styles.dangerButtonText}>Discard Details</Text>
               </View>
             </Pressable>
@@ -308,7 +307,7 @@ const Profile = () => {
               setLogout()
             }>
             <View style={styles.iconStyle}>
-              <Ionicons style={styles.darkButtonText} name="log-out" />
+              <Ionicons style={styles.darkButtonText} name="log-out-outline" />
               <Text style={styles.darkButtonText}>Logout</Text>
             </View>
           </Pressable>
