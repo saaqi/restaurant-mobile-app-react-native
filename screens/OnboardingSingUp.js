@@ -49,8 +49,8 @@ export default function OnboardingSingUp({ navigation }) {
       setLoading(true);
       const userNameRecoded = await AsyncStorage.getItem('userName');
       const userEmailRecorded = await AsyncStorage.getItem('userEmail');
-      userNameRecoded !== '' ? setUserName(userNameRecoded) : ''
-      userEmailRecorded !== '' ? setUserEmail(userEmailRecorded) : ''
+      userNameRecoded && userNameRecoded !== '' && setUserName(userNameRecoded)
+      userEmailRecorded && userEmailRecorded !== '' && setUserEmail(userEmailRecorded)
     } catch (error) {
       console.error('Error retrieving User Data:', error);
     } finally {

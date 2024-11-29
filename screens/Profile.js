@@ -9,7 +9,6 @@ import {
   ActivityIndicator,
   Pressable,
   Image,
-  Dimensions,
   CheckBox
 } from 'react-native'
 import { useState, useEffect } from 'react'
@@ -25,17 +24,15 @@ import * as ImagePicker from 'expo-image-picker'
 
 const Profile = () => {
 
-  const windowWidth = Dimensions.get('window').width
-
   const [isLoading, setLoading] = useState(false)
 
   const [userName, setUserName] = useState('')
   const [userEmail, setUserEmail] = useState('')
   const [userPhone, setUserPhone] = useState('')
 
-  const [userAvatar, setUserAvatar] = useState();
+  const [userAvatar, setUserAvatar] = useState('');
 
-  const [orderStatus, setOrderStatus] = useState(true)
+  const [deliveryStatus, setDeliveryStatus] = useState(true)
   const [passwordChanges, setPasswordChanges] = useState(true)
   const [specialOffers, setSpecialOffers] = useState(true)
   const [newsLetter, setNewsLetter] = useState(true)
@@ -44,9 +41,9 @@ const Profile = () => {
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
     let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ['images', 'videos'],
+      mediaTypes: ['images'],
       allowsEditing: true,
-      aspect: [4, 3],
+      aspect: [1, 1],
       quality: 1,
     });
 
@@ -58,10 +55,11 @@ const Profile = () => {
   const handleUserDetails = async () => {
     try {
       await AsyncStorage.multiSet([
+        ['userAvatar', userAvatar],
         ['userName', userName],
         ['userEmail', userEmail],
         ['userPhone', userPhone],
-        ['orderStatus', orderStatus ? 'true' : 'false'],
+        ['deliveryStatus', deliveryStatus ? 'true' : 'false'],
         ['passwordChanges', passwordChanges ? 'true' : 'false'],
         ['specialOffers', specialOffers ? 'true' : 'false'],
         ['newsLetter', newsLetter ? 'true' : 'false'],
@@ -81,21 +79,23 @@ const Profile = () => {
   const getUserData = async () => {
     try {
       setLoading(true);
-      const userNameRecoded = await AsyncStorage.getItem('userName');
-      const userEmailRecorded = await AsyncStorage.getItem('userEmail');
-      const userPhoneRecorded = await AsyncStorage.getItem('userPhone');
-      userNameRecoded && userNameRecoded !== '' ? setUserName(userNameRecoded) : ''
-      userEmailRecorded && userEmailRecorded !== '' ? setUserEmail(userEmailRecorded) : ''
-      userPhoneRecorded && userPhoneRecorded !== '' ? setUserPhone(userPhoneRecorded) : ''
+      const userAvatarRecorded = await AsyncStorage.getItem('userAvatar')
+      userAvatarRecorded && userAvatarRecorded !== '' && setUserAvatar(userAvatarRecorded)
+      const userNameRecorded = await AsyncStorage.getItem('userName')
+      userNameRecorded && userNameRecorded !== '' && setUserName(userNameRecorded)
+      const userEmailRecorded = await AsyncStorage.getItem('userEmail')
+      userEmailRecorded && userEmailRecorded !== '' && setUserEmail(userEmailRecorded)
+      const userPhoneRecorded = await AsyncStorage.getItem('userPhone')
+      userPhoneRecorded && userPhoneRecorded !== '' && setUserPhone(userPhoneRecorded)
 
-      const orderStatusRecorded = await AsyncStorage.getItem('orderStatus');
-      const passwordChangesRecorded = await AsyncStorage.getItem('passwordChanges');
-      const specialOffersRecorded = await AsyncStorage.getItem('specialOffers');
-      const newsLetterRecorded = await AsyncStorage.getItem('newsLetter');
-      orderStatusRecorded && orderStatusRecorded === 'flase' ? setOrderStatus(false) : ''
-      passwordChangesRecorded && passwordChangesRecorded === 'false' ? setPasswordChanges(false) : ''
-      specialOffersRecorded && specialOffersRecorded === 'false' ? setSpecialOffers(false) : ''
-      newsLetterRecorded && newsLetterRecorded === 'false' ? setNewsLetter(false) : ''
+      const deliveryStatusRecorded = await AsyncStorage.getItem('deliveryStatus')
+      deliveryStatusRecorded && deliveryStatusRecorded === 'false' && setDeliveryStatus(false)
+      const passwordChangesRecorded = await AsyncStorage.getItem('passwordChanges')
+      passwordChangesRecorded && passwordChangesRecorded === 'false' && setPasswordChanges(false)
+      const specialOffersRecorded = await AsyncStorage.getItem('specialOffers')
+      specialOffersRecorded && specialOffersRecorded === 'false' && setSpecialOffers(false)
+      const newsLetterRecorded = await AsyncStorage.getItem('newsLetter')
+      newsLetterRecorded && newsLetterRecorded === 'false' && setNewsLetter(false)
 
     } catch (error) {
       console.error('Error retrieving User Data:', error);
@@ -108,20 +108,21 @@ const Profile = () => {
     try {
       setLoading(true);
       await AsyncStorage.multiSet([
+        ['userAvatar', ''],
         ['userName', ''],
         ['userEmail', ''],
         ['userPhone', ''],
-        ['setUserAvatar', ''],
-        ['orderStatus', 'true'],
+        ['deliveryStatus', 'true'],
         ['passwordChanges', 'true'],
         ['specialOffers', 'true'],
         ['newsLetter', 'true'],
       ]);
+      setUserAvatar('')
       setUserName('')
       setUserEmail('')
       setUserPhone('')
 
-      setOrderStatus(true)
+      setDeliveryStatus(true)
       setPasswordChanges(true)
       setSpecialOffers(true)
       setNewsLetter(true)
@@ -174,11 +175,11 @@ const Profile = () => {
               ]}>
               <View style={styles.iconStyle}>
                 <Ionicons style={styles.darkButtonText} name="person-add-outline" />
-                <Text style={styles.darkButtonText}>Change Avatar</Text>
+                <Text style={styles.darkButtonText}>{userAvatar ? 'Change Avatar' : 'Set Avatar'}</Text>
               </View>
             </Pressable>
             <Pressable
-              onPress={() => setUserAvatar()}
+              onPress={() => setUserAvatar('')}
               style={[
                 styles.darkButton,
                 { alignSelf: 'center' }
@@ -238,48 +239,49 @@ const Profile = () => {
             </ScrollView>
           </KeyboardAvoidingView>
 
-          <Pressable
-            style={styles.darkButton} onPress={() =>
-              setLogout()
-            }>
-            <View style={styles.iconStyle}>
-              <Ionicons style={styles.darkButtonText} name="log-out" />
-              <Text style={styles.darkButtonText}>Logout</Text>
+
+          <View style={{marginBottom: 30}}>
+            <Pressable
+              style={[styles.darkButton, { marginBottom: 30 }]} onPress={() =>
+                setLogout()
+              }>
+              <View style={styles.iconStyle}>
+                <Ionicons style={styles.darkButtonText} name="log-out" />
+                <Text style={styles.darkButtonText}>Logout</Text>
+              </View>
+            </Pressable>
+
+            <View style={{ flexDirection: 'row', gap: 10 }}>
+              <CheckBox
+                value={deliveryStatus}
+                onValueChange={(value) => handleCheckboxChange(deliveryStatus, setDeliveryStatus)}
+              />
+              <Text style={styles.bodyText}>Order Delivery Status</Text>
             </View>
-          </Pressable>
-
-          <Text style={styles.headingText}>E-Mail Notifications</Text>
-
-          <View style={{ flexDirection: 'row', gap: 10 }}>
-            <CheckBox
-              value={orderStatus}
-              onValueChange={(value) => handleCheckboxChange(orderStatus, setOrderStatus)}
-            />
-            <Text style={styles.bodyText}>Order Statuses</Text>
-          </View>
-          <View style={{ flexDirection: 'row', gap: 10 }}>
-            <CheckBox
-              value={passwordChanges}
-              onValueChange={(value) => handleCheckboxChange(passwordChanges, setPasswordChanges)}
-            />
-            <Text style={styles.bodyText}>Passwrod Changes</Text>
-          </View>
-          <View style={{ flexDirection: 'row', gap: 10 }}>
-            <CheckBox
-              value={specialOffers}
-              onValueChange={(value) => handleCheckboxChange(specialOffers, setSpecialOffers)}
-            />
-            <Text style={styles.bodyText}>Special Offers</Text>
-          </View>
-          <View style={{ flexDirection: 'row', gap: 10 }}>
-            <CheckBox
-              value={newsLetter}
-              onValueChange={(value) => handleCheckboxChange(newsLetter, setNewsLetter)}
-            />
-            <Text style={styles.bodyText}>Newsletter</Text>
+            <View style={{ flexDirection: 'row', gap: 10 }}>
+              <CheckBox
+                value={passwordChanges}
+                onValueChange={(value) => handleCheckboxChange(passwordChanges, setPasswordChanges)}
+              />
+              <Text style={styles.bodyText}>Passwrod Changes</Text>
+            </View>
+            <View style={{ flexDirection: 'row', gap: 10 }}>
+              <CheckBox
+                value={specialOffers}
+                onValueChange={(value) => handleCheckboxChange(specialOffers, setSpecialOffers)}
+              />
+              <Text style={styles.bodyText}>Special Offers</Text>
+            </View>
+            <View style={{ flexDirection: 'row', gap: 10 }}>
+              <CheckBox
+                value={newsLetter}
+                onValueChange={(value) => handleCheckboxChange(newsLetter, setNewsLetter)}
+              />
+              <Text style={styles.bodyText}>Newsletter</Text>
+            </View>
           </View>
 
-          <View style={{ flexDirection: 'row', gap: 10 }}>
+          <View style={{ flexDirection: 'row', gap: 10, alignItems: 'center', justifyContent: 'center' }}>
 
             <Pressable
               onPress={() => {
@@ -290,19 +292,19 @@ const Profile = () => {
               }
               style={[
                 userName === '' || !ValidateEmailField(userEmail) || !ValidatePhoneNumberField(userPhone) ?
-                  styles.subButtonDisabled : styles.primaryButton
+                  styles.subButtonDisabled : styles.primaryButton, {flex: .5}
               ]}
             >
               <View style={styles.iconStyle}>
                 <Ionicons style={styles.darkButtonText} name="save" />
-                <Text style={styles.darkButtonText}>Save Changes</Text>
+                <Text style={styles.darkButtonText}>Save Details</Text>
               </View>
             </Pressable>
             <Pressable
               onPress={() => {
                 removeUserData();
               }}
-              style={styles.dangerButton}
+              style={[styles.dangerButton, {flex: .5}]}
             >
               <View style={styles.iconStyle}>
                 <Ionicons style={styles.dangerButtonText} name="trash" />
