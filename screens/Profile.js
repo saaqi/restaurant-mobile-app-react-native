@@ -89,13 +89,17 @@ const Profile = () => {
       userPhoneRecorded && userPhoneRecorded !== '' && setUserPhone(userPhoneRecorded)
 
       const deliveryStatusRecorded = await AsyncStorage.getItem('deliveryStatus')
-      deliveryStatusRecorded && deliveryStatusRecorded === 'false' && setDeliveryStatus(false)
+      deliveryStatusRecorded && deliveryStatusRecorded === 'false' ?
+        setDeliveryStatus(false) : setDeliveryStatus(true)
       const passwordChangesRecorded = await AsyncStorage.getItem('passwordChanges')
-      passwordChangesRecorded && passwordChangesRecorded === 'false' && setPasswordChanges(false)
+      passwordChangesRecorded && passwordChangesRecorded === 'false' ?
+        setPasswordChanges(false) : setPasswordChanges(true)
       const specialOffersRecorded = await AsyncStorage.getItem('specialOffers')
-      specialOffersRecorded && specialOffersRecorded === 'false' && setSpecialOffers(false)
+      specialOffersRecorded && specialOffersRecorded === 'false' ?
+        setSpecialOffers(false) : setSpecialOffers(true)
       const newsLetterRecorded = await AsyncStorage.getItem('newsLetter')
-      newsLetterRecorded && newsLetterRecorded === 'false' && setNewsLetter(false)
+      newsLetterRecorded && newsLetterRecorded === 'false' ?
+        setNewsLetter(false) : setNewsLetter(true)
 
     } catch (error) {
       console.error('Error retrieving User Data:', error);
@@ -194,6 +198,7 @@ const Profile = () => {
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
           >
             <ScrollView
+              style={{ marginBottom: 20 }}
               horizontal={false}
               indicatorStyle={'#333'}
               keyboardDismissMode="on-drag"
@@ -232,7 +237,7 @@ const Profile = () => {
                       userName === '' ? 'Please Enter your full name to contiue.' :
                         !ValidateEmailField(userEmail) ? 'Please Enter your Email to continue' :
                           !ValidatePhoneNumberField(userPhone) ? 'Please enter your phone number in the format: (123) 456-7890 or +1 (123) 456-7890.' :
-                            ""
+                            ''
                     }
                   </Text>
                 )}
@@ -240,16 +245,8 @@ const Profile = () => {
           </KeyboardAvoidingView>
 
 
-          <View style={{marginBottom: 30}}>
-            <Pressable
-              style={[styles.darkButton, { marginBottom: 30 }]} onPress={() =>
-                setLogout()
-              }>
-              <View style={styles.iconStyle}>
-                <Ionicons style={styles.darkButtonText} name="log-out" />
-                <Text style={styles.darkButtonText}>Logout</Text>
-              </View>
-            </Pressable>
+          <View style={{ marginBottom: 30 }}>
+            <Text style={styles.headingText}>Select the notifications you would like to receive:</Text>
 
             <View style={{ flexDirection: 'row', gap: 10 }}>
               <CheckBox
@@ -312,8 +309,17 @@ const Profile = () => {
               </View>
             </Pressable>
           </View>
+          <Pressable
+            style={[styles.darkButton, { marginBottom: 30 }]} onPress={() =>
+              setLogout()
+            }>
+            <View style={styles.iconStyle}>
+              <Ionicons style={styles.darkButtonText} name="log-out" />
+              <Text style={styles.darkButtonText}>Logout</Text>
+            </View>
+          </Pressable>
 
-          <AsyncStorageRenderAllItems />
+          {/* <AsyncStorageRenderAllItems /> */}
         </ScrollView>
       )}
     </View>

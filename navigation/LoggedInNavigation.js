@@ -30,7 +30,7 @@ const LoggedInNavigation = () => {
         style={{
           height: 40,
           width: 40,
-          marginRight: 11
+          marginRight: 20
         }}
         resizeMode={'contain'}
         accessible={true}
