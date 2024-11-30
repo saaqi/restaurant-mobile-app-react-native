@@ -60,18 +60,7 @@ export const Index = () => {
 
   useEffect(() => {
     setInitialUserData()
-  }, [
-    // userName,
-    // userEmail,
-    // userPhone,
-    // userAvatar,
-    // newsLetter,
-    // userLoggedIn,
-    // userOnBoarded,
-    // specialOffers,
-    // deliveryStatus,
-    // passwordChanges
-  ])
+  }, [])
 
   return (
     <SafeAreaView style={{ flex: 1, justifyContent: 'center' }}>

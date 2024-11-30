@@ -112,7 +112,7 @@ export default function Profile() {
         <View style={{
           flexDirection: 'row',
           gap: 20,
-          marginBottom: 20,
+          marginVertical: 20,
           justifyContent: 'center',
           alignItems: 'center'
         }}>
@@ -231,9 +231,7 @@ export default function Profile() {
         <View style={{ flexDirection: 'row', gap: 10, alignItems: 'center', justifyContent: 'center' }}>
 
           <Pressable
-            onPress={() => {
-              handleUserDetails()
-            }}
+            onPress={() => handleUserDetails()}
             disabled={
               userName === '' ||
               !ValidateEmailField(userEmail) ||
