@@ -4,6 +4,7 @@ import OnBoardingNavigation from './navigation/OnBoardingNavigation';
 import LoggedInNavigation from './navigation/LoggedInNavigation';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useState, useEffect } from 'react'
+import { GlobalStateProvider } from './GlobalState';
 
 /*
 App Colors ----
@@ -35,13 +36,15 @@ export default function App() {
   }, []);
 
   return (
-    <SafeAreaView style={{ flex: 1, justifyContent: 'center' }}>
-      <NavigationContainer>
-        {isLoading ? <ActivityIndicator /> :
-          userLoggedIn ? <LoggedInNavigation /> : <OnBoardingNavigation />
-        }
-      </NavigationContainer>
-    </SafeAreaView>
+    <GlobalStateProvider>
+      <SafeAreaView style={{ flex: 1, justifyContent: 'center' }}>
+        <NavigationContainer>
+          {isLoading ? <ActivityIndicator /> :
+            userLoggedIn ? <LoggedInNavigation /> : <OnBoardingNavigation />
+          }
+        </NavigationContainer>
+      </SafeAreaView>
+    </GlobalStateProvider>
 
   );
 }

@@ -11,33 +11,33 @@ import {
   Image
 } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
-import CheckBox from 'expo-checkbox';
-import { useState, useEffect } from 'react'
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import Ionicons from '@expo/vector-icons/Ionicons'
+import { useState, useEffect, useContext } from 'react'
 import { ValidateEmailField } from '../validators/ValidateEmailField'
 import { ValidatePhoneNumberField } from '../validators/ValidatePhoneNumberField'
+import { GlobalContext } from '../GlobalState'
+import CheckBox from 'expo-checkbox'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import Ionicons from '@expo/vector-icons/Ionicons'
 import * as ImagePicker from 'expo-image-picker'
 // import AsyncStorageRenderAllItems from '../validators/AsyncStorageRenderAllItems'
 
-
 const Profile = () => {
 
-  const [isLoading, setLoading] = useState(false)
+  const {
+    globalUserAvatar, globalSetUserAvatar,
+    userName, setUserName,
+    userEmail, setUserEmail,
+    userPhone, setUserPhone,
+    isLoading, setLoading,
+    deliveryStatus, setDeliveryStatus,
+    passwordChanges, setPasswordChanges,
+    specialOffers, setSpecialOffers,
+    newsLetter, setNewsLetter,
+  } = useContext(GlobalContext);
 
-  const [userName, setUserName] = useState('')
-  const [userEmail, setUserEmail] = useState('')
-  const [userPhone, setUserPhone] = useState('')
-
-  const [userAvatar, setUserAvatar] = useState('')
-
-  const [deliveryStatus, setDeliveryStatus] = useState(true)
-  const [passwordChanges, setPasswordChanges] = useState(true)
-  const [specialOffers, setSpecialOffers] = useState(false)
-  const [newsLetter, setNewsLetter] = useState(false)
+  const [userAvatar, setUserAvatar] = useState(globalUserAvatar)
 
   const navigation = useNavigation()
-
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -46,7 +46,9 @@ const Profile = () => {
       aspect: [1, 1],
       quality: 1,
     })
-    !result.canceled && setUserAvatar(result.assets[0].uri)
+    !result.canceled &&
+      setUserAvatar(result.assets[0].uri),
+      globalSetUserAvatar(result.assets[0].uri)
   }
 
   const handleUserDetails = async () => {
