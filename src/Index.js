@@ -47,11 +47,11 @@ export const Index = () => {
       passwordChangesRecorded && passwordChangesRecorded === 'false' ?
         setPasswordChanges(false) : setPasswordChanges(true)
       const specialOffersRecorded = await AsyncStorage.getItem('specialOffers')
-      specialOffersRecorded && specialOffersRecorded === 'false' ?
-        setSpecialOffers(false) : setSpecialOffers(true)
+      specialOffersRecorded && specialOffersRecorded === 'true' ?
+        setSpecialOffers(true) : setSpecialOffers(false)
       const newsLetterRecorded = await AsyncStorage.getItem('newsLetter')
-      newsLetterRecorded && newsLetterRecorded === 'false' ?
-        setNewsLetter(false) : setNewsLetter(true)
+      newsLetterRecorded && newsLetterRecorded === 'true' ?
+        setNewsLetter(true) : setNewsLetter(false)
 
     } catch (error) {
       console.error('Error retrieving User Data:', error);

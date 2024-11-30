@@ -152,7 +152,7 @@ export default function Profile() {
           <ScrollView
             style={{ marginBottom: 20 }}
             horizontal={false}
-            keyboardDismissMode="on-drag"
+            // keyboardDismissMode="on-drag"
           >
             <TextInput
               style={styles.inputField}
