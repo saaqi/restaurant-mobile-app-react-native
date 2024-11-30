@@ -19,7 +19,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import * as ImagePicker from 'expo-image-picker'
 
-export default function Profile() {
+export default function Profile({navigation}) {
 
   const {
     userAvatar, setUserAvatar,
@@ -30,7 +30,8 @@ export default function Profile() {
     passwordChanges, setPasswordChanges,
     specialOffers, setSpecialOffers,
     newsLetter, setNewsLetter,
-    setUserLoggedIn
+    setUserLoggedIn,
+    userOnBoarded, setUserOnBoarded
   } = useContext(GlobalContext);
 
   // const navigation = useNavigation()
@@ -52,11 +53,14 @@ export default function Profile() {
         ['userName', userName],
         ['userEmail', userEmail],
         ['userPhone', userPhone],
+        ['userOnBoarded', 'true'],
         ['deliveryStatus', deliveryStatus ? 'true' : 'false'],
         ['passwordChanges', passwordChanges ? 'true' : 'false'],
         ['specialOffers', specialOffers ? 'true' : 'false'],
         ['newsLetter', newsLetter ? 'true' : 'false'],
       ])
+      setUserOnBoarded(true)
+      navigation.navigate('Home')
     } catch (error) {
       console.error('Error storing user data:', error);
     }
@@ -97,7 +101,11 @@ export default function Profile() {
     try {
       // removeUserData()
       setUserLoggedIn(false)
-      await AsyncStorage.setItem('userLoggedIn', 'false')
+      setUserOnBoarded(false)
+      await AsyncStorage.multiSet([
+        ['userLoggedIn', 'false'],
+        ['userOnBoarded', 'false'],
+      ]);
     } catch (error) {
       console.error('Error retrieving User Data:', error);
     }
@@ -152,7 +160,7 @@ export default function Profile() {
           <ScrollView
             style={{ marginBottom: 20 }}
             horizontal={false}
-            // keyboardDismissMode="on-drag"
+          // keyboardDismissMode="on-drag"
           >
             <TextInput
               style={styles.inputField}
@@ -228,8 +236,14 @@ export default function Profile() {
           </View>
         </View>
 
-        <View style={{ flexDirection: 'row', gap: 10, alignItems: 'center', justifyContent: 'center' }}>
-
+        <View style={{
+          flexDirection: 'row',
+          gap: 10,
+          flexWrap: 'wrap',
+          rowGap: 20,
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}>
           <Pressable
             onPress={() => handleUserDetails()}
             disabled={
@@ -250,9 +264,7 @@ export default function Profile() {
             </View>
           </Pressable>
           <Pressable
-            onPress={() => {
-              removeUserData();
-            }}
+            onPress={() => removeUserData()}
             style={[styles.dangerButton, { flex: .5 }]}
           >
             <View style={styles.iconStyle}>
@@ -260,16 +272,16 @@ export default function Profile() {
               <Text style={styles.dangerButtonText}>Discard Details</Text>
             </View>
           </Pressable>
-        </View>
         <Pressable
-          style={[styles.darkButton, { marginBottom: 30 }]} onPress={() =>
-            setLogout()
-          }>
+          style={[styles.darkButton, {flexBasis: '100%'}]}
+          onPress={() => setLogout()}
+        >
           <View style={styles.iconStyle}>
             <Ionicons style={styles.darkButtonText} name="log-out-outline" />
             <Text style={styles.darkButtonText}>Logout</Text>
           </View>
         </Pressable>
+        </View>
 
       </ScrollView>
 

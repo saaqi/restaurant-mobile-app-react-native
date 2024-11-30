@@ -36,7 +36,7 @@ export const Index = () => {
       const userLoggedInRecorded = await AsyncStorage.getItem('userLoggedIn')
       userLoggedInRecorded && userLoggedInRecorded === 'true' ?
         setUserLoggedIn(true) : setUserLoggedIn(false)
-      const userOnBoardRecorded = await AsyncStorage.getItem('userAvatar')
+      const userOnBoardRecorded = await AsyncStorage.getItem('userOnBoarded')
       userOnBoardRecorded && userOnBoardRecorded === 'true' ?
         setUserOnBoarded(true) : setUserOnBoarded(false)
 

@@ -5,6 +5,7 @@ import Welcome from './screens/Welcome'
 import Login from './screens/Login'
 import SingUp from './screens/SingUp'
 import Profile from './screens/Profile'
+import Home from './screens/Home'
 import { useContext } from 'react'
 import { GlobalContext } from './GlobalState'
 import Ionicons from '@expo/vector-icons/Ionicons'
@@ -13,7 +14,7 @@ export default function Navigation() {
 
   const Stack = createNativeStackNavigator()
   const {
-    userAvatar, userLoggedIn
+    userAvatar, userLoggedIn, userOnBoarded
   } = useContext(GlobalContext)
 
   const HeaderLogo = () => {
@@ -56,7 +57,11 @@ export default function Navigation() {
       </Pressable>
     )
   }
-  const firstScreen = !userLoggedIn ? 'Welcome' : 'Profile'
+
+  const firstScreen = !userLoggedIn && !userOnBoarded ? 'Welcome' :
+    userLoggedIn && !userOnBoarded ? 'Profile' :
+      userLoggedIn && userOnBoarded && 'Home'
+
   return (
     <Stack.Navigator
       initialRouteName={firstScreen}
@@ -68,7 +73,7 @@ export default function Navigation() {
         headerTitle: () => <HeaderLogo />,
       }}
     >
-      {!userLoggedIn ? (
+      {!userLoggedIn && !userOnBoarded ? (
         <>
           <Stack.Screen name="Welcome"
             options={{
@@ -92,7 +97,7 @@ export default function Navigation() {
             component={SingUp}
           />
         </>
-      ) : (
+      ) : userLoggedIn && !userOnBoarded ? (
         <>
           <Stack.Screen name="Profile"
             options={{
@@ -101,8 +106,32 @@ export default function Navigation() {
             }}
             component={Profile}
           />
+          <Stack.Screen name="Home"
+            options={{
+              title: 'Little Lemon - Home',
+              headerRight: () => <HeaderUser />
+            }}
+            component={Home}
+          />
         </>
-      ) }
+      ) : userLoggedIn && userOnBoarded && (
+        <>
+          <Stack.Screen name="Home"
+            options={{
+              title: 'Little Lemon - Home',
+              headerRight: () => <HeaderUser />
+            }}
+            component={Home}
+          />
+          <Stack.Screen name="Profile"
+            options={{
+              title: 'Your Profile Page',
+              headerRight: () => <HeaderUser />
+            }}
+            component={Profile}
+          />
+        </>
+      )}
     </Stack.Navigator>
   )
 }
