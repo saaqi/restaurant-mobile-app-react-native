@@ -1,4 +1,3 @@
-import { StatusBar } from 'expo-status-bar'
 import {
   Text,
   StyleSheet,
@@ -8,18 +7,18 @@ import {
   Dimensions
 } from 'react-native'
 import Ionicons from '@expo/vector-icons/Ionicons'
+// import AsyncStorageRenderAllItems from '../validators/AsyncStorageRenderAllItems'
 
-
-export default function OnboardingWelcome({ navigation }) {
+export default function Welcome({ navigation }) {
 
   const deviceWidth = Dimensions.get('window').width
 
-
   return (
     <View style={styles.container}>
+      {/* <AsyncStorageRenderAllItems /> */}
       <View style={{ flex: .8 }}>
         <Image
-          source={require('../assets/littleLemonLogo.png')}
+          source={require('../../assets/littleLemonLogo.png')}
           style={{
             alignSelf: 'center',
             height: 546,
@@ -57,8 +56,6 @@ export default function OnboardingWelcome({ navigation }) {
           </View>
         </Pressable>
       </View>
-
-      <StatusBar style="auto" />
     </View>
   )
 }
@@ -118,4 +115,4 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     gap: 5
   },
-});
+})

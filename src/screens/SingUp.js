@@ -1,4 +1,3 @@
-import { StatusBar } from 'expo-status-bar'
 import {
   Text,
   TextInput,
@@ -12,56 +11,67 @@ import {
   Dimensions,
   ActivityIndicator,
 } from 'react-native'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
+import { GlobalContext } from '../GlobalState'
 import { ValidateEmailField } from '../validators/ValidateEmailField'
+import { ValidatePasswordField } from '../validators/ValidatePasswordField'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
-
-export default function OnboardingLogin({ navigation }) {
+export default function SingUp({ navigation }) {
 
   const deviceWidth = Dimensions.get('window').width
 
-  const [userEmail, setUserEmail] = useState('')
-  const [userPassword, setUserPassword] = useState('')
+  const {
+    userEmail, setUserEmail,
+    userName, setUserName,
+
+  } = useContext(GlobalContext);
+
   const [isLoading, setLoading] = useState(false)
+  const [userPassword, setUserPassword] = useState('')
+  const [userPasswordConfirm, setUserPasswordConfirm] = useState('')
 
   const handleLogin = async () => {
     try {
-      setLoading(true)
       await AsyncStorage.multiSet([
         ['userLoggedIn', 'true'],
+        ['userName', userName],
         ['userEmail', userEmail]
       ]);
+      setLoading(true);
     } catch (error) {
-      console.error('Error storing userLoggedIn:', error)
+      console.error('Error storing user data:', error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   };
 
   const getUserData = async () => {
     try {
       setLoading(true);
+      const userNameRecoded = await AsyncStorage.getItem('userName');
       const userEmailRecorded = await AsyncStorage.getItem('userEmail');
-      userEmailRecorded && userEmailRecorded !== '' ? setUserEmail(userEmailRecorded) : ''
+      userNameRecoded && userNameRecoded !== '' && setUserName(userNameRecoded)
+      userEmailRecorded && userEmailRecorded !== '' && setUserEmail(userEmailRecorded)
     } catch (error) {
       console.error('Error retrieving User Data:', error);
     } finally {
       setLoading(false)
     }
-  }
+  };
+
   useEffect(() => {
-    getUserData()
-  }, [])
+    getUserData();
+  }, []);
 
   return (
     <View style={styles.container}>
       {isLoading ? (<ActivityIndicator />) : (
         <ScrollView>
           <Image
-            source={require('../assets/littleLemonLogo.png')}
+            source={require('../../assets/littleLemonLogo.png')}
             style={{
               alignSelf: 'center',
               height: 100,
@@ -84,6 +94,14 @@ export default function OnboardingLogin({ navigation }) {
             >
               <TextInput
                 style={styles.inputField}
+                onChangeText={setUserName}
+                placeholder='Your Name'
+                secureTextEntry={false}
+                keyboardType='default'
+                value={userName}
+              />
+              <TextInput
+                style={styles.inputField}
                 onChangeText={setUserEmail}
                 placeholder='Your Email'
                 secureTextEntry={false}
@@ -98,10 +116,23 @@ export default function OnboardingLogin({ navigation }) {
                 keyboardType='default'
                 value={userPassword}
               />
+              <TextInput
+                style={styles.inputField}
+                onChangeText={setUserPasswordConfirm}
+                placeholder='Re-enter Password'
+                secureTextEntry={true}
+                keyboardType='default'
+                value={userPasswordConfirm}
+              />
               {
-                (!ValidateEmailField(userEmail) || userPassword === '') && (
+                (!ValidateEmailField(userEmail) || !ValidatePasswordField(userPassword) || userName === '' || userPassword !== userPasswordConfirm) && (
                   <Text style={styles.alert}>
-                    {!ValidateEmailField(userEmail) ? 'Please Enter your Email to continue' : 'Please enter your password to continue'}
+                    {
+                      userName === '' ? 'Please Enter your full name to contiue.' :
+                        !ValidateEmailField(userEmail) ? 'Please Enter your Email to continue' :
+                          !ValidatePasswordField(userPassword) ? 'Please enter a password with at least 8 characters, including one uppercase letter, one lowercase letter, one number, and one special character.' :
+                            userPassword !== userPasswordConfirm ? 'Passwords do not match' : ''
+                    }
                   </Text>
                 )
               }
@@ -111,39 +142,37 @@ export default function OnboardingLogin({ navigation }) {
                     handleLogin();
                     navigation.navigate('Profile');
                   }}
-                  disabled={userPassword === '' || !ValidateEmailField(userEmail)}
+                  disabled={
+                    userName === '' || !ValidateEmailField(userEmail) || !ValidatePasswordField(userPassword) || userPassword !== userPasswordConfirm
+                  }
                   style={[
-                    userPassword === '' || !ValidateEmailField(userEmail) ?
+                    userName === '' || !ValidateEmailField(userEmail) || !ValidatePasswordField(userPassword) || userPassword !== userPasswordConfirm ?
                       styles.subButtonDisabled : styles.subButton,
                     { flex: 1, alignSelf: 'end' }
                   ]}
                 >
                   <View style={styles.iconStyle}>
-                    <Ionicons style={styles.buttonText} name="log-in-outline" />
-                    <Text style={styles.buttonText}>Login</Text>
+                    <Ionicons style={styles.buttonText} name="person-add" />
+                    <Text style={styles.buttonText}>Sign Up</Text>
                   </View>
                 </Pressable>
               </View>
             </ScrollView>
           </KeyboardAvoidingView>
-          <Text style={styles.bodyText}>Don't have an account yet? Sing up instead! </Text>
+          <Text style={styles.bodyText}>Already have an account? Login instead! </Text>
           <Pressable
             onPress={() => {
-              navigation.navigate('Signup')
+              navigation.navigate('Login')
             }}
             style={styles.singUpButton}
           >
             <View style={styles.iconStyle}>
-              <Ionicons style={styles.signUpbuttonText} name="person-add" />
-              <Text style={styles.signUpbuttonText}>{"Sign Up!"}</Text>
+              <Ionicons style={styles.signUpbuttonText} name="log-in-outline" />
+              <Text style={styles.signUpbuttonText}>Login!</Text>
             </View>
           </Pressable>
-
         </ScrollView>
       )}
-
-
-      <StatusBar style="auto" />
     </View>
   )
 }
@@ -217,4 +246,4 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     gap: 5
   },
-});
+})
