@@ -11,7 +11,7 @@ import {
   Image
 } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
-import { useState, useEffect, useContext } from 'react'
+import { useEffect, useContext } from 'react'
 import { ValidateEmailField } from '../validators/ValidateEmailField'
 import { ValidatePhoneNumberField } from '../validators/ValidatePhoneNumberField'
 import { GlobalContext } from '../GlobalState'
@@ -24,7 +24,7 @@ import * as ImagePicker from 'expo-image-picker'
 const Profile = () => {
 
   const {
-    globalUserAvatar, globalSetUserAvatar,
+    userAvatar, setUserAvatar,
     userName, setUserName,
     userEmail, setUserEmail,
     userPhone, setUserPhone,
@@ -35,8 +35,6 @@ const Profile = () => {
     newsLetter, setNewsLetter,
   } = useContext(GlobalContext);
 
-  const [userAvatar, setUserAvatar] = useState(globalUserAvatar)
-
   const navigation = useNavigation()
 
   const pickImage = async () => {
@@ -46,9 +44,7 @@ const Profile = () => {
       aspect: [1, 1],
       quality: 1,
     })
-    !result.canceled &&
-      setUserAvatar(result.assets[0].uri),
-      globalSetUserAvatar(result.assets[0].uri)
+    !result.canceled && setUserAvatar(result.assets[0].uri)
   }
 
   const handleUserDetails = async () => {

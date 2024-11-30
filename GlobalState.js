@@ -6,7 +6,7 @@ export const GlobalStateProvider = ({ children }) => {
   const [userName, setUserName] = useState('')
   const [userEmail, setUserEmail] = useState('')
   const [userPhone, setUserPhone] = useState('')
-  const [globalUserAvatar, globalSetUserAvatar] = useState('')
+  const [userAvatar, setUserAvatar] = useState('')
   const [userLoggedIn, setUserLoggedIn] = useState(false)
   const [userOnBoarded, setUserOnBoarded] = useState(false)
   const [deliveryStatus, setDeliveryStatus] = useState(true)
@@ -18,7 +18,7 @@ export const GlobalStateProvider = ({ children }) => {
       userName, setUserName,
       userEmail, setUserEmail,
       userPhone, setUserPhone,
-      globalUserAvatar, globalSetUserAvatar,
+      userAvatar, setUserAvatar,
       newsLetter, setNewsLetter,
       userLoggedIn, setUserLoggedIn,
       specialOffers, setSpecialOffers,
