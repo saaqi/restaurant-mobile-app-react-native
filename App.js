@@ -3,8 +3,10 @@ import { NavigationContainer } from '@react-navigation/native'
 import OnBoardingNavigation from './navigation/OnBoardingNavigation';
 import LoggedInNavigation from './navigation/LoggedInNavigation';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useState, useEffect } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { GlobalStateProvider } from './GlobalState';
+import { GlobalContext } from './GlobalState'
+
 
 /*
 App Colors ----
@@ -16,8 +18,13 @@ Light: #F6FCDF
 
 export default function App() {
 
-  const [userLoggedIn, setUserLoggedIn] = useState(false)
-  const [isLoading, setLoading] = useState(false)
+  // const [userLoggedIn, setUserLoggedIn] = useState(false)
+  // const [isLoading, setLoading] = useState(false)
+
+  const {
+    isLoading, setLoading,
+    userLoggedIn, setUserLoggedIn,
+  } = useContext(GlobalContext);
 
   const getUserLoggedIn = async () => {
     try {
