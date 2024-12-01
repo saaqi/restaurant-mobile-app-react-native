@@ -62,11 +62,11 @@ export const Index = () => {
 
   useEffect(() => {
     setInitialUserData()
-  }, [userOnBoarded])
+  }, [])
 
   return (
     <SafeAreaView style={{ flex: 1, justifyContent: 'center' }}>
-      <AsyncStorageRenderAllItems />
+      {/* <AsyncStorageRenderAllItems /> */}
       <NavigationContainer>
         <Navigation />
       </NavigationContainer>

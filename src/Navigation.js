@@ -58,9 +58,10 @@ export default function Navigation() {
     )
   }
 
+
   return (
     <Stack.Navigator
-      // initialRouteName={firstScreen}
+      // initialRouteName={'Home'}
       screenOptions={{
         headerStyle: { backgroundColor: '#F6FCDF' },
         headerTintColor: '#1A1A19',
@@ -69,7 +70,7 @@ export default function Navigation() {
         headerTitle: () => <HeaderLogo />,
       }}
     >
-      {!userLoggedIn && !userOnBoarded ? (
+      {!userLoggedIn ? (
         <>
           <Stack.Screen name="Welcome"
             options={{
@@ -93,24 +94,7 @@ export default function Navigation() {
             component={SingUp}
           />
         </>
-      ) : userLoggedIn && !userOnBoarded ? (
-        <>
-          <Stack.Screen name="Profile"
-            options={{
-              title: 'Your Profile Page',
-              headerRight: () => <HeaderUser />
-            }}
-            component={Profile}
-          />
-          <Stack.Screen name="Home"
-            options={{
-              title: 'Little Lemon - Home',
-              headerRight: () => <HeaderUser />
-            }}
-            component={Home}
-          />
-        </>
-      ) : userLoggedIn && userOnBoarded && (
+      ) : (
         <>
           <Stack.Screen name="Home"
             options={{
