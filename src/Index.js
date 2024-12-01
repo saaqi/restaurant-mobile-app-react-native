@@ -5,9 +5,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useContext, useEffect } from 'react'
 import { GlobalContext } from './GlobalState'
 import { StatusBar } from 'expo-status-bar'
-import AsyncStorageRenderAllItems from './validators/AsyncStorageRenderAllItems'
-
-
+// import AsyncStorageRenderAllItems from './validators/AsyncStorageRenderAllItems'
 
 export const Index = () => {
 
@@ -19,7 +17,7 @@ export const Index = () => {
     setNewsLetter,
     setUserLoggedIn,
     setSpecialOffers,
-    setUserOnBoarded, userOnBoarded,
+    setUserOnBoarded,
     setDeliveryStatus,
     setPasswordChanges,
   } = useContext(GlobalContext);

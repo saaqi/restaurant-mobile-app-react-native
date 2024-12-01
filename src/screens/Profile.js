@@ -312,7 +312,6 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
 
-
   alert: {
     color: '#842029',
     backgroundColor: '#f8d7da',

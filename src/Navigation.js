@@ -14,7 +14,7 @@ export default function Navigation() {
 
   const Stack = createNativeStackNavigator()
   const {
-    userAvatar, userLoggedIn, userOnBoarded
+    userAvatar, userLoggedIn, userName
   } = useContext(GlobalContext)
 
   const HeaderLogo = () => {
@@ -58,7 +58,6 @@ export default function Navigation() {
     )
   }
 
-
   return (
     <Stack.Navigator
       // initialRouteName={'Home'}
@@ -81,14 +80,14 @@ export default function Navigation() {
           />
           <Stack.Screen name="Login"
             options={{
-              title: 'Log in to your account',
+              title: 'Login - Little Lemon',
               headerRight: () => <HeaderUser />
             }}
             component={Login}
           />
           <Stack.Screen name="Signup"
             options={{
-              title: 'Sign up for a new account',
+              title: 'Signup - Little Lemon',
               headerRight: () => <HeaderUser />
             }}
             component={SingUp}
@@ -98,14 +97,14 @@ export default function Navigation() {
         <>
           <Stack.Screen name="Home"
             options={{
-              title: 'Little Lemon - Home',
+              title: 'Home - Little Lemon',
               headerRight: () => <HeaderUser />
             }}
             component={Home}
           />
           <Stack.Screen name="Profile"
             options={{
-              title: 'Your Profile Page',
+              title: userName ? userName + '\'s Profile Page' : 'Profile - Little Lemon',
               headerRight: () => <HeaderUser />
             }}
             component={Profile}
