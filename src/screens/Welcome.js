@@ -7,7 +7,6 @@ import {
   Dimensions
 } from 'react-native'
 import Ionicons from '@expo/vector-icons/Ionicons'
-// import AsyncStorageRenderAllItems from '../validators/AsyncStorageRenderAllItems'
 
 export default function Welcome({ navigation }) {
 
@@ -15,7 +14,6 @@ export default function Welcome({ navigation }) {
 
   return (
     <View style={styles.container}>
-      {/* <AsyncStorageRenderAllItems /> */}
       <View style={{ flex: .8 }}>
         <Image
           source={require('../../assets/littleLemonLogo.png')}

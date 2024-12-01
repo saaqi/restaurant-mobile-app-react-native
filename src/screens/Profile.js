@@ -48,6 +48,7 @@ export default function Profile({navigation}) {
 
   const handleUserDetails = async () => {
     try {
+      setUserOnBoarded(true)
       await AsyncStorage.multiSet([
         ['userAvatar', userAvatar],
         ['userName', userName],
@@ -59,7 +60,6 @@ export default function Profile({navigation}) {
         ['specialOffers', specialOffers ? 'true' : 'false'],
         ['newsLetter', newsLetter ? 'true' : 'false'],
       ])
-      setUserOnBoarded(true)
       navigation.navigate('Home')
     } catch (error) {
       console.error('Error storing user data:', error);

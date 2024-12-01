@@ -5,6 +5,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useContext, useEffect } from 'react'
 import { GlobalContext } from './GlobalState'
 import { StatusBar } from 'expo-status-bar'
+import AsyncStorageRenderAllItems from './validators/AsyncStorageRenderAllItems'
+
 
 
 export const Index = () => {
@@ -17,7 +19,7 @@ export const Index = () => {
     setNewsLetter,
     setUserLoggedIn,
     setSpecialOffers,
-    setUserOnBoarded,
+    setUserOnBoarded, userOnBoarded,
     setDeliveryStatus,
     setPasswordChanges,
   } = useContext(GlobalContext);
@@ -60,10 +62,11 @@ export const Index = () => {
 
   useEffect(() => {
     setInitialUserData()
-  }, [])
+  }, [userOnBoarded])
 
   return (
     <SafeAreaView style={{ flex: 1, justifyContent: 'center' }}>
+      <AsyncStorageRenderAllItems />
       <NavigationContainer>
         <Navigation />
       </NavigationContainer>

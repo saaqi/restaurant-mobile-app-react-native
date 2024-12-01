@@ -20,7 +20,7 @@ const AsyncStorageRenderAllItems = () => {
   }, []);
 
   return (
-    <ScrollView>
+    <ScrollView style={{flex: .5}}>
       {storageItems.map(([key, value]) => (
         <View key={key} style={{ margin: 10 }}>
           <Text style={{ fontWeight: 'bold' }}>{key}:</Text>

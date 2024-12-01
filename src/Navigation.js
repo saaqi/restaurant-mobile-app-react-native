@@ -58,13 +58,9 @@ export default function Navigation() {
     )
   }
 
-  const firstScreen = !userLoggedIn && !userOnBoarded ? 'Welcome' :
-    userLoggedIn && !userOnBoarded ? 'Profile' :
-      userLoggedIn && userOnBoarded && 'Home'
-
   return (
     <Stack.Navigator
-      initialRouteName={firstScreen}
+      // initialRouteName={firstScreen}
       screenOptions={{
         headerStyle: { backgroundColor: '#F6FCDF' },
         headerTintColor: '#1A1A19',

@@ -22,6 +22,7 @@ export default function Login({ navigation }) {
 
   const {
     setUserLoggedIn,
+    setUserOnBoarded,
     userEmail, setUserEmail,
   } = useContext(GlobalContext);
 
@@ -30,8 +31,10 @@ export default function Login({ navigation }) {
   const handleLogin = async () => {
     try {
       setUserLoggedIn(true)
+      setUserOnBoarded(false)
       await AsyncStorage.multiSet([
         ['userLoggedIn', 'true'],
+        ['userOnBoarded', 'false'],
         ['userEmail', userEmail]
       ]);
     } catch (error) {
