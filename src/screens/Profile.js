@@ -19,7 +19,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import * as ImagePicker from 'expo-image-picker'
 
-export default function Profile({navigation}) {
+export default function Profile({ navigation }) {
 
   const {
     userAvatar, setUserAvatar,
@@ -255,12 +255,21 @@ export default function Profile({navigation}) {
               userName === '' ||
                 !ValidateEmailField(userEmail) ||
                 !ValidatePhoneNumberField(userPhone) ?
-                styles.subButtonDisabled : styles.primaryButton, { flex: .5 }
+                styles.subButtonDisabled : styles.primaryButton, { flexBasis: '100%' }
             ]}
           >
             <View style={styles.iconStyle}>
               <Ionicons style={styles.darkButtonText} name="save-outline" />
-              <Text style={styles.darkButtonText}>Save Details</Text>
+              <Text style={styles.darkButtonText}>Save & Continue</Text>
+            </View>
+          </Pressable>
+          <Pressable
+            style={[styles.darkButton, { flex: .5 }]}
+            onPress={() => setLogout()}
+          >
+            <View style={styles.iconStyle}>
+              <Ionicons style={styles.darkButtonText} name="log-out-outline" />
+              <Text style={styles.darkButtonText}>Logout</Text>
             </View>
           </Pressable>
           <Pressable
@@ -272,15 +281,6 @@ export default function Profile({navigation}) {
               <Text style={styles.dangerButtonText}>Discard Details</Text>
             </View>
           </Pressable>
-        <Pressable
-          style={[styles.darkButton, {flexBasis: '100%'}]}
-          onPress={() => setLogout()}
-        >
-          <View style={styles.iconStyle}>
-            <Ionicons style={styles.darkButtonText} name="log-out-outline" />
-            <Text style={styles.darkButtonText}>Logout</Text>
-          </View>
-        </Pressable>
         </View>
 
       </ScrollView>
