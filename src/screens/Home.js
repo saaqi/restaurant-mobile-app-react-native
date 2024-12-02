@@ -23,16 +23,16 @@ export default function Home() {
         <Text style={styles.headingText}>Little Lemon</Text>
         <Text style={styles.subHeadingText}>Chicago</Text>
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <Text style={[styles.heroBodyText, { flexBasis: "50%" }]}>We are a family owned Mediterranean restaurant, focused on traditional recipes served with a modern twist.</Text>
-          <View style={{ borderRadius: 20, flexBasis: "50%" }}>
+          <Text style={[styles.heroBodyText, { flexBasis: '50%' }]}>We are a family owned Mediterranean restaurant, focused on traditional recipes served with a modern twist.</Text>
+          <View style={{ borderRadius: 20, flexBasis: '50%' }}>
             <Image
               source={require('../images/hero.png')}
               style={{
                 alignSelf: 'flex-end',
                 height: 250,
-                width: windowWidth * 0.3,
+                width: windowWidth * .45,
                 // maxWidth: 165,
-                borderRadius: 10
+                borderRadius: 10,
 
               }}
               resizeMode={'cover'}
