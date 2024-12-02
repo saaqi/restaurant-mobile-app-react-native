@@ -1,4 +1,14 @@
-import { Text, StyleSheet, FlatList, View, Image, ActivityIndicator, Dimensions } from 'react-native'
+import {
+  Text,
+  StyleSheet,
+  FlatList,
+  View,
+  Image,
+  ScrollView,
+  ActivityIndicator,
+  Dimensions,
+  Pressable
+} from 'react-native'
 import { useEffect, useState } from 'react'
 
 const FlatListEx = () => {
@@ -30,7 +40,16 @@ const FlatListEx = () => {
   const menuFooter = () => <Text style={styles.menuFooter}>All Rights Reserved 2024</Text>
   const Separator = () => <View style={styles.separator}></View>
 
-  const Foods = ({ name, price, description, image, category }) => {
+  // const FoodCats = ({ category }) => {
+  //   return (
+  //     <ScrollView >
+  //       <Pressable>
+  //         <Text>{category}</Text>
+  //       </Pressable>
+  //     </ScrollView>
+  //   )
+  // }
+  const Foods = ({ name, price, description, image }) => {
     return (
       <View style={{
         flex: 1,
@@ -39,17 +58,19 @@ const FlatListEx = () => {
         gap: 10
       }}>
         <View style={{ width: windowWidth - 200 }}>
-          <Text style={{fontSize: 24, fontWeight: 700, marginBottom: 20}}>{name} </Text>
-          <Text style={{fontSize: 18}}>{description}</Text>
-          <Text style={{fontSize: 20, fontWeight: 500, marginTop: 'auto'}}>{price}</Text>
+          <Text style={{ fontSize: 24, fontWeight: 700, marginBottom: 20 }}>{name} </Text>
+          <Text style={{ fontSize: 18 }}>{description}</Text>
+          <Text style={{ fontSize: 20, fontWeight: 500, marginTop: 'auto' }}>{price}</Text>
         </View>
-        <View style={{  }}>
+        <View style={{}}>
           <Image
             source={{ uri: `https://github.com/Meta-Mobile-Developer-PC/Working-With-Data-API/blob/main/images/${image}?raw=true` }}
             style={{
               height: 150,
               width: 150,
               borderRadius: 10,
+              borderWidth: 1,
+              borderColor: '#31511e',
               alignSelf: 'flex-end'
             }}
             resizeMode={'cover'}
@@ -64,22 +85,32 @@ const FlatListEx = () => {
   return (
     <View style={styles.listContainer}>
       {isLoading ? (<ActivityIndicator />) : (
-        <FlatList
-          data={menuList}
-          keyExtractor={(item, index) => item + index}
-          // keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
-            <Foods
-              name={item.name}
-              description={item.description}
-              price={'$' + item.price}
-              image={item.image}
-            />
-          )}
-          ItemSeparatorComponent={Separator}
-          ListHeaderComponent={menuHeader}
-          ListFooterComponent={menuFooter}
-        />
+        <View>
+          {/* <FlatList
+            data={menuList}
+            keyExtractor={(item, index) => item + index + 'cats'}
+            renderItem={({ item }) => (
+              <FoodCats
+                category={item.category}
+              />
+            )}
+          /> */}
+          <FlatList
+            data={menuList}
+            keyExtractor={(item, index) => item + index}
+            renderItem={({ item }) => (
+              <Foods
+                name={item.name}
+                description={item.description}
+                price={'$' + item.price}
+                image={item.image}
+              />
+            )}
+            ItemSeparatorComponent={Separator}
+            ListHeaderComponent={menuHeader}
+            ListFooterComponent={menuFooter}
+          />
+        </View>
       )}
     </View>
   )
@@ -96,31 +127,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20
   },
 
-  listStyles: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-
-  listItemName: {
-
-  },
-
-  listItemDeseciption: {
-
-  },
-
-
-  listItemPrice: {
-
-  },
-
-  listItemImage: {
-
-  },
-
   menuHeader: {
     fontWeight: 'bold',
-    fontSize: 20,
+    fontSize: 24,
     textAlign: 'center'
   },
 
