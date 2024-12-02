@@ -10,31 +10,98 @@ import {
   Pressable
 } from 'react-native'
 import { useEffect, useState } from 'react'
+import * as SQLite from 'expo-sqlite'
+
+const db = SQLite.openDatabaseSync('littleLemon');
 
 const FlatListEx = () => {
 
   const [isLoading, setLoading] = useState(true)
-  const [menuList, setMenuList] = useState([])
+  const [menuItems, setMenuItems] = useState([])
   const windowWidth = Dimensions.get('window').width
 
 
-  const getMenu = async () => {
+  const fetchMenuData = async () => {
     try {
       const response = await fetch(
         'https://raw.githubusercontent.com/Meta-Mobile-Developer-PC/Working-With-Data-API/main/capstone.json'
       )
-      const json = await response.json()
-      setMenuList(json.menu)
+      const data = await response.json()
+      return data.menu
     } catch (e) {
       console.error(e)
+      return []
     } finally {
       setLoading(false)
     }
   }
 
+  // Initialize SQLite database
+  const initDatabase = async () => {
+    try {
+      await db.execAsync(
+        `create table if not exists menu (
+          id text primary key,
+          name text,
+          price real,
+          description text,
+          image text
+        )`
+      );
+    } catch (error) {
+      console.error('Error initializing database:', error)
+    }
+  }
+
+  // Save menu data to SQLite
+  const saveMenuToDatabase = async (menu) => {
+    try {
+      // Clear existing data
+      await db.execAsync(`delete from menu`);
+
+      // Insert new data
+      const values = menu
+        .map(
+          (item) =>
+            `('${item.id}', '${item.name}', '${item.price}', '${item.description}', '${item.image}')`
+        )
+        .join(',');
+
+      await db.execAsync(
+        `insert into menu (id, name, price, description, image) values ${values}`
+      );
+    } catch (error) {
+      console.error('Error saving menu data to database:', error);
+    }
+  }
+
+  // Load menu data from SQLite
+  const loadMenuFromDatabase = async () => {
+    try {
+      const result = await db.execAsync(`select * from menu`);
+      return result.rows._array || [];
+    } catch (error) {
+      console.error('Error loading menu data from database:', error);
+      return [];
+    }
+  };
+
+  // Load menu items on component mount
   useEffect(() => {
-    getMenu()
-  }, [])
+    const loadMenu = async () => {
+      await initDatabase();
+
+      const storedMenu = await loadMenuFromDatabase();
+      if (storedMenu.length === 0) {
+        const menu = await fetchMenuData();
+        await saveMenuToDatabase(menu);
+        setMenuItems(menu);
+      } else {
+        setMenuItems(storedMenu);
+      }
+    };
+    loadMenu();
+  }, []);
 
   const menuHeader = () => <Text style={styles.menuHeader}>Our Menu</Text>
   const menuFooter = () => <Text style={styles.menuFooter}>All Rights Reserved 2024</Text>
@@ -96,7 +163,7 @@ const FlatListEx = () => {
             )}
           /> */}
           <FlatList
-            data={menuList}
+            data={menuItems}
             keyExtractor={(item, index) => item + index}
             renderItem={({ item }) => (
               <Foods
