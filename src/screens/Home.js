@@ -1,17 +1,21 @@
-import { ScrollView, View, StyleSheet, Text, Image } from 'react-native'
-import { useEffect, useContext } from 'react'
-import { GlobalContext } from '../GlobalState'
+import {
+  ScrollView,
+  View,
+  StyleSheet,
+  Text,
+  Image,
+  Dimensions,
+  KeyboardAvoidingView,
+  TextInput
+} from 'react-native'
+import { useState } from 'react'
+import Ionicons from '@expo/vector-icons/Ionicons'
 
 
-export default function Home({ navigation }) {
+export default function Home() {
 
-  const {
-    userOnBoarded
-  } = useContext(GlobalContext);
-
-  useEffect(() => {
-    !userOnBoarded && navigation.navigate('Profile')
-  }, [])
+  const windowWidth = Dimensions.get('window').width
+  const [ searchQuery, setSearchQuery ] = useState('')
 
   return (
     <ScrollView style={styles.container}>
@@ -19,23 +23,35 @@ export default function Home({ navigation }) {
         <Text style={styles.headingText}>Little Lemon</Text>
         <Text style={styles.subHeadingText}>Chicago</Text>
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 20 }}>
-          <Text style={[styles.heroBodyText, { flexBasis: '50%' }]}>We are a family owned Mediterranean restaurant, focused on traditional recipes served with a modern twist.</Text>
-          <View style={{ flexBasis: '50%', borderRadius: 20 }}>
+          <Text style={styles.heroBodyText}>We are a family owned Mediterranean restaurant, focused on traditional recipes served with a modern twist.</Text>
+          <View style={{ borderRadius: 20 }}>
             <Image
-              source={require('../../assets/hero.png')}
+              source={require('../images/hero.png')}
               style={{
-                alignSelf: 'center',
+                alignSelf: 'flex-end',
                 height: 250,
-                width: 165,
+                width: windowWidth * 0.3,
+                // maxWidth: 165,
                 borderRadius: 10
 
               }}
-              resizeMode={'contain'}
+              resizeMode={'cover'}
               accessible={true}
               accessibilityLabel={"Hero Section Image"}
             />
           </View>
         </View>
+        <KeyboardAvoidingView style={styles.searchContainer}>
+          <Ionicons style={styles.icon} name="search-circle-outline" />
+          <TextInput
+            style={styles.inputField}
+            onChangeText={setSearchQuery}
+            placeholder='Search for dishes'
+            secureTextEntry={false}
+            keyboardType='default'
+            value={searchQuery}
+          />
+        </KeyboardAvoidingView>
       </View>
     </ScrollView>
   )
@@ -69,12 +85,29 @@ const styles = StyleSheet.create({
     marginBottom: 40
   },
 
+  searchContainer: {
+    backgroundColor: "#fff",
+    paddingHorizontal: 10,
+    paddingVertical: 10,
+    borderRadius: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 20
+  },
+
+  icon: {
+    fontSize: 24,
+    color: "#31511E",
+    borderRightColor: '#333',
+    borderRightWidth: 1,
+    marginRight: 5,
+    paddingRight: 5
+  },
+
   inputField: {
-    borderColor: '#999',
-    borderWidth: 1,
-    borderRadius: 5,
-    padding: 10,
-    marginBottom: 10,
+    outlineStyle: 'none',
+    height: '100%',
+    width: "100%"
   },
 
   heroBodyText: {
@@ -140,11 +173,6 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
 
-  iconStyle: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 5
-  },
+
 
 })
