@@ -195,7 +195,7 @@ export default function Profile({ navigation }) {
                   {
                     userName === '' ? 'Please Enter your full name to contiue.' :
                       !ValidateEmailField(userEmail) ? 'Please Enter your Email to continue' :
-                        !ValidatePhoneNumberField(userPhone) ? 'Please enter your phone number in the format: (123) 456-7890 or +1 (123) 456-7890.' :
+                        !ValidatePhoneNumberField(userPhone) ? 'Please enter your phone number in the eg: (123) 456-7890 or +1 (123) 456-7890.' :
                           ''
                   }
                 </Text>

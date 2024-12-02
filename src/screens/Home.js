@@ -22,9 +22,9 @@ export default function Home() {
       <View style={styles.heroSection}>
         <Text style={styles.headingText}>Little Lemon</Text>
         <Text style={styles.subHeadingText}>Chicago</Text>
-        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 20 }}>
-          <Text style={styles.heroBodyText}>We are a family owned Mediterranean restaurant, focused on traditional recipes served with a modern twist.</Text>
-          <View style={{ borderRadius: 20 }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <Text style={[styles.heroBodyText, { flexBasis: "50%" }]}>We are a family owned Mediterranean restaurant, focused on traditional recipes served with a modern twist.</Text>
+          <View style={{ borderRadius: 20, flexBasis: "50%" }}>
             <Image
               source={require('../images/hero.png')}
               style={{
