@@ -8,17 +8,33 @@ import {
   KeyboardAvoidingView,
   TextInput
 } from 'react-native'
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 import Ionicons from '@expo/vector-icons/Ionicons'
+import { useFonts } from "expo-font"
+import MenuList from  '../components/MenuList'
 
 
 export default function Home() {
 
   const windowWidth = Dimensions.get('window').width
-  const [ searchQuery, setSearchQuery ] = useState('')
+  const [searchQuery, setSearchQuery] = useState('')
+
+  // FONTS
+  const [fontsLoaded] = useFonts({
+    "Karla-Regular": require("../fonts/Karla-Regular.ttf"),
+    "Karla-Medium": require("../fonts/Karla-Medium.ttf"),
+    "Karla-Bold": require("../fonts/Karla-Bold.ttf"),
+    "Karla-ExtraBold": require("../fonts/Karla-ExtraBold.ttf"),
+    "MarkaziText-Regular": require("../fonts/MarkaziText-Regular.ttf"),
+    "MarkaziText-Medium": require("../fonts/MarkaziText-Medium.ttf"),
+  });
+
+  const onLayoutRootView = useCallback(async () => {
+  }, [fontsLoaded]);
+
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView style={styles.container} onLayout={onLayoutRootView}>
       <View style={styles.heroSection}>
         <Text style={styles.headingText}>Little Lemon</Text>
         <Text style={styles.subHeadingText}>Chicago</Text>
@@ -30,8 +46,7 @@ export default function Home() {
               style={{
                 alignSelf: 'flex-end',
                 height: 250,
-                width: windowWidth * .45,
-                // maxWidth: 165,
+                width: 165,
                 borderRadius: 10,
 
               }}
@@ -53,6 +68,7 @@ export default function Home() {
           />
         </KeyboardAvoidingView>
       </View>
+        <MenuList />
     </ScrollView>
   )
 }
@@ -60,7 +76,8 @@ export default function Home() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F6FCDF"
+    backgroundColor: "#F6FCDF",
+    fontFamiy: "Karla-Regular"
   },
 
   heroSection: {
@@ -70,17 +87,17 @@ const styles = StyleSheet.create({
   },
 
   headingText: {
-    fontSize: 48,
-    fontFamily: 'Courier-BoldOblique',
-    fontWeight: 700,
+    fontSize: 75,
+    fontFamily: "MarkaziText-Medium",
+    fontWeight: 500,
     color: "#ffff00",
     marginBottom: 20
   },
 
   subHeadingText: {
     fontSize: 36,
-    fontFamily: 'Courier-BoldOblique',
-    fontWeight: 700,
+    fontFamily: "Karla-Medium",
+    fontWeight: 500,
     color: "#E1E9C8",
     marginBottom: 40
   },
@@ -113,7 +130,9 @@ const styles = StyleSheet.create({
   heroBodyText: {
     fontSize: 24,
     color: "#F6FCDF",
-    marginBottom: 10
+    marginBottom: 10,
+    fontFamiy: "Karla-Regular"
+
   },
 
   bodyText: {
