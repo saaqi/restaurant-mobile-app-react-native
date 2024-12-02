@@ -130,7 +130,8 @@ export default function Profile({ navigation }) {
               style={{
                 height: 100,
                 width: 100,
-                alignSelf: 'start'
+                alignSelf: 'start',
+                borderRadius: 100
               }}
               resizeMode={'contain'}
               accessible={true}
@@ -140,7 +141,7 @@ export default function Profile({ navigation }) {
 
           <View>
             <Pressable onPress={pickImage} style={styles.primaryButton}>
-              <View style={styles.iconStyle}>
+              <View style={[styles.iconStyle]}>
                 <Ionicons style={styles.darkButtonText} name="person-add-outline" />
                 <Text style={styles.darkButtonText}>{userAvatar ? 'Change Avatar' : 'Set Avatar'}</Text>
               </View>
@@ -343,7 +344,6 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 15,
     borderRadius: 5,
-    marginBottom: 10,
   },
 
   dangerButton: {
@@ -351,7 +351,6 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 15,
     borderRadius: 5,
-    marginBottom: 10,
   },
 
   darkButton: {
@@ -359,7 +358,6 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 15,
     borderRadius: 5,
-    marginBottom: 10,
   },
 
   darkButtonText: {

@@ -46,7 +46,8 @@ export default function Navigation() {
             style={{
               height: 40,
               width: 40,
-              marginRight: 11
+              marginRight: 11,
+              borderRadius: 100
             }}
             resizeMode={'contain'}
             accessible={true}
