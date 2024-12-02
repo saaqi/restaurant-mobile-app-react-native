@@ -14,7 +14,7 @@ import * as SQLite from 'expo-sqlite'
 
 const db = SQLite.openDatabaseSync('littleLemon');
 
-const FlatListEx = () => {
+const MenuListSQLite = () => {
 
   const [isLoading, setLoading] = useState(true)
   const [menuItems, setMenuItems] = useState([])
@@ -183,7 +183,7 @@ const FlatListEx = () => {
   )
 }
 
-export default FlatListEx
+export default MenuListSQLite
 
 //Style Sheet
 const styles = StyleSheet.create({
