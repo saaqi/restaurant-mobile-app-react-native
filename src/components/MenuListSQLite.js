@@ -71,21 +71,31 @@ const MenuListSQLite = () => {
   }
 
   // Load menu data from SQLite
-  const loadMenuFromDatabase = () => {
-    return new Promise((resolve, reject) => {
-      db.transaction(tx => {
-        tx.executeSql(
-          'select * from menu',
-          [],
-          (_, { rows: { _array } }) => resolve(_array),
-          (_, error) => {
-            console.error('Loading Database,', error);
-            reject([]);
-          }
-        )
-      })
-    })
-  }
+  const loadMenuFromDatabase = async () => {
+    try {
+      const result = await db.execAsync(`select * from menu`)
+      return result.rows._array || []
+    } catch (error) {
+      console.error('Loading Database,', error)
+      return []
+    }
+  };
+
+  // const loadMenuFromDatabase = () => {
+  //   return new Promise((resolve, reject) => {
+  //     db.transaction(tx => {
+  //       tx.executeSql(
+  //         'select * from menu',
+  //         [],
+  //         (_, { rows: { _array } }) => resolve(_array),
+  //         (_, error) => {
+  //           console.error('Loading Database,', error);
+  //           reject([]);
+  //         }
+  //       )
+  //     })
+  //   })
+  // }
 
   // Load menu items on component mount
   useEffect(() => {

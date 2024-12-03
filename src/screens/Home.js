@@ -10,8 +10,8 @@ import {
 import { useState, useCallback } from 'react'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import { useFonts } from "expo-font"
-import MenuListSQLite from  '../components/MenuListSQLite'
-// import MenuListDirect from  '../components/MenuListDirect'
+// import MenuListSQLite from  '../components/MenuListSQLite'
+import MenuListDirect from  '../components/MenuListDirect'
 
 
 export default function Home() {
@@ -67,8 +67,8 @@ export default function Home() {
           />
         </KeyboardAvoidingView>
       </View>
-      <MenuListSQLite />
-      {/* <MenuListDirect /> */}
+      {/* <MenuListSQLite /> */}
+      <MenuListDirect />
     </ScrollView>
   )
 }
