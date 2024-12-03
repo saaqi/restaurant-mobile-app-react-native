@@ -4,7 +4,7 @@ import {
   FlatList,
   View,
   Image,
-  ScrollView,
+  // ScrollView,
   ActivityIndicator,
   Dimensions,
   Pressable
@@ -64,8 +64,8 @@ const MenuListDirect = () => {
         gap: 10
       }}>
         <View style={{ width: windowWidth - 200 }}>
-          <Text style={{ fontSize: 24, fontWeight: 700, marginBottom: 20 }}>{name} </Text>
-          <Text style={{ fontSize: 18 }}>{description}</Text>
+          <Text style={{ fontSize: 24, fontWeight: 700, marginBottom: 10 }}>{name} </Text>
+          <Text style={{ fontSize: 16, marginBottom: 10 }}>{description}</Text>
           <Text style={{ fontSize: 20, fontWeight: 500, marginTop: 'auto' }}>{price}</Text>
         </View>
         <View style={{}}>
