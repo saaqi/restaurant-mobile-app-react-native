@@ -4,10 +4,10 @@ import {
   FlatList,
   View,
   Image,
-  ScrollView,
   ActivityIndicator,
   Dimensions,
-  Pressable
+  // ScrollView,
+  // Pressable
 } from 'react-native'
 import { useEffect, useState } from 'react'
 import * as SQLite from 'expo-sqlite'
@@ -17,7 +17,7 @@ const db = SQLite.openDatabaseSync('littleLemon');
 const MenuListSQLite = () => {
 
   const [isLoading, setLoading] = useState(true)
-  const [menuItems, setMenuItems] = useState([])
+  const [menuList, setMenuList] = useState([])
   const windowWidth = Dimensions.get('window').width
 
 
@@ -27,7 +27,12 @@ const MenuListSQLite = () => {
         'https://raw.githubusercontent.com/Meta-Mobile-Developer-PC/Working-With-Data-API/main/capstone.json'
       )
       const data = await response.json()
-      return data.menu
+      return data.menu.map((item) => {
+        return {
+          ...item,
+          picture: `https://github.com/Meta-Mobile-Developer-PC/Working-With-Data-API/blob/main/images/${item.image}?raw=true`
+        }
+      })
     } catch (e) {
       console.error(e)
       return []
@@ -41,50 +46,46 @@ const MenuListSQLite = () => {
     try {
       await db.execAsync(
         `create table if not exists menu (
-          id text primary key,
-          name text,
+          name text primary key,
           price real,
           description text,
-          image text
+          image text,
+          picture text
         )`
       );
     } catch (error) {
-      console.error('Error initializing database:', error)
+      console.error('Initializing database, ', error)
     }
   }
 
   // Save menu data to SQLite
-  const saveMenuToDatabase = async (menu) => {
+  const saveMenuToDatabase = async (menuList) => {
     try {
-      // Clear existing data
-      await db.execAsync(`delete from menu`);
-
-      // Insert new data
-      const values = menu
-        .map(
-          (item) =>
-            `('${item.id}', '${item.name}', '${item.price}', '${item.description}', '${item.image}')`
-        )
-        .join(',');
-
-      await db.execAsync(
-        `insert into menu (id, name, price, description, image) values ${values}`
+      db.execAsync( // runAsync
+        'insert into menuitems (name, price, description, category, image, picture) values ' +
+        menuList.map((item) => `('${item.name}', '${item.price}', '${item.category}', '${item.image}'), '${item.picture}')`).join(',')
       );
     } catch (error) {
-      console.error('Error saving menu data to database:', error);
+      console.error('Saving Database, ', error);
     }
   }
 
   // Load menu data from SQLite
-  const loadMenuFromDatabase = async () => {
-    try {
-      const result = await db.execAsync(`select * from menu`);
-      return result.rows._array || [];
-    } catch (error) {
-      console.error('Error loading menu data from database:', error);
-      return [];
-    }
-  };
+  const loadMenuFromDatabase = () => {
+    return new Promise((resolve, reject) => {
+      db.transaction(tx => {
+        tx.executeSql(
+          'select * from menu',
+          [],
+          (_, { rows: { _array } }) => resolve(_array),
+          (_, error) => {
+            console.error('Loading Database,', error);
+            reject([]);
+          }
+        )
+      })
+    })
+  }
 
   // Load menu items on component mount
   useEffect(() => {
@@ -95,9 +96,9 @@ const MenuListSQLite = () => {
       if (storedMenu.length === 0) {
         const menu = await fetchMenuData();
         await saveMenuToDatabase(menu);
-        setMenuItems(menu);
+        setMenuList(menu);
       } else {
-        setMenuItems(storedMenu);
+        setMenuList(storedMenu);
       }
     };
     loadMenu();
@@ -116,7 +117,7 @@ const MenuListSQLite = () => {
   //     </ScrollView>
   //   )
   // }
-  const Foods = ({ name, price, description, image }) => {
+  const Foods = ({ name, price, description, picture }) => {
     return (
       <View style={{
         flex: 1,
@@ -131,7 +132,7 @@ const MenuListSQLite = () => {
         </View>
         <View style={{}}>
           <Image
-            source={{ uri: `https://github.com/Meta-Mobile-Developer-PC/Working-With-Data-API/blob/main/images/${image}?raw=true` }}
+            source={{ uri: picture }}
             style={{
               height: 150,
               width: 150,
@@ -163,14 +164,14 @@ const MenuListSQLite = () => {
             )}
           /> */}
           <FlatList
-            data={menuItems}
+            data={menuList}
             keyExtractor={(item, index) => item + index}
             renderItem={({ item }) => (
               <Foods
                 name={item.name}
                 description={item.description}
                 price={'$' + item.price}
-                image={item.image}
+                picture={item.picture}
               />
             )}
             ItemSeparatorComponent={Separator}

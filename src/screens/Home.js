@@ -4,20 +4,18 @@ import {
   StyleSheet,
   Text,
   Image,
-  Dimensions,
   KeyboardAvoidingView,
   TextInput
 } from 'react-native'
 import { useState, useCallback } from 'react'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import { useFonts } from "expo-font"
-// import MenuListSQLite from  '../components/MenuListSQLite'
-import MenuListDirect from  '../components/MenuListDirect'
+import MenuListSQLite from  '../components/MenuListSQLite'
+// import MenuListDirect from  '../components/MenuListDirect'
 
 
 export default function Home() {
 
-  const windowWidth = Dimensions.get('window').width
   const [searchQuery, setSearchQuery] = useState('')
 
   // FONTS
@@ -69,8 +67,8 @@ export default function Home() {
           />
         </KeyboardAvoidingView>
       </View>
-      {/* <MenuListSQLite /> */}
-      <MenuListDirect />
+      <MenuListSQLite />
+      {/* <MenuListDirect /> */}
     </ScrollView>
   )
 }
@@ -89,7 +87,7 @@ const styles = StyleSheet.create({
   },
 
   headingText: {
-    fontSize: 75,
+    fontSize: 70,
     fontFamily: "MarkaziText-Medium",
     fontWeight: 500,
     color: "#ffff00",

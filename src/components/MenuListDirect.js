@@ -24,7 +24,12 @@ const MenuListDirect = () => {
         'https://raw.githubusercontent.com/Meta-Mobile-Developer-PC/Working-With-Data-API/main/capstone.json'
       )
       const json = await response.json()
-      setMenuList(json.menu)
+      setMenuList(json.menu.map((item) => {
+        return {
+          ...item,
+          picture: `https://github.com/Meta-Mobile-Developer-PC/Working-With-Data-API/blob/main/images/${item.image}?raw=true`
+        }
+      }))
     } catch (e) {
       console.error(e)
     } finally {
@@ -34,6 +39,7 @@ const MenuListDirect = () => {
 
   useEffect(() => {
     getMenu()
+    console.log(menuList)
   }, [])
 
   const menuHeader = () => <Text style={styles.menuHeader}>Our Menu</Text>
@@ -49,7 +55,7 @@ const MenuListDirect = () => {
   //     </ScrollView>
   //   )
   // }
-  const Foods = ({ name, price, description, image }) => {
+  const Foods = ({ name, price, description, picture }) => {
     return (
       <View style={{
         flex: 1,
@@ -64,7 +70,8 @@ const MenuListDirect = () => {
         </View>
         <View style={{}}>
           <Image
-            source={{ uri: `https://github.com/Meta-Mobile-Developer-PC/Working-With-Data-API/blob/main/images/${image}?raw=true` }}
+            // source={{ uri: `https://github.com/Meta-Mobile-Developer-PC/Working-With-Data-API/blob/main/images/${image}?raw=true` }}
+            source={{ uri: picture }}
             style={{
               height: 150,
               width: 150,
@@ -103,7 +110,7 @@ const MenuListDirect = () => {
                 name={item.name}
                 description={item.description}
                 price={'$' + item.price}
-                image={item.image}
+                picture={item.picture}
               />
             )}
             ItemSeparatorComponent={Separator}
