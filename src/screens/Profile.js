@@ -113,7 +113,7 @@ export default function Profile({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <ScrollView style={{ paddingHorizontal: 10 }}>
+      <ScrollView style={{ padding: 20 }}>
         <Text style={[styles.headingText, { textAlign: 'center' }]}>
           Welcome {userName}, It is nice to have you.
         </Text>
@@ -294,7 +294,7 @@ export default function Profile({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
+    // padding: 20,
     backgroundColor: "#F6FCDF"
   },
 

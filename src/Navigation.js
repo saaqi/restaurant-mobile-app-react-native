@@ -38,7 +38,7 @@ export default function Navigation() {
     const navigation = useNavigation();
 
     return (
-      <Pressable onPress={() => navigation.navigate('Profile')}>
+      <Pressable onPress={() => userLoggedIn && navigation.navigate('Profile')}>
         <View>
           {userAvatar && userLoggedIn ? <Image
             source={{ uri: userAvatar }
