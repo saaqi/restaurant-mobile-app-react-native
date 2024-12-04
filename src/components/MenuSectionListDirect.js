@@ -28,7 +28,6 @@ const MenuSectionListDirect = () => {
       setMenuList(json.menu.map((item, index, category) => {
         return {
           ...item,
-          picture: `https://github.com/Meta-Mobile-Developer-PC/Working-With-Data-API/blob/main/images/${item.image}?raw=true`,
           id: `menu-${index + 1}`
         }
       }))
@@ -48,7 +47,7 @@ const MenuSectionListDirect = () => {
   const menuFooter = () => <Text style={styles.menuFooter}>All Rights Reserved &copy; 2024</Text>
   const Separator = () => <View style={styles.separator}></View>
 
-  const Foods = ({ name, price, description, picture }) => {
+  const Foods = ({ name, price, description, image }) => {
     return (
       <View style={{
         flex: 1,
@@ -63,7 +62,7 @@ const MenuSectionListDirect = () => {
         </View>
         <View style={{}}>
           <Image
-            source={{ uri: picture }}
+            source={{ uri: `https://github.com/Meta-Mobile-Developer-PC/Working-With-Data-API/blob/main/images/${image}?raw=true` }}
             style={{
               height: 150,
               width: 150,
@@ -141,7 +140,7 @@ const MenuSectionListDirect = () => {
                 name={item.name}
                 description={item.description}
                 price={'$' + item.price}
-                picture={item.image}
+                image={item.image}
               />
             )}
             renderSectionHeader={({ section: { title } }) => (

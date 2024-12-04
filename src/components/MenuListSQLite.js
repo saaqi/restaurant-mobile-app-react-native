@@ -31,7 +31,6 @@ const MenuListSQLite = () => {
         return {
           ...item,
           id: `menu-${index + 1}`,
-          picture: `https://github.com/Meta-Mobile-Developer-PC/Working-With-Data-API/blob/main/images/${item.image}?raw=true`,
         }
       })
       setMenuList(mappedMenu)
@@ -55,7 +54,6 @@ const MenuListSQLite = () => {
           description text,
           category text,
           image text,
-          picture text
         )`
       );
     } catch (error) {
@@ -67,8 +65,8 @@ const MenuListSQLite = () => {
   const saveMenuToDatabase = async (menuList) => {
     try {
       db.execAsync(
-        'insert into menu (id, name, price, description, category, image, picture) values ' +
-        menuList.map((item) => `('${item.id}', '${item.name}', '${item.price}', '${item.description}', '${item.category}', '${item.image}', '${item.picture}')`).join(',')
+        'insert into menu (id, name, price, description, category, image) values ' +
+        menuList.map((item) => `('${item.id}', '${item.name}', '${item.price}', '${item.description}', '${item.category}', '${item.image}')`).join(',')
       );
     } catch (error) {
       console.error('Saving Database, ', error);
@@ -116,7 +114,7 @@ const MenuListSQLite = () => {
   //     </ScrollView>
   //   )
   // }
-  const Foods = ({ name, price, description, picture }) => {
+  const Foods = ({ name, price, description, image }) => {
     return (
       <View style={{
         flex: 1,
@@ -131,7 +129,7 @@ const MenuListSQLite = () => {
         </View>
         <View style={{}}>
           <Image
-            source={{ uri: picture }}
+            source={{ uri: `https://github.com/Meta-Mobile-Developer-PC/Working-With-Data-API/blob/main/images/${image}?raw=true` }}
             style={{
               height: 150,
               width: 150,
@@ -170,7 +168,7 @@ const MenuListSQLite = () => {
                 name={item.name}
                 description={item.description}
                 price={'$' + item.price}
-                picture={item.picture}
+                image={item.image}
               />
             )}
             ItemSeparatorComponent={Separator}
