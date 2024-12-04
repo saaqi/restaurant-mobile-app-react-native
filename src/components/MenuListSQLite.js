@@ -12,7 +12,8 @@ import {
 import { useEffect, useState } from 'react'
 import * as SQLite from 'expo-sqlite'
 
-const db = SQLite.openDatabaseSync('littleLemon');
+const db = await SQLite.openDatabaseAsync('little_lemon')
+
 
 const MenuListSQLite = () => {
 
@@ -47,15 +48,16 @@ const MenuListSQLite = () => {
   const initDatabase = async () => {
     try {
       await db.execAsync(
-        `create table if not exists menu (
-          id text primary key,
-          name text,
-          price real,
-          description text,
-          category text,
-          image text,
+        `PRAGMA journal_mode = WAL;
+        CREATE TABLE IF NOT EXISTS menu (
+          id TETX PRIMARY KEY NOT NULL,
+          name TEXT NOT NULL,
+          price REAL NOT NULL,
+          description TEXT NOT NULL,
+          image TEXT NOT NULL,
+          category TEXT NOT NULL
         )`
-      );
+      )
     } catch (error) {
       console.error('Initializing database, ', error)
     }
@@ -64,8 +66,8 @@ const MenuListSQLite = () => {
   // Save menu data to SQLite
   const saveMenuToDatabase = async (menuList) => {
     try {
-      db.execAsync(
-        'insert into menu (id, name, price, description, category, image) values ' +
+      await db.execAsync(
+        'INSERT INTO menu (id, name, price, description, category, image) VALUES ' +
         menuList.map((item) => `('${item.id}', '${item.name}', '${item.price}', '${item.description}', '${item.category}', '${item.image}')`).join(',')
       );
     } catch (error) {
