@@ -26,16 +26,16 @@ const MenuListSQLite = () => {
       const response = await fetch(
         'https://raw.githubusercontent.com/Meta-Mobile-Developer-PC/Working-With-Data-API/main/capstone.json'
       )
-      const data = await response.json()
-      return data.menu.map((item) => {
+      const json = await response.json()
+      setMenuList(json.menu.map((item, index) => {
         return {
           ...item,
-          picture: `https://github.com/Meta-Mobile-Developer-PC/Working-With-Data-API/blob/main/images/${item.image}?raw=true`
+          picture: `https://github.com/Meta-Mobile-Developer-PC/Working-With-Data-API/blob/main/images/${item.image}?raw=true`,
+          id: `menu-${index + 1}`
         }
-      })
+      }))
     } catch (e) {
       console.error(e)
-      return []
     } finally {
       setLoading(false)
     }
@@ -46,7 +46,8 @@ const MenuListSQLite = () => {
     try {
       await db.execAsync(
         `create table if not exists menu (
-          name text primary key,
+          id text primary key,
+          name text,
           price real,
           description text,
           image text,
@@ -62,8 +63,8 @@ const MenuListSQLite = () => {
   const saveMenuToDatabase = async (menuList) => {
     try {
       db.execAsync( // runAsync
-        'insert into menuitems (name, price, description, category, image, picture) values ' +
-        menuList.map((item) => `('${item.name}', '${item.price}', '${item.category}', '${item.image}'), '${item.picture}')`).join(',')
+        'insert into menuitems (id, name, price, description, category, image, picture) values ' +
+        menuList.map((item) => `('${item.id}', '${item.name}', '${item.price}', '${item.category}', '${item.image}', '${item.picture}')`).join(',')
       );
     } catch (error) {
       console.error('Saving Database, ', error);

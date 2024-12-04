@@ -1,18 +1,18 @@
 import {
   Text,
   StyleSheet,
-  FlatList,
+  SectionList,
   View,
   Image,
   ActivityIndicator,
   Dimensions,
-  // Pressable
+  Pressable
 } from 'react-native'
 import { useEffect, useState, useContext } from 'react'
 import { GlobalContext } from '../GlobalState'
 
 
-const MenuListDirect = () => {
+const MenuSectionListDirect = () => {
 
   const [isLoading, setLoading] = useState(true)
   const [menuList, setMenuList] = useState([])
@@ -25,7 +25,7 @@ const MenuListDirect = () => {
         'https://raw.githubusercontent.com/Meta-Mobile-Developer-PC/Working-With-Data-API/main/capstone.json'
       )
       const json = await response.json()
-      setMenuList(json.menu.map((item, index) => {
+      setMenuList(json.menu.map((item, index, category) => {
         return {
           ...item,
           picture: `https://github.com/Meta-Mobile-Developer-PC/Working-With-Data-API/blob/main/images/${item.image}?raw=true`,
@@ -85,27 +85,69 @@ const MenuListDirect = () => {
     searchKeyword, setSearchKeyword
   } = useContext(GlobalContext);
 
-  // Filtered menu based on the search keyword
-  const filteredMenu = menuList.filter(item =>
-    Object.values(item).some(value =>
-      String(value).toLowerCase().includes(searchKeyword.toLowerCase())
-    )
-  )
+  const sections = [
+    {
+      title: "Starters",
+      data: menuList.filter((item) => item.category === "starters"),
+    },
+    {
+      title: "Mains",
+      data: menuList.filter((item) => item.category === "mains"),
+    },
+    {
+      title: "Desserts",
+      data: menuList.filter((item) => item.category === "desserts"),
+    },
+  ]
+
+  const filteredSectionMenu = sections
+    .map((section) => {
+      const filteredData = section.data.filter((item) =>
+        Object.values(item).some((value) =>
+          String(value).toLowerCase().includes(searchKeyword.toLowerCase())
+        )
+      );
+      if (filteredData.length > 0) {
+        return { ...section, data: filteredData }
+      }
+
+      return null
+    })
+    .filter(Boolean)
 
   return (
     <View style={styles.listContainer}>
       {isLoading ? (<ActivityIndicator />) : (
         <View>
-          <FlatList
-            data={filteredMenu}
-            keyExtractor={(item) => item.id}
+          <View>
+            <Pressable onPress={() => setSearchKeyword('')}>
+              <Text>All</Text>
+            </Pressable>
+            <Pressable onPress={() => setSearchKeyword('starters')}>
+              <Text>Starters</Text>
+            </Pressable>
+            <Pressable onPress={() => setSearchKeyword('mains')}>
+              <Text>Mains</Text>
+            </Pressable>
+            <Pressable onPress={() => setSearchKeyword('desserts')}>
+              <Text>Desserts</Text>
+            </Pressable>
+          </View>
+          <SectionList
+            sections={filteredSectionMenu}
+            keyExtractor={(item, index) => item.name + index} // Use a unique key
             renderItem={({ item }) => (
               <Foods
                 name={item.name}
                 description={item.description}
                 price={'$' + item.price}
-                picture={item.picture}
+                picture={item.image}
               />
+            )}
+            renderSectionHeader={({ section: { title } }) => (
+              <Text style={{ fontSize: 18, fontWeight: 'bold', marginVertical: 10 }}>
+                {title}
+              </Text>
             )}
             ItemSeparatorComponent={Separator}
             ListHeaderComponent={menuHeader}
@@ -117,7 +159,7 @@ const MenuListDirect = () => {
   )
 }
 
-export default MenuListDirect
+export default MenuSectionListDirect
 
 //Style Sheet
 const styles = StyleSheet.create({
