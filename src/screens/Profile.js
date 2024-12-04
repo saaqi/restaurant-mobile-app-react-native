@@ -318,7 +318,7 @@ const styles = StyleSheet.create({
   },
 
   bodyText: {
-    fontSize: 16,
+    fontSize: 18,
     color: "#1A1A19",
     marginBottom: 10
   },

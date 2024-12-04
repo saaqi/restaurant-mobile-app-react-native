@@ -55,7 +55,7 @@ const MenuListDirect = () => {
         gap: 10
       }}>
         <View style={{ width: windowWidth - 200 }}>
-          <Text style={{ fontSize: 24, fontWeight: 700, marginBottom: 10 }}>{name} </Text>
+          <Text style={{ fontSize: 20, fontWeight: 700, marginBottom: 10 }}>{name}</Text>
           <Text style={{ fontSize: 16, marginBottom: 10 }}>{description}</Text>
           <Text style={{ fontSize: 20, fontWeight: 500, marginTop: 'auto' }}>{price}</Text>
         </View>
@@ -128,7 +128,7 @@ const styles = StyleSheet.create({
 
   menuHeader: {
     fontWeight: 'bold',
-    fontSize: 24,
+    fontSize: 20,
     textAlign: 'center'
   },
 

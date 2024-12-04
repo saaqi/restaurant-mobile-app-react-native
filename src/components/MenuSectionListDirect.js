@@ -55,9 +55,9 @@ const MenuSectionListDirect = () => {
         gap: 10
       }}>
         <View style={{ width: windowWidth - 200 }}>
-          <Text style={{ fontSize: 24, fontWeight: 700, marginBottom: 10 }}>{name} </Text>
+          <Text style={{ fontSize: 18, fontWeight: 700, marginBottom: 10 }}>{name}</Text>
           <Text style={{ fontSize: 16, marginBottom: 10 }}>{description}</Text>
-          <Text style={{ fontSize: 20, fontWeight: 500, marginTop: 'auto' }}>{price}</Text>
+          <Text style={{ fontSize: 18, fontWeight: 500, marginTop: 'auto' }}>{price}</Text>
         </View>
         <View style={{}}>
           <Image
@@ -218,7 +218,7 @@ const styles = StyleSheet.create({
   sectionHeader: {
     fontWeight: 500,
     fontFamily: 'MarkaziText-Medium',
-    fontSize: 26,
+    fontSize: 20,
     textAlign: 'center',
     paddingBottom: 10,
     borderBottomColor: '#31511E',
@@ -238,7 +238,7 @@ const styles = StyleSheet.create({
   menuHeader: {
     fontFamily: 'Karla-Bold',
     fontWeight: 'bold',
-    fontSize: 24,
+    fontSize: 20,
     marginBottom: 10,
     textAlign: 'center'
   },

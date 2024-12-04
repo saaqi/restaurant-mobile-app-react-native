@@ -184,7 +184,7 @@ const styles = StyleSheet.create({
   signUpbuttonText: {
     color: '#31511E',
     fontWeight: 500,
-    fontSize: 16
+    fontSize: 18
   },
   iconStyle: {
     flexDirection: 'row',
