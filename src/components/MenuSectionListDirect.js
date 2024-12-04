@@ -25,7 +25,7 @@ const MenuSectionListDirect = () => {
         'https://raw.githubusercontent.com/Meta-Mobile-Developer-PC/Working-With-Data-API/main/capstone.json'
       )
       const json = await response.json()
-      setMenuList(json.menu.map((item, index, category) => {
+      setMenuList(json.menu.map((item, index) => {
         return {
           ...item,
           id: `menu-${index + 1}`
@@ -40,7 +40,6 @@ const MenuSectionListDirect = () => {
 
   useEffect(() => {
     getMenu()
-    console.log(menuList)
   }, [])
 
   const menuHeader = () => <Text style={styles.menuHeader}>Our Menu</Text>
@@ -81,7 +80,7 @@ const MenuSectionListDirect = () => {
   }
 
   const {
-    searchKeyword, setSearchKeyword
+    searchQuery, setSearchQuery
   } = useContext(GlobalContext);
 
   const sections = [
@@ -103,7 +102,7 @@ const MenuSectionListDirect = () => {
     .map((section) => {
       const filteredData = section.data.filter((item) =>
         Object.values(item).some((value) =>
-          String(value).toLowerCase().includes(searchKeyword.toLowerCase())
+          String(value).toLowerCase().includes(searchQuery.toLowerCase())
         )
       );
       if (filteredData.length > 0) {
@@ -118,18 +117,65 @@ const MenuSectionListDirect = () => {
     <View style={styles.listContainer}>
       {isLoading ? (<ActivityIndicator />) : (
         <View>
-          <View>
-            <Pressable onPress={() => setSearchKeyword('')}>
-              <Text>All</Text>
+          <View style={{
+            flexDirection: 'row',
+            justifyContent: 'center',
+            alignItems: 'center',
+            textAlign: 'center',
+            marginBottom: 20,
+            gap: 10
+          }}>
+            <Pressable
+              style={[styles.menuSelector, searchQuery === '' && { backgroundColor: '#31511E' }]}
+              onPress={() => setSearchQuery('')}
+            >
+              <Text
+                style={[
+                  searchQuery === '' && { color: '#F6FCDF' },
+                  { textAlign: 'center', fontWeight: 500, fontFamily: 'Karla-Medium' }
+                ]}
+              >
+                All
+              </Text>
             </Pressable>
-            <Pressable onPress={() => setSearchKeyword('starters')}>
-              <Text>Starters</Text>
+            <Pressable
+              style={[styles.menuSelector, searchQuery === 'starters' && { backgroundColor: '#31511E' }]}
+              onPress={() => setSearchQuery('starters')}
+            >
+              <Text
+                style={[
+                  searchQuery === 'starters' && { color: '#F6FCDF' },
+                  { textAlign: 'center', fontWeight: 500, fontFamily: 'Karla-Medium' }
+                ]}
+              >
+                Starters
+              </Text>
             </Pressable>
-            <Pressable onPress={() => setSearchKeyword('mains')}>
-              <Text>Mains</Text>
+            <Pressable
+              style={[styles.menuSelector, searchQuery === 'mains' && { backgroundColor: '#31511E' }]}
+              onPress={() => setSearchQuery('mains')}
+            >
+              <Text
+                style={[
+                  searchQuery === 'mains' && { color: '#F6FCDF' },
+                  { textAlign: 'center', fontWeight: 500, fontFamily: 'Karla-Medium' }
+                ]}
+              >
+                Mains
+              </Text>
             </Pressable>
-            <Pressable onPress={() => setSearchKeyword('desserts')}>
-              <Text>Desserts</Text>
+            <Pressable
+              style={[styles.menuSelector, searchQuery === 'desserts' && { backgroundColor: '#31511E' }]}
+              onPress={() => setSearchQuery('desserts')}
+            >
+              <Text
+                style={[
+                  searchQuery === 'desserts' && { color: '#F6FCDF' },
+                  { textAlign: 'center', fontWeight: 500, fontFamily: 'Karla-Medium' }
+                ]}
+              >
+                Desserts
+              </Text>
             </Pressable>
           </View>
           <SectionList
@@ -144,7 +190,7 @@ const MenuSectionListDirect = () => {
               />
             )}
             renderSectionHeader={({ section: { title } }) => (
-              <Text style={{ fontSize: 18, fontWeight: 'bold', marginVertical: 10 }}>
+              <Text style={styles.sectionHeader}>
                 {title}
               </Text>
             )}
@@ -169,9 +215,31 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20
   },
 
+  sectionHeader: {
+    fontWeight: 500,
+    fontFamily: 'MarkaziText-Medium',
+    fontSize: 26,
+    textAlign: 'center',
+    paddingBottom: 10,
+    borderBottomColor: '#31511E',
+    borderBottomWidth: 1,
+  },
+
+  menuSelector: {
+    paddingHorizontal: 10,
+    paddingVertical: 10,
+    borderColor: '#333',
+    borderWidth: 1,
+    fontFamily: 'MarkaziText-Regular',
+    flex: .25,
+    borderRadius: 40
+  },
+
   menuHeader: {
+    fontFamily: 'Karla-Bold',
     fontWeight: 'bold',
     fontSize: 24,
+    marginBottom: 10,
     textAlign: 'center'
   },
 
@@ -184,7 +252,8 @@ const styles = StyleSheet.create({
 
   separator: {
     borderBottomWidth: 1,
-    borderColor: '#666',
+    borderColor: '#31511E',
+    borderStyle: 'dashed',
     paddingTop: 1
   }
 

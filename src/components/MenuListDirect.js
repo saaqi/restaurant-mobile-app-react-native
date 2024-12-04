@@ -80,13 +80,13 @@ const MenuListDirect = () => {
   }
 
   const {
-    searchKeyword, setSearchKeyword
+    searchQuery,
   } = useContext(GlobalContext);
 
   // Filtered menu based on the search keyword
   const filteredMenu = menuList.filter(item =>
     Object.values(item).some(value =>
-      String(value).toLowerCase().includes(searchKeyword.toLowerCase())
+      String(value).toLowerCase().includes(searchQuery.toLowerCase())
     )
   )
 

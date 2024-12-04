@@ -8,45 +8,33 @@ import {
   TextInput
 } from 'react-native'
 import { GlobalContext } from '../GlobalState'
-import { useState, useCallback, useContext, useEffect } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import Ionicons from '@expo/vector-icons/Ionicons'
-import { useFonts } from "expo-font"
 // import MenuListSQLite from  '../components/MenuListSQLite'
-import MenuListDirect from '../components/MenuListDirect'
-// import MenuSectionListDirect from '../components/MenuSectionListDirect'
+// import MenuListDirect from '../components/MenuListDirect'
+import MenuSectionListDirect from '../components/MenuSectionListDirect'
 
 export default function Home() {
 
-  const [searchQuery, setSearchQuery] = useState('')
+  const [inputQuery, setInputQuery] = useState('')
+
   const {
-    setSearchKeyword
+    setSearchQuery
   } = useContext(GlobalContext)
 
   useEffect(() => {
-    setSearchKeyword(searchQuery)
-  }, [searchQuery])
-
-  // FONTS
-  const [fontsLoaded] = useFonts({
-    "Karla-Regular": require("../fonts/Karla-Regular.ttf"),
-    "Karla-Medium": require("../fonts/Karla-Medium.ttf"),
-    "Karla-Bold": require("../fonts/Karla-Bold.ttf"),
-    "Karla-ExtraBold": require("../fonts/Karla-ExtraBold.ttf"),
-    "MarkaziText-Regular": require("../fonts/MarkaziText-Regular.ttf"),
-    "MarkaziText-Medium": require("../fonts/MarkaziText-Medium.ttf"),
-  });
-
-  const onLayoutRootView = useCallback(async () => {
-  }, [fontsLoaded]);
-
+    setSearchQuery(inputQuery)
+  }, [inputQuery])
 
   return (
-    <ScrollView style={styles.container} onLayout={onLayoutRootView}>
+    <ScrollView style={styles.container}>
       <View style={styles.heroSection}>
         <Text style={styles.headingText}>Little Lemon</Text>
         <Text style={styles.subHeadingText}>Chicago</Text>
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <Text style={[styles.heroBodyText, { flexBasis: '50%' }]}>We are a family owned Mediterranean restaurant, focused on traditional recipes served with a modern twist.</Text>
+          <Text style={[styles.heroBodyText, { flexBasis: '50%' }]}>
+            We are a family owned Mediterranean restaurant, focused on traditional recipes served with a modern twist.
+          </Text>
           <View style={{ borderRadius: 20, flexBasis: '50%' }}>
             <Image
               source={require('../images/hero.png')}
@@ -67,18 +55,18 @@ export default function Home() {
           <Ionicons style={styles.icon} name="search-circle-outline" />
           <TextInput
             style={styles.inputField}
-            onChangeText={setSearchQuery}
+            onChangeText={setInputQuery}
             placeholder='Search for dishes'
             secureTextEntry={false}
             keyboardType='default'
-            value={searchQuery}
+            value={inputQuery}
           />
         </KeyboardAvoidingView>
       </View>
       <View>
         {/* <MenuListSQLite /> */}
-        <MenuListDirect />
-        {/* <MenuSectionListDirect /> */}
+        {/* <MenuListDirect /> */}
+        <MenuSectionListDirect />
       </View>
     </ScrollView>
   )
@@ -135,7 +123,7 @@ const styles = StyleSheet.create({
   inputField: {
     outlineStyle: 'none',
     height: '100%',
-    width: "100%"
+    width: "100%",
   },
 
   heroBodyText: {
@@ -143,7 +131,6 @@ const styles = StyleSheet.create({
     color: "#F6FCDF",
     marginBottom: 10,
     fontFamiy: "Karla-Regular"
-
   },
 
   bodyText: {

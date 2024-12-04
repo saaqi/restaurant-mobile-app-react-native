@@ -13,7 +13,8 @@ export const GlobalStateProvider = ({ children }) => {
   const [passwordChanges, setPasswordChanges] = useState(true)
   const [specialOffers, setSpecialOffers] = useState(false)
   const [newsLetter, setNewsLetter] = useState(false)
-  const [searchKeyword, setSearchKeyword] = useState('');
+  const [searchQuery, setSearchQuery] = useState('')
+
 
   return (
     <GlobalContext.Provider value={{
@@ -27,7 +28,7 @@ export const GlobalStateProvider = ({ children }) => {
       userOnBoarded, setUserOnBoarded,
       deliveryStatus, setDeliveryStatus,
       passwordChanges, setPasswordChanges,
-      searchKeyword, setSearchKeyword,
+      searchQuery, setSearchQuery,
     }}>
       {children}
     </GlobalContext.Provider>

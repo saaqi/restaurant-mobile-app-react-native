@@ -105,15 +105,7 @@ const MenuListSQLite = () => {
   const menuFooter = () => <Text style={styles.menuFooter}>All Rights Reserved 2024</Text>
   const Separator = () => <View style={styles.separator}></View>
 
-  // const FoodCats = ({ category }) => {
-  //   return (
-  //     <ScrollView >
-  //       <Pressable>
-  //         <Text>{category}</Text>
-  //       </Pressable>
-  //     </ScrollView>
-  //   )
-  // }
+
   const Foods = ({ name, price, description, image }) => {
     return (
       <View style={{

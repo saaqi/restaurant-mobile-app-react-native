@@ -1,5 +1,7 @@
 import { GlobalStateProvider } from './src/GlobalState'
 import { Index } from './src/Index'
+import { StatusBar } from 'expo-status-bar'
+
 /*
 App Colors ----
 Primary: #31511E
@@ -13,6 +15,7 @@ export default function App() {
   return (
     <GlobalStateProvider>
       <Index />
+      <StatusBar style="auto" />
     </GlobalStateProvider>
   )
 }
