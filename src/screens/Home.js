@@ -11,8 +11,8 @@ import { GlobalContext } from '../GlobalState'
 import { useState, useCallback, useContext, useEffect } from 'react'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import { useFonts } from "expo-font"
-import MenuListSQLite from  '../components/MenuListSQLite'
-// import MenuListDirect from '../components/MenuListDirect'
+// import MenuListSQLite from  '../components/MenuListSQLite'
+import MenuListDirect from '../components/MenuListDirect'
 // import MenuSectionListDirect from '../components/MenuSectionListDirect'
 
 export default function Home() {
@@ -76,8 +76,8 @@ export default function Home() {
         </KeyboardAvoidingView>
       </View>
       <View>
-        <MenuListSQLite />
-        {/* <MenuListDirect /> */}
+        {/* <MenuListSQLite /> */}
+        <MenuListDirect />
         {/* <MenuSectionListDirect /> */}
       </View>
     </ScrollView>

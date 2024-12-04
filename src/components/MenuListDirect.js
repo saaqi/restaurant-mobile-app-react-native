@@ -41,7 +41,6 @@ const MenuListDirect = () => {
 
   useEffect(() => {
     getMenu()
-    console.log(menuList)
   }, [])
 
   const menuHeader = () => <Text style={styles.menuHeader}>Our Menu</Text>

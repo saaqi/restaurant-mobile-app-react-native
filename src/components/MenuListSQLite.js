@@ -26,16 +26,19 @@ const MenuListSQLite = () => {
       const response = await fetch(
         'https://raw.githubusercontent.com/Meta-Mobile-Developer-PC/Working-With-Data-API/main/capstone.json'
       )
-      const json = await response.json()
-      setMenuList(json.menu.map((item, index) => {
+      const data = await response.json()
+      const mappedMenu = data.menu.map((item, index) => {
         return {
           ...item,
+          id: `menu-${index + 1}`,
           picture: `https://github.com/Meta-Mobile-Developer-PC/Working-With-Data-API/blob/main/images/${item.image}?raw=true`,
-          id: `menu-${index + 1}`
         }
-      }))
+      })
+      setMenuList(mappedMenu)
+      return mappedMenu
     } catch (e) {
       console.error(e)
+      return []
     } finally {
       setLoading(false)
     }
@@ -50,6 +53,7 @@ const MenuListSQLite = () => {
           name text,
           price real,
           description text,
+          category text,
           image text,
           picture text
         )`
@@ -62,9 +66,9 @@ const MenuListSQLite = () => {
   // Save menu data to SQLite
   const saveMenuToDatabase = async (menuList) => {
     try {
-      db.execAsync( // runAsync
-        'insert into menuitems (id, name, price, description, category, image, picture) values ' +
-        menuList.map((item) => `('${item.id}', '${item.name}', '${item.price}', '${item.category}', '${item.image}', '${item.picture}')`).join(',')
+      db.execAsync(
+        'insert into menu (id, name, price, description, category, image, picture) values ' +
+        menuList.map((item) => `('${item.id}', '${item.name}', '${item.price}', '${item.description}', '${item.category}', '${item.image}', '${item.picture}')`).join(',')
       );
     } catch (error) {
       console.error('Saving Database, ', error);
@@ -80,23 +84,7 @@ const MenuListSQLite = () => {
       console.error('Loading Database,', error)
       return []
     }
-  };
-
-  // const loadMenuFromDatabase = () => {
-  //   return new Promise((resolve, reject) => {
-  //     db.transaction(tx => {
-  //       tx.executeSql(
-  //         'select * from menu',
-  //         [],
-  //         (_, { rows: { _array } }) => resolve(_array),
-  //         (_, error) => {
-  //           console.error('Loading Database,', error);
-  //           reject([]);
-  //         }
-  //       )
-  //     })
-  //   })
-  // }
+  }
 
   // Load menu items on component mount
   useEffect(() => {
