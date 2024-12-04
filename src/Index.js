@@ -17,7 +17,6 @@ export const Index = () => {
     setNewsLetter,
     setUserLoggedIn,
     setSpecialOffers,
-    setUserOnBoarded,
     setDeliveryStatus,
     setPasswordChanges,
   } = useContext(GlobalContext);
@@ -36,9 +35,6 @@ export const Index = () => {
       const userLoggedInRecorded = await AsyncStorage.getItem('userLoggedIn')
       userLoggedInRecorded && userLoggedInRecorded === 'true' ?
         setUserLoggedIn(true) : setUserLoggedIn(false)
-      const userOnBoardRecorded = await AsyncStorage.getItem('userOnBoarded')
-      userOnBoardRecorded && userOnBoardRecorded === 'true' ?
-        setUserOnBoarded(true) : setUserOnBoarded(false)
 
       const deliveryStatusRecorded = await AsyncStorage.getItem('deliveryStatus')
       deliveryStatusRecorded && deliveryStatusRecorded === 'false' ?

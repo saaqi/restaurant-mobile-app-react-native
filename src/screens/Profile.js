@@ -9,7 +9,6 @@ import {
   Pressable,
   Image
 } from 'react-native'
-// import { useNavigation } from '@react-navigation/native'
 import { useContext } from 'react'
 import { ValidateEmailField } from '../validators/ValidateEmailField'
 import { ValidatePhoneNumberField } from '../validators/ValidatePhoneNumberField'
@@ -30,11 +29,8 @@ export default function Profile({ navigation }) {
     passwordChanges, setPasswordChanges,
     specialOffers, setSpecialOffers,
     newsLetter, setNewsLetter,
-    setUserLoggedIn,
-    userOnBoarded, setUserOnBoarded
+    setUserLoggedIn
   } = useContext(GlobalContext);
-
-  // const navigation = useNavigation()
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -48,13 +44,11 @@ export default function Profile({ navigation }) {
 
   const handleUserDetails = async () => {
     try {
-      setUserOnBoarded(true)
       await AsyncStorage.multiSet([
         ['userAvatar', userAvatar],
         ['userName', userName],
         ['userEmail', userEmail],
         ['userPhone', userPhone],
-        ['userOnBoarded', 'true'],
         ['deliveryStatus', deliveryStatus ? 'true' : 'false'],
         ['passwordChanges', passwordChanges ? 'true' : 'false'],
         ['specialOffers', specialOffers ? 'true' : 'false'],
@@ -101,10 +95,8 @@ export default function Profile({ navigation }) {
     try {
       // removeUserData()
       setUserLoggedIn(false)
-      setUserOnBoarded(false)
       await AsyncStorage.multiSet([
         ['userLoggedIn', 'false'],
-        ['userOnBoarded', 'false'],
       ]);
     } catch (error) {
       console.error('Error retrieving User Data:', error);

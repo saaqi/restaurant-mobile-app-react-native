@@ -7,13 +7,12 @@ export const GlobalStateProvider = ({ children }) => {
   const [userEmail, setUserEmail] = useState('')
   const [userPhone, setUserPhone] = useState('')
   const [userAvatar, setUserAvatar] = useState('')
+  const [searchQuery, setSearchQuery] = useState('')
+  const [newsLetter, setNewsLetter] = useState(false)
   const [userLoggedIn, setUserLoggedIn] = useState(false)
-  const [userOnBoarded, setUserOnBoarded] = useState(false)
   const [deliveryStatus, setDeliveryStatus] = useState(true)
   const [passwordChanges, setPasswordChanges] = useState(true)
   const [specialOffers, setSpecialOffers] = useState(false)
-  const [newsLetter, setNewsLetter] = useState(false)
-  const [searchQuery, setSearchQuery] = useState('')
 
 
   return (
@@ -23,12 +22,11 @@ export const GlobalStateProvider = ({ children }) => {
       userPhone, setUserPhone,
       userAvatar, setUserAvatar,
       newsLetter, setNewsLetter,
+      searchQuery, setSearchQuery,
       userLoggedIn, setUserLoggedIn,
       specialOffers, setSpecialOffers,
-      userOnBoarded, setUserOnBoarded,
       deliveryStatus, setDeliveryStatus,
       passwordChanges, setPasswordChanges,
-      searchQuery, setSearchQuery,
     }}>
       {children}
     </GlobalContext.Provider>
