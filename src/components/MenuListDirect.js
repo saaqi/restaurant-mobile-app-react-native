@@ -9,7 +9,9 @@ import {
   Dimensions,
   Pressable
 } from 'react-native'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useContext } from 'react'
+import { GlobalContext } from '../GlobalState'
+
 
 const MenuListDirect = () => {
 
@@ -24,10 +26,11 @@ const MenuListDirect = () => {
         'https://raw.githubusercontent.com/Meta-Mobile-Developer-PC/Working-With-Data-API/main/capstone.json'
       )
       const json = await response.json()
-      setMenuList(json.menu.map((item) => {
+      setMenuList(json.menu.map((item, index) => {
         return {
           ...item,
-          picture: `https://github.com/Meta-Mobile-Developer-PC/Working-With-Data-API/blob/main/images/${item.image}?raw=true`
+          picture: `https://github.com/Meta-Mobile-Developer-PC/Working-With-Data-API/blob/main/images/${item.image}?raw=true`,
+          id: `menu-${index + 1}`
         }
       }))
     } catch (e) {
@@ -89,6 +92,17 @@ const MenuListDirect = () => {
     )
   }
 
+  const {
+    searchKeyword, setSearchKeyword
+  } = useContext(GlobalContext);
+
+  // Filtered menu based on the search keyword
+  const filteredMenu = menuList.filter(item =>
+    Object.values(item).some(value =>
+      String(value).toLowerCase().includes(searchKeyword.toLowerCase())
+    )
+  );
+
   return (
     <View style={styles.listContainer}>
       {isLoading ? (<ActivityIndicator />) : (
@@ -103,8 +117,8 @@ const MenuListDirect = () => {
             )}
           /> */}
           <FlatList
-            data={menuList}
-            keyExtractor={(item, index) => item + index}
+            data={filteredMenu}
+            keyExtractor={(item) => item.id}
             renderItem={({ item }) => (
               <Foods
                 name={item.name}

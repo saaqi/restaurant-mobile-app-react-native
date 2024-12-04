@@ -7,7 +7,8 @@ import {
   KeyboardAvoidingView,
   TextInput
 } from 'react-native'
-import { useState, useCallback } from 'react'
+import { GlobalContext } from '../GlobalState'
+import { useState, useCallback, useContext, useEffect } from 'react'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import { useFonts } from "expo-font"
 // import MenuListSQLite from  '../components/MenuListSQLite'
@@ -17,6 +18,13 @@ import MenuListDirect from '../components/MenuListDirect'
 export default function Home() {
 
   const [searchQuery, setSearchQuery] = useState('')
+  const {
+    setSearchKeyword
+  } = useContext(GlobalContext)
+
+  useEffect(() => {
+    setSearchKeyword(searchQuery)
+  }, [searchQuery])
 
   // FONTS
   const [fontsLoaded] = useFonts({
