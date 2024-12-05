@@ -7,20 +7,18 @@ import {
   ActivityIndicator,
   Dimensions,
   Pressable,
-  TextInput,
-  Platform,
-  KeyboardAvoidingView
 } from 'react-native'
 import { useEffect, useState, useContext } from 'react'
-import Ionicons from '@expo/vector-icons/Ionicons'
+import { GlobalContext } from '../GlobalState'
 
 const MenuSectionListDirect = () => {
 
   const [isLoading, setLoading] = useState(true)
   const [menuList, setMenuList] = useState([])
 
-  const [inputQuery, setInputQuery] = useState('')
-  const [searchQuery, setSearchQuery] = useState('')
+  const {
+    searchQuery, setSearchQuery
+  } = useContext(GlobalContext);
 
   const windowWidth = Dimensions.get('window').width
 
@@ -121,16 +119,16 @@ const MenuSectionListDirect = () => {
             <Text style={styles.headingText}>Little Lemon</Text>
             <Text style={styles.subHeadingText}>Chicago</Text>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Text style={[styles.heroBodyText, { flexBasis: '50%' }]}>
+              <Text style={[styles.heroBodyText, {flex: .5 }]}>
                 We are a family owned Mediterranean restaurant, focused on traditional recipes served with a modern twist.
               </Text>
-              <View style={{ borderRadius: 20, flexBasis: '50%' }}>
+              <View style={{ borderRadius: 20, flex: .5 }}>
                 <Image
-                  source={require('../images/hero.png')}
+                  source={require('../../assets/hero.png')}
                   style={{
                     alignSelf: 'flex-end',
-                    height: 250,
-                    width: 165,
+                    height: 200,
+                    width: 132,
                     borderRadius: 10,
 
                   }}
@@ -140,29 +138,14 @@ const MenuSectionListDirect = () => {
                 />
               </View>
             </View>
-            <KeyboardAvoidingView
-              style={styles.searchContainer}
-              behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-            >
-              <Ionicons style={styles.icon} name="search-circle-outline" />
-              <TextInput
-                style={styles.inputField}
-                onChangeText={setInputQuery}
-                placeholder='Search for dishes'
-                secureTextEntry={false}
-                keyboardType='default'
-                value={inputQuery}
-              />
-            </KeyboardAvoidingView>
           </View>
         </View>
-        <Text style={styles.menuHeader}>Our Menu</Text>
         <View style={{
           flexDirection: 'row',
           justifyContent: 'center',
           alignItems: 'center',
           textAlign: 'center',
-          marginBottom: 20,
+          marginVertical: 20,
           paddingHorizontal: 20,
           gap: 10
         }}>
@@ -223,10 +206,6 @@ const MenuSectionListDirect = () => {
     )
   }
 
-  useEffect(() => {
-    setSearchQuery(inputQuery)
-  }, [inputQuery])
-
   return (
     <View style={styles.listContainer}>
       {isLoading ? (<ActivityIndicator />) : (
@@ -282,14 +261,6 @@ const styles = StyleSheet.create({
     fontFamily: 'Markazi Text Regular',
     flex: .25,
     borderRadius: 40
-  },
-
-  menuHeader: {
-    fontFamily: 'Karla',
-    fontWeight: 'bold',
-    fontSize: 20,
-    marginBottom: 10,
-    textAlign: 'center'
   },
 
   menuFooter: {
@@ -354,7 +325,7 @@ const styles = StyleSheet.create({
   },
 
   heroBodyText: {
-    fontSize: 24,
+    fontSize: 20,
     color: "#F6FCDF",
     marginBottom: 10,
     fontFamiy: "Karla"
