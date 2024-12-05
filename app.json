@@ -25,7 +25,19 @@
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
-      "expo-font",
+      [
+        "expo-font",
+        {
+          "fonts": [
+            "./assets/fonts/Karla-Bold.ttf",
+            "./assets/fonts/Karla-ExtraBold.ttf",
+            "./assets/fonts/Karla-Medium.ttf",
+            "./assets/fonts/Karla-Regular.ttf",
+            "./assets/fonts/MarkaziText-Medium.ttf",
+            "./assets/fonts/MarkaziText-Regular.ttf"
+          ]
+        }
+      ],
       "expo-sqlite"
     ]
   }

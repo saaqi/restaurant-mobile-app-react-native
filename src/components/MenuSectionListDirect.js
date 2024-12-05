@@ -9,6 +9,7 @@ import {
   Pressable
 } from 'react-native'
 import { useEffect, useState, useContext } from 'react'
+import HeroSection from './HeroSection'
 import { GlobalContext } from '../GlobalState'
 
 
@@ -42,7 +43,6 @@ const MenuSectionListDirect = () => {
     getMenu()
   }, [])
 
-  const menuHeader = () => <Text style={styles.menuHeader}>Our Menu</Text>
   const menuFooter = () => <Text style={styles.menuFooter}>All Rights Reserved &copy; 2024</Text>
   const Separator = () => <View style={styles.separator}></View>
 
@@ -50,7 +50,7 @@ const MenuSectionListDirect = () => {
     return (
       <View style={{
         flex: 1,
-        paddingVertical: 20,
+        padding: 20,
         flexDirection: 'row',
         gap: 10
       }}>
@@ -113,92 +113,100 @@ const MenuSectionListDirect = () => {
     })
     .filter(Boolean)
 
+  const menuHeader = () => {
+    return (
+      <>
+        <HeroSection />
+        <Text style={styles.menuHeader}>Our Menu</Text>
+        <View style={{
+          flexDirection: 'row',
+          justifyContent: 'center',
+          alignItems: 'center',
+          textAlign: 'center',
+          marginBottom: 20,
+          paddingHorizontal: 20,
+          gap: 10
+        }}>
+          <Pressable
+            style={[styles.menuSelector, searchQuery === '' && { backgroundColor: '#31511E' }]}
+            onPress={() => setSearchQuery('')}
+          >
+            <Text
+              style={[
+                searchQuery === '' && { color: '#F6FCDF' },
+                { textAlign: 'center', fontWeight: 500, fontFamily: 'Karla Medium' }
+              ]}
+            >
+              All
+            </Text>
+          </Pressable>
+          <Pressable
+            style={[styles.menuSelector, searchQuery === 'starters' && { backgroundColor: '#31511E' }]}
+            onPress={() => setSearchQuery('starters')}
+          >
+            <Text
+              style={[
+                searchQuery === 'starters' && { color: '#F6FCDF' },
+                { textAlign: 'center', fontWeight: 500, fontFamily: 'Karla Medium' }
+              ]}
+            >
+              Starters
+            </Text>
+          </Pressable>
+          <Pressable
+            style={[styles.menuSelector, searchQuery === 'mains' && { backgroundColor: '#31511E' }]}
+            onPress={() => setSearchQuery('mains')}
+          >
+            <Text
+              style={[
+                searchQuery === 'mains' && { color: '#F6FCDF' },
+                { textAlign: 'center', fontWeight: 500, fontFamily: 'Karla Medium' }
+              ]}
+            >
+              Mains
+            </Text>
+          </Pressable>
+          <Pressable
+            style={[styles.menuSelector, searchQuery === 'desserts' && { backgroundColor: '#31511E' }]}
+            onPress={() => setSearchQuery('desserts')}
+          >
+            <Text
+              style={[
+                searchQuery === 'desserts' && { color: '#F6FCDF' },
+                { textAlign: 'center', fontWeight: 500, fontFamily: 'Karla Medium' }
+              ]}
+            >
+              Desserts
+            </Text>
+          </Pressable>
+        </View>
+      </>
+    )
+  }
+
   return (
     <View style={styles.listContainer}>
       {isLoading ? (<ActivityIndicator />) : (
-        <View>
-          <View style={{
-            flexDirection: 'row',
-            justifyContent: 'center',
-            alignItems: 'center',
-            textAlign: 'center',
-            marginBottom: 20,
-            gap: 10
-          }}>
-            <Pressable
-              style={[styles.menuSelector, searchQuery === '' && { backgroundColor: '#31511E' }]}
-              onPress={() => setSearchQuery('')}
-            >
-              <Text
-                style={[
-                  searchQuery === '' && { color: '#F6FCDF' },
-                  { textAlign: 'center', fontWeight: 500, fontFamily: 'Karla-Medium' }
-                ]}
-              >
-                All
-              </Text>
-            </Pressable>
-            <Pressable
-              style={[styles.menuSelector, searchQuery === 'starters' && { backgroundColor: '#31511E' }]}
-              onPress={() => setSearchQuery('starters')}
-            >
-              <Text
-                style={[
-                  searchQuery === 'starters' && { color: '#F6FCDF' },
-                  { textAlign: 'center', fontWeight: 500, fontFamily: 'Karla-Medium' }
-                ]}
-              >
-                Starters
-              </Text>
-            </Pressable>
-            <Pressable
-              style={[styles.menuSelector, searchQuery === 'mains' && { backgroundColor: '#31511E' }]}
-              onPress={() => setSearchQuery('mains')}
-            >
-              <Text
-                style={[
-                  searchQuery === 'mains' && { color: '#F6FCDF' },
-                  { textAlign: 'center', fontWeight: 500, fontFamily: 'Karla-Medium' }
-                ]}
-              >
-                Mains
-              </Text>
-            </Pressable>
-            <Pressable
-              style={[styles.menuSelector, searchQuery === 'desserts' && { backgroundColor: '#31511E' }]}
-              onPress={() => setSearchQuery('desserts')}
-            >
-              <Text
-                style={[
-                  searchQuery === 'desserts' && { color: '#F6FCDF' },
-                  { textAlign: 'center', fontWeight: 500, fontFamily: 'Karla-Medium' }
-                ]}
-              >
-                Desserts
-              </Text>
-            </Pressable>
-          </View>
-          <SectionList
-            sections={filteredSectionMenu}
-            keyExtractor={(item, index) => item.name + index} // Use a unique key
-            renderItem={({ item }) => (
-              <Foods
-                name={item.name}
-                description={item.description}
-                price={'$' + item.price}
-                image={item.image}
-              />
-            )}
-            renderSectionHeader={({ section: { title } }) => (
-              <Text style={styles.sectionHeader}>
-                {title}
-              </Text>
-            )}
-            ItemSeparatorComponent={Separator}
-            ListHeaderComponent={menuHeader}
-            ListFooterComponent={menuFooter}
-          />
-        </View>
+        <SectionList
+          sections={filteredSectionMenu}
+          keyExtractor={(item, index) => item.name + index} // Use a unique key
+          renderItem={({ item }) => (
+            <Foods
+              name={item.name}
+              description={item.description}
+              price={'$' + item.price}
+              image={item.image}
+            />
+          )}
+          renderSectionHeader={({ section: { title } }) => (
+            <Text style={styles.sectionHeader}>
+              {title}
+            </Text>
+          )}
+          ItemSeparatorComponent={Separator}
+          ListHeaderComponent={menuHeader}
+          ListFooterComponent={menuFooter}
+        />
       )}
     </View>
   )
@@ -211,13 +219,11 @@ const styles = StyleSheet.create({
 
   listContainer: {
     flex: 1,
-    marginTop: 30,
-    paddingHorizontal: 20
   },
 
   sectionHeader: {
     fontWeight: 500,
-    fontFamily: 'MarkaziText-Medium',
+    fontFamily: 'Markazi Text Medium',
     fontSize: 20,
     textAlign: 'center',
     paddingBottom: 10,
@@ -230,13 +236,13 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     borderColor: '#333',
     borderWidth: 1,
-    fontFamily: 'MarkaziText-Regular',
+    fontFamily: 'Markazi Text Regular',
     flex: .25,
     borderRadius: 40
   },
 
   menuHeader: {
-    fontFamily: 'Karla-Bold',
+    fontFamily: 'Karla',
     fontWeight: 'bold',
     fontSize: 20,
     marginBottom: 10,

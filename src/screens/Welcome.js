@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     textAlign: 'center',
     flex: .5,
-    fontFamily: 'MarkaziText-Medium'
+    fontFamily: 'Markazi Text Medium'
   },
 
   loginButton: {

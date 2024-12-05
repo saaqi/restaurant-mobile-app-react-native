@@ -50,12 +50,12 @@ const MenuListSQLite = () => {
       await db.execAsync(
         `PRAGMA journal_mode = WAL;
         CREATE TABLE IF NOT EXISTS menu (
-          id TETX PRIMARY KEY NOT NULL,
+          id TEXT PRIMARY KEY NOT NULL,
           name TEXT NOT NULL,
           price REAL NOT NULL,
           description TEXT NOT NULL,
-          image TEXT NOT NULL,
-          category TEXT NOT NULL
+          category TEXT NOT NULL,
+          image TEXT NOT NULL
         )`
       )
     } catch (error) {
@@ -78,7 +78,7 @@ const MenuListSQLite = () => {
   // Load menu data from SQLite
   const loadMenuFromDatabase = async () => {
     try {
-      const result = await db.execAsync(`select * from menu`)
+      const result = await db.execAsync(`SELECT * FROM menu`)
       return result.rows._array || []
     } catch (error) {
       console.error('Loading Database,', error)
