@@ -12,96 +12,90 @@ import {
 import { useEffect, useState } from 'react'
 import * as SQLite from 'expo-sqlite'
 
-const db = await SQLite.openDatabaseAsync('little_lemon')
-
+const db = SQLite.openDatabaseAsync('little_lemon')
 
 const MenuListSQLite = () => {
 
   const [isLoading, setLoading] = useState(true)
   const [menuList, setMenuList] = useState([])
+
   const windowWidth = Dimensions.get('window').width
 
 
-  const fetchMenuData = async () => {
-    try {
-      const response = await fetch(
-        'https://raw.githubusercontent.com/Meta-Mobile-Developer-PC/Working-With-Data-API/main/capstone.json'
-      )
-      const data = await response.json()
-      const mappedMenu = data.menu.map((item, index) => {
-        return {
-          ...item,
-          id: `menu-${index + 1}`,
-        }
-      })
-      setMenuList(mappedMenu)
-      return mappedMenu
-    } catch (e) {
-      console.error(e)
-      return []
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  // Initialize SQLite database
-  const initDatabase = async () => {
-    try {
-      await db.execAsync(
-        `PRAGMA journal_mode = WAL;
-        CREATE TABLE IF NOT EXISTS menu (
-          id TEXT PRIMARY KEY NOT NULL,
-          name TEXT NOT NULL,
-          price REAL NOT NULL,
-          description TEXT NOT NULL,
-          category TEXT NOT NULL,
-          image TEXT NOT NULL
-        )`
-      )
-    } catch (error) {
-      console.error('Initializing database, ', error)
-    }
-  }
-
-  // Save menu data to SQLite
-  const saveMenuToDatabase = async (menuList) => {
-    try {
-      await db.execAsync(
-        'INSERT INTO menu (id, name, price, description, category, image) VALUES ' +
-        menuList.map((item) => `('${item.id}', '${item.name}', '${item.price}', '${item.description}', '${item.category}', '${item.image}')`).join(',')
-      );
-    } catch (error) {
-      console.error('Saving Database, ', error);
-    }
-  }
-
-  // Load menu data from SQLite
-  const loadMenuFromDatabase = async () => {
-    try {
-      const result = await db.execAsync(`SELECT * FROM menu`)
-      return result.rows._array || []
-    } catch (error) {
-      console.error('Loading Database,', error)
-      return []
-    }
-  }
-
-  // Load menu items on component mount
+  // Initialize database and check for existing data
   useEffect(() => {
-    const loadMenu = async () => {
-      await initDatabase();
+    const initializeDatabase = async () => {
+      // Create the 'menu' table if it doesn't exist
+      await db.execAsync(
+        [
+          {
+            sql: `
+              CREATE TABLE IF NOT EXISTS menu (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                name TEXT NOT NULL,
+                price REAL NOT NULL,
+                description TEXT NOT NULL,
+                image TEXT NOT NULL,
+                category TEXT NOT NULL
+              )
+            `,
+            args: [],
+          },
+        ],
+        false
+      );
 
-      const storedMenu = await loadMenuFromDatabase();
-      if (storedMenu.length === 0) {
-        const menu = await fetchMenuData();
-        await saveMenuToDatabase(menu);
-        setMenuList(menu);
+      // Check if data already exists in the 'menu' table
+      const result = await db.execAsync(
+        [
+          {
+            sql: "SELECT * FROM menu",
+            args: [],
+          },
+        ],
+        true
+      );
+
+      if (result[0].rows.length > 0) {
+        // Load existing data from the database
+        setMenuList(result[0].rows);
+        setLoading(false);
       } else {
-        setMenuList(storedMenu);
+        // Fetch data from remote server and insert into database
+        fetchmenuList();
       }
     };
-    loadMenu();
+
+    initializeDatabase();
   }, []);
+
+  // Fetch menu data from the remote server and store it in the database
+  const fetchmenuList = async () => {
+    try {
+      const response = await fetch(
+        "https://raw.githubusercontent.com/Meta-Mobile-Developer-PC/Working-With-Data-API/main/capstone.json"
+      );
+      const json = await response.json();
+      const menuItems = json.menu;
+
+      // Insert menu data into the database
+      const insertQueries = menuItems.map((item) => ({
+        sql: `
+          INSERT INTO menu (name, price, description, image, category)
+          VALUES (?, ?, ?, ?)
+        `,
+        args: [item.name, item.price, item.description, item.image, item.category],
+      }));
+
+      await db.execAsync(insertQueries, false);
+
+      // Set the fetched data as state
+      setMenuList(menuItems);
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching menu data:", error);
+    }
+  }
 
   const menuHeader = () => <Text style={styles.menuHeader}>Our Menu</Text>
   const menuFooter = () => <Text style={styles.menuFooter}>All Rights Reserved 2024</Text>

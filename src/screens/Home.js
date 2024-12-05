@@ -1,10 +1,12 @@
-import MenuSectionListDirect from "../components/MenuSectionListDirect"
+// import MenuSectionListDirect from "../components/MenuSectionListDirect"
+import MenuListSQLite from "../components/MenuListSQLite"
 import SearchBox from '../components/SearchBox'
 
 const Home = () => {
   return (
     <>
-      <MenuSectionListDirect />
+      {/* <MenuSectionListDirect /> */}
+      <MenuListSQLite />
       <SearchBox />
     </>
   )
