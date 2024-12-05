@@ -6,19 +6,23 @@ import {
   Image,
   ActivityIndicator,
   Dimensions,
-  Pressable
+  Pressable,
+  TextInput,
+  Platform,
+  KeyboardAvoidingView
 } from 'react-native'
 import { useEffect, useState, useContext } from 'react'
-import HeroSection from './HeroSection'
-import { GlobalContext } from '../GlobalState'
-
+import Ionicons from '@expo/vector-icons/Ionicons'
 
 const MenuSectionListDirect = () => {
 
   const [isLoading, setLoading] = useState(true)
   const [menuList, setMenuList] = useState([])
-  const windowWidth = Dimensions.get('window').width
 
+  const [inputQuery, setInputQuery] = useState('')
+  const [searchQuery, setSearchQuery] = useState('')
+
+  const windowWidth = Dimensions.get('window').width
 
   const getMenu = async () => {
     try {
@@ -79,10 +83,6 @@ const MenuSectionListDirect = () => {
     )
   }
 
-  const {
-    searchQuery, setSearchQuery
-  } = useContext(GlobalContext);
-
   const sections = [
     {
       title: "Starters",
@@ -115,8 +115,47 @@ const MenuSectionListDirect = () => {
 
   const menuHeader = () => {
     return (
-      <>
-        <HeroSection />
+      <View>
+        <View style={styles.container}>
+          <View style={styles.heroSection}>
+            <Text style={styles.headingText}>Little Lemon</Text>
+            <Text style={styles.subHeadingText}>Chicago</Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Text style={[styles.heroBodyText, { flexBasis: '50%' }]}>
+                We are a family owned Mediterranean restaurant, focused on traditional recipes served with a modern twist.
+              </Text>
+              <View style={{ borderRadius: 20, flexBasis: '50%' }}>
+                <Image
+                  source={require('../images/hero.png')}
+                  style={{
+                    alignSelf: 'flex-end',
+                    height: 250,
+                    width: 165,
+                    borderRadius: 10,
+
+                  }}
+                  resizeMode={'cover'}
+                  accessible={true}
+                  accessibilityLabel={"Hero Section Image"}
+                />
+              </View>
+            </View>
+            <KeyboardAvoidingView
+              style={styles.searchContainer}
+              behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            >
+              <Ionicons style={styles.icon} name="search-circle-outline" />
+              <TextInput
+                style={styles.inputField}
+                onChangeText={setInputQuery}
+                placeholder='Search for dishes'
+                secureTextEntry={false}
+                keyboardType='default'
+                value={inputQuery}
+              />
+            </KeyboardAvoidingView>
+          </View>
+        </View>
         <Text style={styles.menuHeader}>Our Menu</Text>
         <View style={{
           flexDirection: 'row',
@@ -180,9 +219,13 @@ const MenuSectionListDirect = () => {
             </Text>
           </Pressable>
         </View>
-      </>
+      </View>
     )
   }
+
+  useEffect(() => {
+    setSearchQuery(inputQuery)
+  }, [inputQuery])
 
   return (
     <View style={styles.listContainer}>
@@ -261,6 +304,60 @@ const styles = StyleSheet.create({
     borderColor: '#31511E',
     borderStyle: 'dashed',
     paddingTop: 1
-  }
+  },
+
+  heroSection: {
+    backgroundColor: "#31511E",
+    paddingVertical: 40,
+    paddingHorizontal: 20
+  },
+
+  headingText: {
+    fontSize: 60,
+    fontFamily: "Markazi Text Medium",
+    fontWeight: 500,
+    color: "#ffff00",
+    marginBottom: 20
+  },
+
+  subHeadingText: {
+    fontSize: 36,
+    fontFamily: "Karla Medium",
+    fontWeight: 500,
+    color: "#E1E9C8",
+    marginBottom: 40
+  },
+
+  searchContainer: {
+    backgroundColor: "#fff",
+    paddingHorizontal: 10,
+    paddingVertical: 10,
+    borderRadius: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 20
+  },
+
+  icon: {
+    fontSize: 24,
+    color: "#31511E",
+    borderRightColor: '#333',
+    borderRightWidth: 1,
+    marginRight: 5,
+    paddingRight: 5
+  },
+
+  inputField: {
+    outlineStyle: 'none',
+    height: '100%',
+    width: "100%",
+  },
+
+  heroBodyText: {
+    fontSize: 24,
+    color: "#F6FCDF",
+    marginBottom: 10,
+    fontFamiy: "Karla"
+  },
 
 })
