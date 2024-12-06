@@ -1,18 +1,20 @@
 import { View, SectionList, Image, Pressable, Text, StyleSheet, ActivityIndicator } from 'react-native';
-import * as SQLite from 'expo-sqlite';
+import * as SQLite from 'expo-sqlite'
 import React, { useState, useEffect, useContext } from 'react';
 import { GlobalContext } from '../GlobalState'
+
 
 const MenuSectionListSql = () => {
   const [isLoading, setLoading] = useState(true)
   const [menuItems, setMenuItems] = useState([])
+
   const {
     searchQuery, setSearchQuery
-  } = useContext(GlobalContext);
+  } = useContext(GlobalContext)
+
+  const db = SQLite.openDatabaseAsync('little_lemon')
 
   const initDatabase = async () => {
-    // Open the database
-    const db = await SQLite.openDatabaseAsync('little_lemon');
     // Create table if not exists
     try {
       await db.execAsync(
@@ -26,7 +28,7 @@ const MenuSectionListSql = () => {
         );`
       )
     } catch (error) {
-      console.error('Error creating table:', error);
+      // console.error('Error creating table:', error);
     }
   }
 

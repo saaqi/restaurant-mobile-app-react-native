@@ -104,181 +104,178 @@ export default function Profile({ navigation }) {
   }
 
   return (
-    <View style={styles.container}>
-      <ScrollView style={{ padding: 20 }}>
-        <Text style={[styles.headingText, { textAlign: 'center' }]}>
-          Welcome {userName}, It is nice to have you.
-        </Text>
-        <View style={{
-          flexDirection: 'row',
-          gap: 20,
-          marginVertical: 20,
-          justifyContent: 'center',
-          alignItems: 'center'
-        }}>
-          <Pressable onPress={pickImage}>
-            {userAvatar ? <Image
-              source={{ uri: userAvatar }}
-              style={{
-                height: 100,
-                width: 100,
-                alignSelf: 'start',
-                borderRadius: 100
-              }}
-              resizeMode={'contain'}
-              accessible={true}
-              accessibilityLabel={"User Avatar"}
-            /> : <Ionicons style={{ fontSize: 100 }} name="person-circle" />}
-          </Pressable>
+    <ScrollView style={styles.container}>
+      <Text style={[styles.headingText, { textAlign: 'center' }]}>
+        Welcome {userName}, It is nice to have you.
+      </Text>
+      <View style={{
+        flexDirection: 'row',
+        gap: 20,
+        marginVertical: 20,
+        justifyContent: 'center',
+        alignItems: 'center'
+      }}>
+        <Pressable onPress={pickImage}>
+          {userAvatar ? <Image
+            source={{ uri: userAvatar }}
+            style={{
+              height: 100,
+              width: 100,
+              alignSelf: 'start',
+              borderRadius: 100
+            }}
+            resizeMode={'contain'}
+            accessible={true}
+            accessibilityLabel={"User Avatar"}
+          /> : <Ionicons style={{ fontSize: 100 }} name="person-circle" />}
+        </Pressable>
 
-          <View>
-            <Pressable onPress={pickImage} style={styles.primaryButton}>
-              <View style={[styles.iconStyle]}>
-                <Ionicons style={styles.darkButtonText} name="person-add-outline" />
-                <Text style={styles.darkButtonText}>{userAvatar ? 'Change Avatar' : 'Set Avatar'}</Text>
-              </View>
-            </Pressable>
-            <Pressable
-              onPress={() => setUserAvatar('')} style={styles.darkButton}>
-              <View style={styles.iconStyle}>
-                <Ionicons style={styles.darkButtonText} name="person-remove-outline" />
-                <Text style={styles.darkButtonText}>Remove Avatar</Text>
-              </View>
-            </Pressable>
-          </View>
+        <View>
+          <Pressable onPress={pickImage} style={styles.primaryButton}>
+            <View style={[styles.iconStyle]}>
+              <Ionicons style={styles.darkButtonText} name="person-add-outline" />
+              <Text style={styles.darkButtonText}>{userAvatar ? 'Change Avatar' : 'Set Avatar'}</Text>
+            </View>
+          </Pressable>
+          <Pressable
+            onPress={() => setUserAvatar('')} style={styles.darkButton}>
+            <View style={styles.iconStyle}>
+              <Ionicons style={styles.darkButtonText} name="person-remove-outline" />
+              <Text style={styles.darkButtonText}>Remove Avatar</Text>
+            </View>
+          </Pressable>
         </View>
-        <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      </View>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      >
+        <ScrollView
+          style={{ marginBottom: 20 }}
+          horizontal={false}
+        // keyboardDismissMode="on-drag"
         >
-          <ScrollView
-            style={{ marginBottom: 20 }}
-            horizontal={false}
-          // keyboardDismissMode="on-drag"
-          >
-            <TextInput
-              style={styles.inputField}
-              onChangeText={setUserName}
-              placeholder='Your Name'
-              secureTextEntry={false}
-              keyboardType='default'
-              value={userName}
-            />
-            <TextInput
-              style={styles.inputField}
-              onChangeText={setUserEmail}
-              placeholder='Your Email'
-              secureTextEntry={false}
-              keyboardType='email-address'
-              value={userEmail}
-            />
-            <TextInput
-              style={styles.inputField}
-              onChangeText={setUserPhone}
-              placeholder='Your Phone Number'
-              secureTextEntry={false}
-              keyboardType='number-pad'
-              value={userPhone}
-            />
-            {(
-              !ValidateEmailField(userEmail) ||
-              !ValidatePhoneNumberField(userPhone) ||
-              userName === ''
-            ) && (
-                <Text style={styles.alert}>
-                  {
-                    userName === '' ? 'Please Enter your full name to contiue.' :
-                      !ValidateEmailField(userEmail) ? 'Please Enter your Email to continue' :
-                        !ValidatePhoneNumberField(userPhone) ? 'Please enter your phone number in the eg: (123) 456-7890 or +1 (123) 456-7890.' :
-                          ''
-                  }
-                </Text>
-              )}
-          </ScrollView>
-        </KeyboardAvoidingView>
+          <TextInput
+            style={styles.inputField}
+            onChangeText={setUserName}
+            placeholder='Your Name'
+            secureTextEntry={false}
+            keyboardType='default'
+            value={userName}
+          />
+          <TextInput
+            style={styles.inputField}
+            onChangeText={setUserEmail}
+            placeholder='Your Email'
+            secureTextEntry={false}
+            keyboardType='email-address'
+            value={userEmail}
+          />
+          <TextInput
+            style={styles.inputField}
+            onChangeText={setUserPhone}
+            placeholder='Your Phone Number'
+            secureTextEntry={false}
+            keyboardType='number-pad'
+            value={userPhone}
+          />
+          {(
+            !ValidateEmailField(userEmail) ||
+            !ValidatePhoneNumberField(userPhone) ||
+            userName === ''
+          ) && (
+              <Text style={styles.alert}>
+                {
+                  userName === '' ? 'Please Enter your full name to contiue.' :
+                    !ValidateEmailField(userEmail) ? 'Please Enter your Email to continue' :
+                      !ValidatePhoneNumberField(userPhone) ? 'Please enter your phone number in the eg: (123) 456-7890 or +1 (123) 456-7890.' :
+                        ''
+                }
+              </Text>
+            )}
+        </ScrollView>
+      </KeyboardAvoidingView>
 
-        <View style={{ marginBottom: 30 }}>
-          <Text style={styles.headingText}>Select the notifications you would like to receive:</Text>
+      <View style={{ marginBottom: 30 }}>
+        <Text style={styles.headingText}>Select the notifications you would like to receive:</Text>
 
-          <View style={{ flexDirection: 'row', gap: 10 }}>
-            <CheckBox
-              value={deliveryStatus}
-              onValueChange={(value) => handleCheckboxChange(deliveryStatus, setDeliveryStatus)}
-            />
-            <Text style={styles.bodyText}>Order Delivery Status</Text>
-          </View>
-          <View style={{ flexDirection: 'row', gap: 10 }}>
-            <CheckBox
-              value={passwordChanges}
-              onValueChange={(value) => handleCheckboxChange(passwordChanges, setPasswordChanges)}
-            />
-            <Text style={styles.bodyText}>Passwrod Changes</Text>
-          </View>
-          <View style={{ flexDirection: 'row', gap: 10 }}>
-            <CheckBox
-              value={specialOffers}
-              onValueChange={(value) => handleCheckboxChange(specialOffers, setSpecialOffers)}
-            />
-            <Text style={styles.bodyText}>Special Offers</Text>
-          </View>
-          <View style={{ flexDirection: 'row', gap: 10 }}>
-            <CheckBox
-              value={newsLetter}
-              onValueChange={(value) => handleCheckboxChange(newsLetter, setNewsLetter)}
-            />
-            <Text style={styles.bodyText}>Newsletter</Text>
-          </View>
+        <View style={{ flexDirection: 'row', gap: 10 }}>
+          <CheckBox
+            value={deliveryStatus}
+            onValueChange={(value) => handleCheckboxChange(deliveryStatus, setDeliveryStatus)}
+          />
+          <Text style={styles.bodyText}>Order Delivery Status</Text>
         </View>
-
-        <View style={{
-          flexDirection: 'row',
-          gap: 10,
-          flexWrap: 'wrap',
-          rowGap: 20,
-          alignItems: 'center',
-          justifyContent: 'center'
-        }}>
-          <Pressable
-            onPress={() => handleUserDetails()}
-            disabled={
-              userName === '' ||
-              !ValidateEmailField(userEmail) ||
-              !ValidatePhoneNumberField(userPhone)
-            }
-            style={[
-              userName === '' ||
-                !ValidateEmailField(userEmail) ||
-                !ValidatePhoneNumberField(userPhone) ?
-                styles.subButtonDisabled : styles.primaryButton, { flexBasis: '100%' }
-            ]}
-          >
-            <View style={styles.iconStyle}>
-              <Ionicons style={styles.darkButtonText} name="save-outline" />
-              <Text style={styles.darkButtonText}>Save & Continue</Text>
-            </View>
-          </Pressable>
-          <Pressable
-            style={[styles.darkButton, { flex: .5 }]}
-            onPress={() => setLogout()}
-          >
-            <View style={styles.iconStyle}>
-              <Ionicons style={styles.darkButtonText} name="log-out-outline" />
-              <Text style={styles.darkButtonText}>Logout</Text>
-            </View>
-          </Pressable>
-          <Pressable
-            onPress={() => removeUserData()}
-            style={[styles.dangerButton, { flex: .5 }]}
-          >
-            <View style={styles.iconStyle}>
-              <Ionicons style={styles.dangerButtonText} name="trash-outline" />
-              <Text style={styles.dangerButtonText}>Discard Details</Text>
-            </View>
-          </Pressable>
+        <View style={{ flexDirection: 'row', gap: 10 }}>
+          <CheckBox
+            value={passwordChanges}
+            onValueChange={(value) => handleCheckboxChange(passwordChanges, setPasswordChanges)}
+          />
+          <Text style={styles.bodyText}>Passwrod Changes</Text>
         </View>
+        <View style={{ flexDirection: 'row', gap: 10 }}>
+          <CheckBox
+            value={specialOffers}
+            onValueChange={(value) => handleCheckboxChange(specialOffers, setSpecialOffers)}
+          />
+          <Text style={styles.bodyText}>Special Offers</Text>
+        </View>
+        <View style={{ flexDirection: 'row', gap: 10 }}>
+          <CheckBox
+            value={newsLetter}
+            onValueChange={(value) => handleCheckboxChange(newsLetter, setNewsLetter)}
+          />
+          <Text style={styles.bodyText}>Newsletter</Text>
+        </View>
+      </View>
 
-      </ScrollView>
-
-    </View>
+      <View style={{
+        flexDirection: 'row',
+        gap: 10,
+        flexWrap: 'wrap',
+        rowGap: 20,
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginBottom: 40
+      }}>
+        <Pressable
+          onPress={() => handleUserDetails()}
+          disabled={
+            userName === '' ||
+            !ValidateEmailField(userEmail) ||
+            !ValidatePhoneNumberField(userPhone)
+          }
+          style={[
+            userName === '' ||
+              !ValidateEmailField(userEmail) ||
+              !ValidatePhoneNumberField(userPhone) ?
+              styles.subButtonDisabled : styles.primaryButton, { flexBasis: '100%' }
+          ]}
+        >
+          <View style={styles.iconStyle}>
+            <Ionicons style={styles.darkButtonText} name="save-outline" />
+            <Text style={styles.darkButtonText}>Save & Continue</Text>
+          </View>
+        </Pressable>
+        <Pressable
+          style={[styles.darkButton, { flex: .5 }]}
+          onPress={() => setLogout()}
+        >
+          <View style={styles.iconStyle}>
+            <Ionicons style={styles.darkButtonText} name="log-out-outline" />
+            <Text style={styles.darkButtonText}>Logout</Text>
+          </View>
+        </Pressable>
+        <Pressable
+          onPress={() => removeUserData()}
+          style={[styles.dangerButton, { flex: .5 }]}
+        >
+          <View style={styles.iconStyle}>
+            <Ionicons style={styles.dangerButtonText} name="trash-outline" />
+            <Text style={styles.dangerButtonText}>Discard Details</Text>
+          </View>
+        </Pressable>
+      </View>
+    </ScrollView>
   )
 }
 
@@ -286,7 +283,7 @@ export default function Profile({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // padding: 20,
+    padding: 20,
     backgroundColor: "#F6FCDF"
   },
 
