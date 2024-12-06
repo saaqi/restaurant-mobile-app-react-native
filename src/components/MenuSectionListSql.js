@@ -55,7 +55,7 @@ const MenuSectionListSql = () => {
       // Use a prepared statement for batch insertion
       const insertQuery = `
         INSERT INTO menu (id, name, price, description, image, category)
-        VALUES (?, ?, ?, ?, ? , ?);
+        VALUES (?, ?, ?, ?, ?, ?);
       `
 
       // Execute batch insert
