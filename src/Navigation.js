@@ -25,26 +25,26 @@ export default function Navigation() {
       screenOptions={{
         headerRight: () =>
           <Pressable onPress={() => userLoggedIn && navigation.navigate('Profile')}>
-          <View>
-            {userAvatar && userLoggedIn ? <Image
-              source={{ uri: userAvatar }
-              }
-              style={{
-                height: 40,
-                width: 40,
-                // marginRight: 11,
-                borderRadius: 100,
-              }}
-              resizeMode={'contain'}
-              accessible={true}
-              accessibilityLabel={"User Avatar"}
+            <View>
+              {userAvatar && userLoggedIn ? <Image
+                source={{ uri: userAvatar }
+                }
+                style={{
+                  height: 40,
+                  width: 40,
+                  // marginRight: 11,
+                  borderRadius: 100,
+                }}
+                resizeMode={'contain'}
+                accessible={true}
+                accessibilityLabel={"User Avatar"}
               /> : <Ionicons style={{
-                  fontSize: 40,
-                  // marginRight: 11
+                fontSize: 40,
+                // marginRight: 11
               }} name="person-circle" />
-            }
-          </View>
-        </Pressable>,
+              }
+            </View>
+          </Pressable>,
         headerStyle: { backgroundColor: '#F6FCDF' },
         headerTintColor: '#1A1A19',
         headerTitleAlign: 'center',
@@ -62,7 +62,22 @@ export default function Navigation() {
         />
       }}
     >
-      {!userLoggedIn ? (
+      {userLoggedIn ? (
+        <>
+          <Stack.Screen name="Home"
+            options={{
+              title: 'Home - Little Lemon'
+            }}
+            component={Home}
+          />
+          <Stack.Screen name="Profile"
+            options={{
+              title: userName ? userName + '\'s Profile Page' : 'Profile - Little Lemon'
+            }}
+            component={Profile}
+          />
+        </>
+      ) : (
         <>
           <Stack.Screen name="Welcome"
             options={{
@@ -81,21 +96,6 @@ export default function Navigation() {
               title: 'Signup - Little Lemon'
             }}
             component={SingUp}
-          />
-        </>
-      ) : (
-        <>
-          <Stack.Screen name="Home"
-            options={{
-              title: 'Home - Little Lemon'
-            }}
-            component={Home}
-          />
-          <Stack.Screen name="Profile"
-            options={{
-              title: userName ? userName + '\'s Profile Page' : 'Profile - Little Lemon'
-            }}
-            component={Profile}
           />
         </>
       )}
