@@ -32,13 +32,16 @@ export default function Navigation() {
               style={{
                 height: 40,
                 width: 40,
-                marginRight: 11,
-                borderRadius: 100
+                // marginRight: 11,
+                borderRadius: 100,
               }}
               resizeMode={'contain'}
               accessible={true}
               accessibilityLabel={"User Avatar"}
-            /> : <Ionicons style={{ fontSize: 40, marginRight: 11 }} name="person-circle" />
+              /> : <Ionicons style={{
+                  fontSize: 40,
+                  // marginRight: 11
+              }} name="person-circle" />
             }
           </View>
         </Pressable>,
