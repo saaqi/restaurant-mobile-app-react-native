@@ -15,16 +15,16 @@ const MenuSectionListSql = () => {
     const db = await SQLite.openDatabaseAsync('little_lemon');
     // Create table if not exists
     try {
-      await db.execAsync(`
-        CREATE TABLE IF NOT EXISTS menu (
-          id TEXT PRIMARY KEY NOT NULL,
-          name TEXT NOT NULL,
-          price REAL NOT NULL,
-          description TEXT NOT NULL,
-          image TEXT NOT NULL,
-          category TEXT NOT NULL
-        );
-      `);
+      await db.execAsync(
+        `CREATE TABLE IF NOT EXISTS menu (
+          id text PRIMARY KEY NOT NULL,
+          name text NOT NULL,
+          price real NOT NULL,
+          description text NOT NULL,
+          image text NOT NULL,
+          category text NOT NULL
+        );`
+      )
     } catch (error) {
       console.error('Error creating table:', error);
     }
@@ -52,21 +52,15 @@ const MenuSectionListSql = () => {
   // Insert menu items into SQLite database
   const insertMenuItems = async (items) => {
     try {
-      // Use a prepared statement for batch insertion
-      const insertQuery = `
-        INSERT INTO menu (id, name, price, description, image, category)
-        VALUES (?, ?, ?, ?, ? , ?);
-      `
-
-      // Execute batch insert
+      const entryData = items.map(item =>
+        `('${item.id}', '${item.name}', ${item.price}, '${item.description}', '${item.image}', '${item.category}')`
+      ).join(', ')
       await db.execAsync(
-        items.map(item => ({
-          sql: insertQuery,
-          args: [item.id, item.name, item.price, item.description, item.image, item.category]
-        }))
+        `INSERT INTO menu (id, name, price, description, image, , category) VALUES ` +
+        `${entryData}`
       )
     } catch (error) {
-      // console.error('Error inserting menu items:', error);
+      console.error('Error inserting menu items:', error);
     }
   }
 
@@ -87,7 +81,7 @@ const MenuSectionListSql = () => {
       const result = await db.execAsync('SELECT COUNT(*) as count FROM menu;')
       return result[0].rows[0].count === 0
     } catch (error) {
-      // console.error('Error checking database:', error)
+      console.error('Error checking database:', error)
       return true
     }
   }
