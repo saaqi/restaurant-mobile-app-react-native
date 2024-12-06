@@ -17,7 +17,7 @@ const MenuSectionListSql = () => {
     try {
       await db.execAsync(
         `CREATE TABLE IF NOT EXISTS menu (
-          id text PRIMARY KEY NOT NULL,
+          id integer PRIMARY KEY AUTOINCREMENT NOT NULL,
           name text NOT NULL,
           price real NOT NULL,
           description text NOT NULL,
@@ -53,11 +53,11 @@ const MenuSectionListSql = () => {
   const insertMenuItems = async (items) => {
     try {
       const entryData = items.map(item =>
-        `('${item.id}', '${item.name}', ${item.price}, '${item.description}', '${item.image}', '${item.category}')`
+        `("${item.name}", ${item.price}, "${item.description}", "${item.image}", "${item.category}")`
       ).join(', ')
       await db.execAsync(
-        `INSERT INTO menu (id, name, price, description, image, , category) VALUES ` +
-        `${entryData}`
+        `INSERT INTO menu (name, price, description, image, category) VALUES ` +
+        `${entryData};`
       )
     } catch (error) {
       console.error('Error inserting menu items:', error);
