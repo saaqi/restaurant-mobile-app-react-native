@@ -1,50 +1,126 @@
-import {
-  Text,
-  StyleSheet,
-  SectionList,
-  View,
-  Image,
-  ActivityIndicator,
-  Pressable,
-} from 'react-native'
-import { useEffect, useState, useContext } from 'react'
+import { View, SectionList, Image, Pressable, Text, StyleSheet, ActivityIndicator } from 'react-native';
+import * as SQLite from 'expo-sqlite';
+import React, { useState, useEffect, useContext } from 'react';
 import { GlobalContext } from '../GlobalState'
 
-const MenuSectionListDirect = () => {
-
+const MenuSectionListSql = () => {
   const [isLoading, setLoading] = useState(true)
-  const [menuList, setMenuList] = useState([])
-
+  const [menuItems, setMenuItems] = useState([])
   const {
     searchQuery, setSearchQuery
   } = useContext(GlobalContext);
 
-  const getMenu = async () => {
+  const initDatabase = async () => {
+    // Open the database
+    const db = await SQLite.openDatabaseAsync('little_lemon');
+    // Create table if not exists
+    try {
+      await db.execAsync(`
+        CREATE TABLE IF NOT EXISTS menu (
+          id TEXT PRIMARY KEY NOT NULL,
+          name TEXT NOT NULL,
+          price REAL NOT NULL,
+          description TEXT NOT NULL,
+          image TEXT NOT NULL,
+          category TEXT NOT NULL
+        );
+      `);
+    } catch (error) {
+      console.error('Error creating table:', error);
+    }
+  }
+
+  // Fetch menu data from remote server
+  const fetchMenuFromServer = async () => {
     try {
       const response = await fetch(
         'https://raw.githubusercontent.com/Meta-Mobile-Developer-PC/Working-With-Data-API/main/capstone.json'
       )
-      const json = await response.json()
-      setMenuList(json.menu.map((item, index) => {
+      const data = await response.json();
+      return data.menu.map((item, index) => {
         return {
           ...item,
           id: `menu-${index + 1}`
         }
-      }))
-    } catch (e) {
-      console.error(e)
-    } finally {
-      setLoading(false)
+      })
+    } catch (error) {
+      console.error('Error fetching menu:', error);
+      return [];
     }
   }
 
+  // Insert menu items into SQLite database
+  const insertMenuItems = async (items) => {
+    try {
+      // Use a prepared statement for batch insertion
+      const insertQuery = `
+        INSERT INTO menu (id, name, price, description, image, category)
+        VALUES (?, ?, ?, ?, ? , ?);
+      `
+
+      // Execute batch insert
+      await db.execAsync(
+        items.map(item => ({
+          sql: insertQuery,
+          args: [item.id, item.name, item.price, item.description, item.image, item.category]
+        }))
+      )
+    } catch (error) {
+      // console.error('Error inserting menu items:', error);
+    }
+  }
+
+  // Retrieve menu items from database
+  const retrieveMenuItems = async () => {
+    try {
+      const result = await db.execAsync('SELECT * FROM menu;')
+      return result[0].rows;
+    } catch (error) {
+      console.error('Error retrieving menu items:', error)
+      return []
+    }
+  }
+
+  // Check if database is empty
+  const isDatabaseEmpty = async () => {
+    try {
+      const result = await db.execAsync('SELECT COUNT(*) as count FROM menu;')
+      return result[0].rows[0].count === 0
+    } catch (error) {
+      // console.error('Error checking database:', error)
+      return true
+    }
+  }
+
+  // Main data loading logic
+  const loadMenuData = async () => {
+    try {
+      await initDatabase()
+      const isEmpty = await isDatabaseEmpty()
+      if (isEmpty) {
+        // Fetch from server and store in database
+        const serverMenuItems = await fetchMenuFromServer()
+        await insertMenuItems(serverMenuItems)
+        setMenuItems(serverMenuItems)
+      } else {
+        // Load from database
+        const storedMenuItems = await retrieveMenuItems()
+        setMenuItems(storedMenuItems)
+      }
+    } catch (error) {
+      console.error('Error Setting Menu List:', error)
+    } finally {
+      setLoading(false)
+    }
+  };
+
+  // Effect to load menu data on component mount
   useEffect(() => {
-    getMenu()
+    loadMenuData()
   }, [])
 
   const menuFooter = () => <Text style={styles.menuFooter}>All Rights Reserved &copy; 2024</Text>
   const Separator = () => <View style={styles.separator}></View>
-
   const Foods = ({ name, price, description, image }) => {
     return (
       <View style={{
@@ -77,22 +153,20 @@ const MenuSectionListDirect = () => {
       </View>
     )
   }
-
   const sections = [
     {
       title: "Starters",
-      data: menuList.filter((item) => item.category === "starters"),
+      data: menuItems.filter((item) => item.category === "starters"),
     },
     {
       title: "Mains",
-      data: menuList.filter((item) => item.category === "mains"),
+      data: menuItems.filter((item) => item.category === "mains"),
     },
     {
       title: "Desserts",
-      data: menuList.filter((item) => item.category === "desserts"),
+      data: menuItems.filter((item) => item.category === "desserts"),
     },
   ]
-
   const filteredSectionMenu = sections
     .map((section) => {
       const filteredData = section.data.filter((item) =>
@@ -106,7 +180,6 @@ const MenuSectionListDirect = () => {
 
       return null
     }).filter(Boolean)
-
   const menuHeader = () => {
     return (
       <View>
@@ -115,7 +188,7 @@ const MenuSectionListDirect = () => {
             <Text style={styles.headingText}>Little Lemon</Text>
             <Text style={styles.subHeadingText}>Chicago</Text>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Text style={[styles.heroBodyText, {flex: .5 }]}>
+              <Text style={[styles.heroBodyText, { flex: .5 }]}>
                 We are a family owned Mediterranean restaurant, focused on traditional recipes served with a modern twist.
               </Text>
               <View style={{ borderRadius: 20, flex: .5 }}>
@@ -204,10 +277,10 @@ const MenuSectionListDirect = () => {
 
   return (
     <View style={styles.listContainer}>
-      {isLoading ? (<ActivityIndicator />) : (
+      {isLoading ? (<ActivityIndicator style={{ flex: 1 }} />) : (
         <SectionList
           sections={filteredSectionMenu}
-          keyExtractor={(item, index) => item.name + index} // Use a unique key
+          keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
             <Foods
               name={item.name}
@@ -229,8 +302,6 @@ const MenuSectionListDirect = () => {
     </View>
   )
 }
-
-export default MenuSectionListDirect
 
 //Style Sheet
 const styles = StyleSheet.create({
@@ -328,3 +399,5 @@ const styles = StyleSheet.create({
   },
 
 })
+
+export default MenuSectionListSql;

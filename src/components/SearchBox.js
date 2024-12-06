@@ -26,6 +26,7 @@ const SearchBox = () => {
           style={styles.inputField}
           onChangeText={setInput}
           placeholder='Search for dishes'
+          placeholderTextColor={'#F6FCDF'}
           secureTextEntry={false}
           keyboardType='default'
           value={input}
