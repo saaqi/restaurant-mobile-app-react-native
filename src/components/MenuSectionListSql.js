@@ -114,7 +114,7 @@ const MenuSectionListSql = () => {
     const db = await SQLite.openDatabaseAsync(dbName);
     const allRows = await db.getAllAsync('SELECT COUNT(*) as count FROM menu');
     // If the count is 0, it means the table is empty
-    return allRows[0].count !== 0;
+    return allRows[0].count === 0;
   } catch (error) {
     console.error('Checking database:', error);
     return false; // Return false if there's an error (indicating the table is not empty)
