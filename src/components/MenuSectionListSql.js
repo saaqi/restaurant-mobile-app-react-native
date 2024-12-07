@@ -230,30 +230,28 @@ const MenuSectionListSql = () => {
   }).filter(Boolean)
   const MenuHeader = () => {
     return (
-      <View>
-        <View style={styles.container}>
-          <View style={styles.heroSection}>
-            <Text style={styles.headingText}>Little Lemon</Text>
-            <Text style={styles.subHeadingText}>Chicago</Text>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Text style={[styles.heroBodyText, { flex: .5 }]}>
-                We are a family owned Mediterranean restaurant, focused on traditional recipes served with a modern twist.
-              </Text>
-              <View style={{ borderRadius: 20, flex: .5 }}>
-                <Image
-                  source={require('../../assets/hero.png')}
-                  style={{
-                    alignSelf: 'flex-end',
-                    height: 200,
-                    width: 132,
-                    borderRadius: 10,
+      <View style={styles.container}>
+        <View style={styles.heroSection}>
+          <Text style={styles.headingText}>Little Lemon</Text>
+          <Text style={styles.subHeadingText}>Chicago</Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <Text style={[styles.heroBodyText, { flex: .5 }]}>
+              We are a family owned Mediterranean restaurant, focused on traditional recipes served with a modern twist.
+            </Text>
+            <View style={{ borderRadius: 20, flex: .5 }}>
+              <Image
+                source={require('../../assets/hero.png')}
+                style={{
+                  alignSelf: 'flex-end',
+                  height: 200,
+                  width: 132,
+                  borderRadius: 10,
 
-                  }}
-                  resizeMode={'cover'}
-                  accessible={true}
-                  accessibilityLabel={"Hero Section Image"}
-                />
-              </View>
+                }}
+                resizeMode={'cover'}
+                accessible={true}
+                accessibilityLabel={"Hero Section Image"}
+              />
             </View>
           </View>
         </View>
@@ -364,7 +362,7 @@ const MenuSectionListSql = () => {
                   </Text>
                 </Pressable>
               </View>
-             </View>
+            </View>
           }
           ListFooterComponent={menuFooter}
         />
@@ -410,8 +408,7 @@ const styles = StyleSheet.create({
   separator: {
     borderBottomWidth: 1,
     borderColor: '#31511E',
-    borderStyle: 'dashed',
-    paddingTop: 1
+    borderStyle: 'dashed'
   },
 
   heroSection: {
