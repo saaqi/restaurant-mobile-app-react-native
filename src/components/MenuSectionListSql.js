@@ -12,13 +12,16 @@ const MenuSectionListSql = () => {
     searchQuery, setSearchQuery
   } = useContext(GlobalContext)
 
-  const db = SQLite.openDatabaseAsync('little_lemon')
+
+  const dbName = 'little_lemon'
 
   const initDatabase = async () => {
+    const db = await SQLite.openDatabaseAsync(dbName)
     // Create table if not exists
     try {
       await db.execAsync(
-        `CREATE TABLE IF NOT EXISTS menu (
+        `PRAGMA journal_mode = WAL;
+        CREATE TABLE IF NOT EXISTS menu (
           id integer PRIMARY KEY AUTOINCREMENT NOT NULL,
           name text NOT NULL,
           price real NOT NULL,
@@ -28,9 +31,13 @@ const MenuSectionListSql = () => {
         );`
       )
     } catch (error) {
-      // console.error('Error creating table:', error);
+      console.error('Creating table:', error);
     }
   }
+
+  useEffect(() => {
+    initDatabase()
+  }, [])
 
   // Fetch menu data from remote server
   const fetchMenuFromServer = async () => {
@@ -54,44 +61,69 @@ const MenuSectionListSql = () => {
   // Insert menu items into SQLite database
   const insertMenuItems = async (items) => {
     try {
-      const entryData = items.map(item =>
-        `("${item.name}", ${item.price}, "${item.description}", "${item.image}", "${item.category}")`
-      ).join(', ')
-      await db.execAsync(
-        `INSERT INTO menu (name, price, description, image, category) VALUES ` +
-        `${entryData};`
-      )
+      const db = await SQLite.openDatabaseAsync(dbName)
+      // const result = await db.runAsync(
+      //   'INSERT INTO menu (name, price, description, image, category) VALUES (?, ?, ?, ?, ?)', ['aaa', 100]);
+      // const entryData = items.map(item =>
+      //   `("${item.name}", ${item.price}, "${item.description}", "${item.image}", "${item.category}")`
+      // ).join(', ')
+      // await db.runAsync(
+      //   `INSERT INTO menu (name, price, description, image, category) VALUES ` +
+      //   `${entryData};`
+      // )
+      const entryData = items.map(() => '(?, ?, ?, ?, ?)').join(', ');
+      const values = items.flatMap(item => [
+        item.name,
+        item.price,
+        item.description,
+        item.image,
+        item.category,
+      ]);
+
+      await db.runAsync(
+        `INSERT INTO menu (name, price, description, image, category) VALUES ${entryData};`,
+        values
+      );
     } catch (error) {
-      console.error('Error inserting menu items:', error);
+      console.error('Inserting menu items:', error);
     }
   }
 
   // Retrieve menu items from database
   const retrieveMenuItems = async () => {
     try {
-      const result = await db.execAsync('SELECT * FROM menu;')
-      return result[0].rows;
+      const db = await SQLite.openDatabaseAsync(dbName);
+      const allRows = await db.getAllAsync('SELECT * FROM menu');
+      // Map each row to an object with the desired structure
+      return allRows.map(row => ({
+        name: row.name,
+        price: parseFloat(row.price),
+        description: row.description,
+        image: row.image,
+        category: row.category
+      }));
     } catch (error) {
-      console.error('Error retrieving menu items:', error)
-      return []
+      console.error('Retrieving menu items:', error);
+      return [];
     }
   }
 
   // Check if database is empty
   const isDatabaseEmpty = async () => {
-    try {
-      const result = await db.execAsync('SELECT COUNT(*) as count FROM menu;')
-      return result[0].rows[0].count === 0
-    } catch (error) {
-      console.error('Error checking database:', error)
-      return true
-    }
+  try {
+    const db = await SQLite.openDatabaseAsync(dbName);
+    const allRows = await db.getAllAsync('SELECT COUNT(*) as count FROM menu');
+    // If the count is 0, it means the table is empty
+    return allRows[0].count !== 0;
+  } catch (error) {
+    console.error('Checking database:', error);
+    return false; // Return false if there's an error (indicating the table is not empty)
   }
+};
 
   // Main data loading logic
   const loadMenuData = async () => {
     try {
-      await initDatabase()
       const isEmpty = await isDatabaseEmpty()
       if (isEmpty) {
         // Fetch from server and store in database
@@ -104,7 +136,7 @@ const MenuSectionListSql = () => {
         setMenuItems(storedMenuItems)
       }
     } catch (error) {
-      console.error('Error Setting Menu List:', error)
+      console.error('Setting Menu List:', error)
     } finally {
       setLoading(false)
     }
@@ -276,7 +308,7 @@ const MenuSectionListSql = () => {
       {isLoading ? (<ActivityIndicator style={{ flex: 1 }} />) : (
         <SectionList
           sections={filteredSectionMenu}
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item, index) => item.name + index}
           renderItem={({ item }) => (
             <Foods
               name={item.name}
@@ -360,31 +392,6 @@ const styles = StyleSheet.create({
     fontWeight: 500,
     color: "#E1E9C8",
     marginBottom: 40
-  },
-
-  searchContainer: {
-    backgroundColor: "#fff",
-    paddingHorizontal: 10,
-    paddingVertical: 10,
-    borderRadius: 10,
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 20
-  },
-
-  icon: {
-    fontSize: 24,
-    color: "#31511E",
-    borderRightColor: '#333',
-    borderRightWidth: 1,
-    marginRight: 5,
-    paddingRight: 5
-  },
-
-  inputField: {
-    outlineStyle: 'none',
-    height: '100%',
-    width: "100%",
   },
 
   heroBodyText: {
