@@ -132,7 +132,7 @@ export default function Profile({ navigation }) {
 
         <View>
           <Pressable onPress={pickImage} style={styles.primaryButton}>
-            <View style={[styles.iconStyle]}>
+            <View style={styles.iconStyle}>
               <Ionicons style={styles.darkButtonText} name="person-add-outline" />
               <Text style={styles.darkButtonText}>{userAvatar ? 'Change Avatar' : 'Set Avatar'}</Text>
             </View>
@@ -152,7 +152,7 @@ export default function Profile({ navigation }) {
         <ScrollView
           style={{ marginBottom: 20 }}
           horizontal={false}
-        // keyboardDismissMode="on-drag"
+          keyboardDismissMode={'on-drag'}
         >
           <TextInput
             style={styles.inputField}
@@ -337,13 +337,6 @@ const styles = StyleSheet.create({
 
   dangerButton: {
     backgroundColor: '#842029',
-    paddingVertical: 10,
-    paddingHorizontal: 15,
-    borderRadius: 5,
-  },
-
-  darkButton: {
-    backgroundColor: '#1A1A19',
     paddingVertical: 10,
     paddingHorizontal: 15,
     borderRadius: 5,

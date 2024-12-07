@@ -33,7 +33,7 @@ export default function HeroSection() {
           </Text>
           <View style={{ borderRadius: 20, flexBasis: '50%' }}>
             <Image
-              source={require('../images/hero.png')}
+              source={require('../../assets/hero.png')}
               style={{
                 alignSelf: 'flex-end',
                 height: 250,
@@ -123,63 +123,6 @@ const styles = StyleSheet.create({
     color: "#F6FCDF",
     marginBottom: 10,
     fontFamiy: "Karla"
-  },
-
-  bodyText: {
-    fontSize: 16,
-    color: "#1A1A19",
-    marginBottom: 10
-  },
-
-  primaryButton: {
-    backgroundColor: '#31511E',
-    paddingVertical: 10,
-    paddingHorizontal: 15,
-    borderRadius: 5,
-    marginBottom: 10,
-  },
-
-  darkButton: {
-    backgroundColor: '#1A1A19',
-    paddingVertical: 10,
-    paddingHorizontal: 15,
-    borderRadius: 5,
-    marginBottom: 10,
-  },
-
-  dangerButton: {
-    backgroundColor: '#842029',
-    paddingVertical: 10,
-    paddingHorizontal: 15,
-    borderRadius: 5,
-    marginBottom: 10,
-  },
-
-  darkButton: {
-    backgroundColor: '#1A1A19',
-    paddingVertical: 10,
-    paddingHorizontal: 15,
-    borderRadius: 5,
-    marginBottom: 10,
-  },
-
-  darkButtonText: {
-    color: 'white',
-    fontWeight: 500,
-    fontSize: 16
-  },
-
-  dangerButtonText: {
-    color: '#F8D7DA',
-    fontWeight: 500,
-    fontSize: 16
-  },
-
-  subButtonDisabled: {
-    backgroundColor: 'grey',
-    padding: 10,
-    borderRadius: 5,
-    marginBottom: 10,
   },
 
 })

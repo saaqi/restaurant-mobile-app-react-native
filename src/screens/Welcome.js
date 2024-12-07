@@ -35,7 +35,7 @@ export default function Welcome({ navigation }) {
           onPress={() => {
             navigation.navigate('Login')
           }}
-          style={ styles.loginButton }
+          style={styles.loginButton}
         >
           <View style={styles.iconStyle}>
             <Text style={styles.loginButtonText}>Login</Text>
@@ -46,7 +46,7 @@ export default function Welcome({ navigation }) {
           onPress={() => {
             navigation.navigate('Signup')
           }}
-          style={ styles.signupButton }
+          style={styles.signupButton}
         >
           <View style={styles.iconStyle}>
             <Text style={styles.singupButtonText}>Signup</Text>
@@ -64,14 +64,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#F6FCDF",
     padding: 20,
     justifyContent: 'center',
-  },
-
-  inputField: {
-    borderColor: '#999',
-    borderWidth: 1,
-    borderRadius: 5,
-    padding: 10,
-    marginBottom: 10,
   },
 
   bodyText: {

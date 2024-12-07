@@ -115,7 +115,7 @@ const MenuSectionListDirect = () => {
             <Text style={styles.headingText}>Little Lemon</Text>
             <Text style={styles.subHeadingText}>Chicago</Text>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Text style={[styles.heroBodyText, {flex: .5 }]}>
+              <Text style={[styles.heroBodyText, { flex: .5 }]}>
                 We are a family owned Mediterranean restaurant, focused on traditional recipes served with a modern twist.
               </Text>
               <View style={{ borderRadius: 20, flex: .5 }}>
@@ -293,31 +293,6 @@ const styles = StyleSheet.create({
     fontWeight: 500,
     color: "#E1E9C8",
     marginBottom: 40
-  },
-
-  searchContainer: {
-    backgroundColor: "#fff",
-    paddingHorizontal: 10,
-    paddingVertical: 10,
-    borderRadius: 10,
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 20
-  },
-
-  icon: {
-    fontSize: 24,
-    color: "#31511E",
-    borderRightColor: '#333',
-    borderRightWidth: 1,
-    marginRight: 5,
-    paddingRight: 5
-  },
-
-  inputField: {
-    outlineStyle: 'none',
-    height: '100%',
-    width: "100%",
   },
 
   heroBodyText: {
