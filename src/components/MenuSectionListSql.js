@@ -1,6 +1,6 @@
-import { View, SectionList, Image, Pressable, Text, StyleSheet, ActivityIndicator } from 'react-native';
+import { View, SectionList, Image, Pressable, Text, StyleSheet, ActivityIndicator } from 'react-native'
 import * as SQLite from 'expo-sqlite'
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react'
 import { GlobalContext } from '../GlobalState'
 
 
@@ -31,7 +31,7 @@ const MenuSectionListSql = () => {
         );`
       )
     } catch (error) {
-      console.error('Creating table:', error);
+      console.error('Creating table:', error)
     }
   }
 
@@ -45,7 +45,7 @@ const MenuSectionListSql = () => {
       const response = await fetch(
         'https://raw.githubusercontent.com/Meta-Mobile-Developer-PC/Working-With-Data-API/main/capstone.json'
       )
-      const data = await response.json();
+      const data = await response.json()
       return data.menu.map((item, index) => {
         return {
           ...item,
@@ -53,8 +53,8 @@ const MenuSectionListSql = () => {
         }
       })
     } catch (error) {
-      console.error('Error fetching menu:', error);
-      return [];
+      console.error('Error fetching menu:', error)
+      return []
     }
   }
 
@@ -71,29 +71,29 @@ const MenuSectionListSql = () => {
       //   `INSERT INTO menu (name, price, description, image, category) VALUES ` +
       //   `${entryData};`
       // )
-      const entryData = items.map(() => '(?, ?, ?, ?, ?)').join(', ');
+      const entryData = items.map(() => '(?, ?, ?, ?, ?)').join(', ')
       const values = items.flatMap(item => [
         item.name,
         item.price,
         item.description,
         item.image,
         item.category,
-      ]);
+      ])
 
       await db.runAsync(
         `INSERT INTO menu (name, price, description, image, category) VALUES ${entryData};`,
         values
-      );
+      )
     } catch (error) {
-      console.error('Inserting menu items:', error);
+      console.error('Inserting menu items:', error)
     }
   }
 
   // Retrieve menu items from database
   const retrieveMenuItems = async () => {
     try {
-      const db = await SQLite.openDatabaseAsync(dbName);
-      const allRows = await db.getAllAsync('SELECT * FROM menu');
+      const db = await SQLite.openDatabaseAsync(dbName)
+      const allRows = await db.getAllAsync('SELECT * FROM menu')
       // Map each row to an object with the desired structure
       return allRows.map(row => ({
         name: row.name,
@@ -101,25 +101,25 @@ const MenuSectionListSql = () => {
         description: row.description,
         image: row.image,
         category: row.category
-      }));
+      }))
     } catch (error) {
-      console.error('Retrieving menu items:', error);
-      return [];
+      console.error('Retrieving menu items:', error)
+      return []
     }
   }
 
   // Check if database is empty
   const isDatabaseEmpty = async () => {
   try {
-    const db = await SQLite.openDatabaseAsync(dbName);
-    const allRows = await db.getAllAsync('SELECT COUNT(*) as count FROM menu');
+    const db = await SQLite.openDatabaseAsync(dbName)
+    const allRows = await db.getAllAsync('SELECT COUNT(*) as count FROM menu')
     // If the count is 0, it means the table is empty
-    return allRows[0].count === 0;
+    return allRows[0].count === 0
   } catch (error) {
-    console.error('Checking database:', error);
-    return false; // Return false if there's an error (indicating the table is not empty)
+    console.error('Checking database:', error)
+    return false // Return false if there's an error (indicating the table is not empty)
   }
-};
+}
 
   // Main data loading logic
   const loadMenuData = async () => {
@@ -140,7 +140,7 @@ const MenuSectionListSql = () => {
     } finally {
       setLoading(false)
     }
-  };
+  }
 
   // Effect to load menu data on component mount
   useEffect(() => {
@@ -201,7 +201,7 @@ const MenuSectionListSql = () => {
         Object.values(item).some((value) =>
           String(value).toLowerCase().includes(searchQuery.toLowerCase())
         )
-      );
+      )
       if (filteredData.length > 0) {
         return { ...section, data: filteredData }
       }
@@ -403,4 +403,4 @@ const styles = StyleSheet.create({
 
 })
 
-export default MenuSectionListSql;
+export default MenuSectionListSql
