@@ -1,17 +1,38 @@
-import { View, SectionList, Image, Pressable, Text, StyleSheet, ActivityIndicator } from 'react-native'
+import {
+  View,
+  SectionList,
+  Image,
+  Pressable,
+  Text,
+  StyleSheet,
+  ActivityIndicator,
+  KeyboardAvoidingView,
+  Platform,
+  TextInput
+} from 'react-native'
 import * as SQLite from 'expo-sqlite'
 import React, { useState, useEffect, useContext } from 'react'
 import { GlobalContext } from '../GlobalState'
-
+import Ionicons from '@expo/vector-icons/Ionicons'
 
 const MenuSectionListSql = () => {
   const [isLoading, setLoading] = useState(true)
   const [menuItems, setMenuItems] = useState([])
+  const [inputQuery, setInputQuery] = useState('')
 
   const {
     searchQuery, setSearchQuery
   } = useContext(GlobalContext)
 
+  useEffect(() => {
+    const debounceTimeout = setTimeout(() => {
+      setSearchQuery(inputQuery)
+    }, 300)
+
+    return () => {
+      clearTimeout(debounceTimeout)
+    }
+  }, [inputQuery])
 
   const dbName = 'little_lemon'
 
@@ -110,16 +131,16 @@ const MenuSectionListSql = () => {
 
   // Check if database is empty
   const isDatabaseEmpty = async () => {
-  try {
-    const db = await SQLite.openDatabaseAsync(dbName)
-    const allRows = await db.getAllAsync('SELECT COUNT(*) as count FROM menu')
-    // If the count is 0, it means the table is empty
-    return allRows[0].count === 0
-  } catch (error) {
-    console.error('Checking database:', error)
-    return false // Return false if there's an error (indicating the table is not empty)
+    try {
+      const db = await SQLite.openDatabaseAsync(dbName)
+      const allRows = await db.getAllAsync('SELECT COUNT(*) as count FROM menu')
+      // If the count is 0, it means the table is empty
+      return allRows[0].count === 0
+    } catch (error) {
+      console.error('Checking database:', error)
+      return false // Return false if there's an error (indicating the table is not empty)
+    }
   }
-}
 
   // Main data loading logic
   const loadMenuData = async () => {
@@ -195,20 +216,19 @@ const MenuSectionListSql = () => {
       data: menuItems.filter((item) => item.category === "desserts"),
     },
   ]
-  const filteredSectionMenu = sections
-    .map((section) => {
-      const filteredData = section.data.filter((item) =>
-        Object.values(item).some((value) =>
-          String(value).toLowerCase().includes(searchQuery.toLowerCase())
-        )
+  const filteredSectionMenu = sections.map((section) => {
+    const filteredData = section.data.filter((item) =>
+      Object.values(item).some((value) =>
+        String(value).toLowerCase().includes(searchQuery.toLowerCase())
       )
-      if (filteredData.length > 0) {
-        return { ...section, data: filteredData }
-      }
+    )
+    if (filteredData.length > 0) {
+      return { ...section, data: filteredData }
+    }
 
-      return null
-    }).filter(Boolean)
-  const menuHeader = () => {
+    return null
+  }).filter(Boolean)
+  const MenuHeader = () => {
     return (
       <View>
         <View style={styles.container}>
@@ -237,68 +257,6 @@ const MenuSectionListSql = () => {
             </View>
           </View>
         </View>
-        <View style={{
-          flexDirection: 'row',
-          justifyContent: 'center',
-          alignItems: 'center',
-          textAlign: 'center',
-          marginVertical: 20,
-          paddingHorizontal: 20,
-          gap: 10
-        }}>
-          <Pressable
-            style={[styles.menuSelector, searchQuery === '' && { backgroundColor: '#31511E' }]}
-            onPress={() => setSearchQuery('')}
-          >
-            <Text
-              style={[
-                searchQuery === '' && { color: '#F6FCDF' },
-                { textAlign: 'center', fontWeight: 500, fontFamily: 'Karla Medium' }
-              ]}
-            >
-              All
-            </Text>
-          </Pressable>
-          <Pressable
-            style={[styles.menuSelector, searchQuery === 'starters' && { backgroundColor: '#31511E' }]}
-            onPress={() => setSearchQuery('starters')}
-          >
-            <Text
-              style={[
-                searchQuery === 'starters' && { color: '#F6FCDF' },
-                { textAlign: 'center', fontWeight: 500, fontFamily: 'Karla Medium' }
-              ]}
-            >
-              Starters
-            </Text>
-          </Pressable>
-          <Pressable
-            style={[styles.menuSelector, searchQuery === 'mains' && { backgroundColor: '#31511E' }]}
-            onPress={() => setSearchQuery('mains')}
-          >
-            <Text
-              style={[
-                searchQuery === 'mains' && { color: '#F6FCDF' },
-                { textAlign: 'center', fontWeight: 500, fontFamily: 'Karla Medium' }
-              ]}
-            >
-              Mains
-            </Text>
-          </Pressable>
-          <Pressable
-            style={[styles.menuSelector, searchQuery === 'desserts' && { backgroundColor: '#31511E' }]}
-            onPress={() => setSearchQuery('desserts')}
-          >
-            <Text
-              style={[
-                searchQuery === 'desserts' && { color: '#F6FCDF' },
-                { textAlign: 'center', fontWeight: 500, fontFamily: 'Karla Medium' }
-              ]}
-            >
-              Desserts
-            </Text>
-          </Pressable>
-        </View>
       </View>
     )
   }
@@ -307,6 +265,7 @@ const MenuSectionListSql = () => {
     <View style={styles.listContainer}>
       {isLoading ? (<ActivityIndicator style={{ flex: 1 }} />) : (
         <SectionList
+          keyboardDismissMode={'on-drag'}
           sections={filteredSectionMenu}
           keyExtractor={(item, index) => item.name + index}
           renderItem={({ item }) => (
@@ -323,7 +282,90 @@ const MenuSectionListSql = () => {
             </Text>
           )}
           ItemSeparatorComponent={Separator}
-          ListHeaderComponent={menuHeader}
+          ListHeaderComponent={
+            <View>
+              <MenuHeader />
+              <KeyboardAvoidingView
+                style={styles.searchOuterContainer}
+                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+              >
+                <View style={styles.searchContainer}>
+                  <Ionicons style={styles.icon} name="search-circle-outline" />
+                  <TextInput
+                    style={styles.inputField}
+                    onChangeText={setInputQuery}
+                    placeholder='Search for dishes'
+                    secureTextEntry={false}
+                    keyboardType='default'
+                    value={inputQuery}
+                  />
+                </View>
+              </KeyboardAvoidingView>
+              <View style={{
+                flexDirection: 'row',
+                justifyContent: 'center',
+                alignItems: 'center',
+                textAlign: 'center',
+                marginVertical: 20,
+                paddingHorizontal: 20,
+                marginTop: 20,
+                gap: 10
+              }}>
+                <Pressable
+                  style={[styles.menuSelector, searchQuery === '' && { backgroundColor: '#31511E' }]}
+                  onPress={() => setSearchQuery('')}
+                >
+                  <Text
+                    style={[
+                      searchQuery === '' && { color: '#F6FCDF' },
+                      { textAlign: 'center', fontWeight: 500, fontFamily: 'Karla Medium' }
+                    ]}
+                  >
+                    All
+                  </Text>
+                </Pressable>
+                <Pressable
+                  style={[styles.menuSelector, searchQuery === 'starters' && { backgroundColor: '#31511E' }]}
+                  onPress={() => setSearchQuery('starters')}
+                >
+                  <Text
+                    style={[
+                      searchQuery === 'starters' && { color: '#F6FCDF' },
+                      { textAlign: 'center', fontWeight: 500, fontFamily: 'Karla Medium' }
+                    ]}
+                  >
+                    Starters
+                  </Text>
+                </Pressable>
+                <Pressable
+                  style={[styles.menuSelector, searchQuery === 'mains' && { backgroundColor: '#31511E' }]}
+                  onPress={() => setSearchQuery('mains')}
+                >
+                  <Text
+                    style={[
+                      searchQuery === 'mains' && { color: '#F6FCDF' },
+                      { textAlign: 'center', fontWeight: 500, fontFamily: 'Karla Medium' }
+                    ]}
+                  >
+                    Mains
+                  </Text>
+                </Pressable>
+                <Pressable
+                  style={[styles.menuSelector, searchQuery === 'desserts' && { backgroundColor: '#31511E' }]}
+                  onPress={() => setSearchQuery('desserts')}
+                >
+                  <Text
+                    style={[
+                      searchQuery === 'desserts' && { color: '#F6FCDF' },
+                      { textAlign: 'center', fontWeight: 500, fontFamily: 'Karla Medium' }
+                    ]}
+                  >
+                    Desserts
+                  </Text>
+                </Pressable>
+              </View>
+             </View>
+          }
           ListFooterComponent={menuFooter}
         />
       )}
@@ -374,7 +416,7 @@ const styles = StyleSheet.create({
 
   heroSection: {
     backgroundColor: "#31511E",
-    paddingVertical: 40,
+    paddingVertical: 30,
     paddingHorizontal: 20
   },
 
@@ -397,8 +439,36 @@ const styles = StyleSheet.create({
   heroBodyText: {
     fontSize: 20,
     color: "#F6FCDF",
-    marginBottom: 10,
     fontFamiy: "Karla"
+  },
+
+  searchOuterContainer: {
+    backgroundColor: "#31511E",
+    paddingHorizontal: 10,
+    paddingBottom: 30
+  },
+
+  searchContainer: {
+    backgroundColor: "#fff",
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderRadius: 10,
+    paddingHorizontal: 10,
+  },
+
+  icon: {
+    fontSize: 24,
+    borderRightWidth: 1,
+    marginRight: 10,
+    paddingRight: 10
+  },
+
+  inputField: {
+    fontSize: 18,
+    fontFamily: 'Markazi Text Regular',
+    outlineStyle: 'none',
+    height: '100%',
+    width: "100%",
   },
 
 })
