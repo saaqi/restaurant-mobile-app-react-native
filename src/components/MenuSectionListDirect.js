@@ -60,7 +60,7 @@ const MenuSectionListDirect = () => {
         </View>
         <View style={{}}>
           <Image
-            source={{ uri: `https://github.com/Meta-Mobile-Developer-PC/Working-With-Data-API/blob/main/images/${image}?raw=true` }}
+            source={{ uri: `https://raw.githubusercontent.com/saaqi/react-native-capstone-saaqi/refs/heads/main/assets/menu/${image}?raw=true` }}
             style={{
               height: 150,
               width: 150,
