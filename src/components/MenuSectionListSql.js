@@ -14,18 +14,12 @@ import {
 import * as SQLite from 'expo-sqlite'
 import React, { useState, useEffect } from 'react'
 import Ionicons from '@expo/vector-icons/Ionicons'
-import { useFonts } from 'expo-font'
-
 
 const MenuSectionListSql = () => {
   const [isLoading, setLoading] = useState(true)
   const [menuItems, setMenuItems] = useState([])
   const [inputQuery, setInputQuery] = useState('')
   const [searchQuery, setSearchQuery] = useState('')
-
-  useFonts({
-    'Markazi-Text': require('../../assets/fonts/MarkaziText-Medium.ttf'),
-  })
 
   useEffect(() => {
     // Debounce the search query input to avoid excessive updates
