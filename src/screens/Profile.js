@@ -6,6 +6,7 @@ import {
   TextInput,
   KeyboardAvoidingView,
   Platform,
+  Switch,
   Pressable,
   Image
 } from 'react-native'
@@ -13,7 +14,6 @@ import { useContext } from 'react'
 import { ValidateEmailField } from '../validators/ValidateEmailField'
 import { ValidatePhoneNumberField } from '../validators/ValidatePhoneNumberField'
 import { GlobalContext } from '../GlobalState'
-import CheckBox from 'expo-checkbox'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import * as ImagePicker from 'expo-image-picker'
@@ -198,33 +198,33 @@ export default function Profile({ navigation }) {
       <View style={{ marginBottom: 30 }}>
         <Text style={styles.headingText}>Select the notifications you would like to receive:</Text>
 
-        <View style={{ flexDirection: 'row', gap: 10 }}>
-          <CheckBox
+        <View style={styles.switchList}>
+          <Text style={styles.bodyText}>Order Delivery Status</Text>
+          <Switch
             value={deliveryStatus}
             onValueChange={(value) => handleCheckboxChange(deliveryStatus, setDeliveryStatus)}
           />
-          <Text style={styles.bodyText}>Order Delivery Status</Text>
         </View>
-        <View style={{ flexDirection: 'row', gap: 10 }}>
-          <CheckBox
+        <View style={styles.switchList}>
+          <Text style={styles.bodyText}>Passwrod Changes</Text>
+          <Switch
             value={passwordChanges}
             onValueChange={(value) => handleCheckboxChange(passwordChanges, setPasswordChanges)}
           />
-          <Text style={styles.bodyText}>Passwrod Changes</Text>
         </View>
-        <View style={{ flexDirection: 'row', gap: 10 }}>
-          <CheckBox
+        <View style={styles.switchList}>
+          <Text style={styles.bodyText}>Special Offers</Text>
+          <Switch
             value={specialOffers}
             onValueChange={(value) => handleCheckboxChange(specialOffers, setSpecialOffers)}
           />
-          <Text style={styles.bodyText}>Special Offers</Text>
         </View>
-        <View style={{ flexDirection: 'row', gap: 10 }}>
-          <CheckBox
+        <View style={styles.switchList}>
+          <Text style={styles.bodyText}>Newsletter</Text>
+          <Switch
             value={newsLetter}
             onValueChange={(value) => handleCheckboxChange(newsLetter, setNewsLetter)}
           />
-          <Text style={styles.bodyText}>Newsletter</Text>
         </View>
       </View>
 
@@ -371,5 +371,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     gap: 5
   },
+
+  switchList: {
+    flexDirection: 'row',
+    gap: 10,
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    flexWrap: 'wrap-reverse',
+    borderBottomWidth: 1,
+    borderBottomColor: '#999',
+    borderStyle: 'dashed',
+  }
 
 })

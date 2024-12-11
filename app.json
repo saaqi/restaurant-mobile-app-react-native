@@ -19,7 +19,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/favicon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.saqibtech.littlelemon"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -39,6 +40,11 @@
         }
       ],
       "expo-sqlite"
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "1cde46b7-e564-4bf4-80d0-ca8679632e59"
+      }
+    }
   }
 }
