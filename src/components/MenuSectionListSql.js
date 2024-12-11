@@ -8,7 +8,8 @@ import {
   ActivityIndicator,
   KeyboardAvoidingView,
   Platform,
-  TextInput
+  TextInput,
+  Alert
 } from 'react-native'
 import * as SQLite from 'expo-sqlite'
 import React, { useState, useEffect, useContext } from 'react'
@@ -136,17 +137,27 @@ const MenuSectionListSql = () => {
   // Main data loading logic
   const loadMenuData = async () => {
     try {
+      const db = await SQLite.openDatabaseAsync(dbName)
+      const storedMenuItems = await retrieveMenuItems()
+      const onlineItems = await fetchMenuFromServer()
       const isEmpty = await isDatabaseEmpty()
       if (isEmpty) {
         // Fetch from server and store in database
-        const serverMenuItems = await fetchMenuFromServer()
-        await insertMenuItems(serverMenuItems)
-        setMenuItems(serverMenuItems)
+        await insertMenuItems(onlineItems)
+        setMenuItems(onlineItems)
+        Alert.alert('Menu Data Loaded', `Loaded ${onlineItems.length} ${storedMenuItems.length} items from the server.`)
+      } else if (storedMenuItems.length !== onlineItems.length) {
+        // Fetch from server and store in database if server has more items
+        await db.execAsync('DELETE FROM menu')
+        await insertMenuItems(onlineItems)
+        setMenuItems(onlineItems)
+        Alert.alert('Menu Data Updated', `Updated ${onlineItems.length} ${storedMenuItems.length} items from the server.`)
       } else {
-        // Load from database
-        const storedMenuItems = await retrieveMenuItems()
+        // Use locally stored items from the database
         setMenuItems(storedMenuItems)
+        Alert.alert('Menu Data Loaded', `Loaded ${storedMenuItems.length} ${storedMenuItems.length} items from local storage.`)
       }
+
     } catch (error) {
       console.error('Setting Menu List:', error)
     } finally {
@@ -163,36 +174,33 @@ const MenuSectionListSql = () => {
   const Separator = () => <View style={styles.separator}></View>
   const Foods = ({ name, price, description, image }) => {
     return (
-
       <View style={{
         flex: 1,
         padding: 20,
         flexDirection: 'row',
         gap: 10
       }}>
-        {isLoading ? (<ActivityIndicator style={{ flex: 1 }} />) : ( <>
-            <View style={{ flex: 1 }}>
-              <Text style={{ fontSize: 18, fontWeight: 700, marginBottom: 10 }}>{name}</Text>
-              <Text style={{ fontSize: 16, marginBottom: 10 }}>{description}</Text>
-              <Text style={{ fontSize: 18, fontWeight: 500, marginTop: 'auto' }}>{price}</Text>
-            </View>
-            <View style={{}}>
-              <Image
-              source={{ uri: `https://raw.githubusercontent.com/saaqi/react-native-capstone-saaqi/refs/heads/main/assets/menu/${image}` }}
-                style={{
-                  height: 150,
-                  width: 150,
-                  borderRadius: 10,
-                  borderWidth: 1,
-                  borderColor: '#31511e',
-                  alignSelf: 'flex-end'
-                }}
-                resizeMode={'cover'}
-                accessible={true}
-                accessibilityLabel={name}
-              />
-            </View>
-          </> )}
+        <View style={{ flex: 1 }}>
+          <Text style={{ fontSize: 18, fontWeight: 700, marginBottom: 10 }}>{name}</Text>
+          <Text style={{ fontSize: 16, marginBottom: 10 }}>{description}</Text>
+          <Text style={{ fontSize: 18, fontWeight: 500, marginTop: 'auto' }}>{price}</Text>
+        </View>
+        <View style={{}}>
+          <Image
+            source={{ uri: `https://raw.githubusercontent.com/saaqi/react-native-capstone-saaqi/refs/heads/main/assets/menu/${image}?raw=true` }}
+            style={{
+              height: 150,
+              width: 150,
+              borderRadius: 10,
+              borderWidth: 1,
+              borderColor: '#31511e',
+              alignSelf: 'flex-end'
+            }}
+            resizeMode={'cover'}
+            accessible={true}
+            accessibilityLabel={name}
+          />
+        </View>
       </View>
     )
   }
@@ -255,111 +263,112 @@ const MenuSectionListSql = () => {
 
   return (
     <View style={styles.listContainer}>
-      <SectionList
-        keyboardDismissMode={'on-drag'}
-        sections={filteredSectionMenu}
-        keyExtractor={(item, index) => item.name + index}
-        renderItem={({ item }) => (
-          <Foods
-            name={item.name}
-            description={item.description}
-            price={'$' + item.price}
-            image={item.image}
-          />
-        )}
-        renderSectionHeader={({ section: { title } }) => (
-          <Text style={styles.sectionHeader}>
-            {title}
-          </Text>
-        )}
-        ItemSeparatorComponent={Separator}
-        ListHeaderComponent={
-          <View>
-            <MenuHeader />
-            <KeyboardAvoidingView
-              style={styles.searchOuterContainer}
-              behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-            >
-              <View style={styles.searchContainer}>
-                <Ionicons style={styles.icon} name="search-circle-outline" />
-                <TextInput
-                  style={styles.inputField}
-                  onChangeText={setInputQuery}
-                  placeholder='Search for dishes'
-                  secureTextEntry={false}
-                  keyboardType='default'
-                  value={inputQuery}
-                />
+      {isLoading ? (<ActivityIndicator style={{ flex: 1 }} />) : (
+        <SectionList
+          keyboardDismissMode={'on-drag'}
+          sections={filteredSectionMenu}
+          keyExtractor={(item, index) => item.name + index}
+          renderItem={({ item }) => (
+            <Foods
+              name={item.name}
+              description={item.description}
+              price={'$' + item.price}
+              image={item.image}
+            />
+          )}
+          renderSectionHeader={({ section: { title } }) => (
+            <Text style={styles.sectionHeader}>
+              {title}
+            </Text>
+          )}
+          ItemSeparatorComponent={Separator}
+          ListHeaderComponent={
+            <View>
+              <MenuHeader />
+              <KeyboardAvoidingView
+                style={styles.searchOuterContainer}
+                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+              >
+                <View style={styles.searchContainer}>
+                  <Ionicons style={styles.icon} name="search-circle-outline" />
+                  <TextInput
+                    style={styles.inputField}
+                    onChangeText={setInputQuery}
+                    placeholder='Search for dishes'
+                    secureTextEntry={false}
+                    keyboardType='default'
+                    value={inputQuery}
+                  />
+                </View>
+              </KeyboardAvoidingView>
+              <View style={{
+                flexDirection: 'row',
+                justifyContent: 'center',
+                alignItems: 'center',
+                textAlign: 'center',
+                marginVertical: 20,
+                paddingHorizontal: 20,
+                marginTop: 20,
+                gap: 10
+              }}>
+                <Pressable
+                  style={[styles.menuSelector, searchQuery === '' && { backgroundColor: '#31511E' }]}
+                  onPress={() => setSearchQuery('')}
+                >
+                  <Text
+                    style={[
+                      searchQuery === '' && { color: '#F6FCDF' },
+                      { textAlign: 'center', fontWeight: 500, fontFamily: 'Karla Medium' }
+                    ]}
+                  >
+                    All
+                  </Text>
+                </Pressable>
+                <Pressable
+                  style={[styles.menuSelector, searchQuery === 'starters' && { backgroundColor: '#31511E' }]}
+                  onPress={() => setSearchQuery('starters')}
+                >
+                  <Text
+                    style={[
+                      searchQuery === 'starters' && { color: '#F6FCDF' },
+                      { textAlign: 'center', fontWeight: 500, fontFamily: 'Karla Medium' }
+                    ]}
+                  >
+                    Starters
+                  </Text>
+                </Pressable>
+                <Pressable
+                  style={[styles.menuSelector, searchQuery === 'mains' && { backgroundColor: '#31511E' }]}
+                  onPress={() => setSearchQuery('mains')}
+                >
+                  <Text
+                    style={[
+                      searchQuery === 'mains' && { color: '#F6FCDF' },
+                      { textAlign: 'center', fontWeight: 500, fontFamily: 'Karla Medium' }
+                    ]}
+                  >
+                    Mains
+                  </Text>
+                </Pressable>
+                <Pressable
+                  style={[styles.menuSelector, searchQuery === 'desserts' && { backgroundColor: '#31511E' }]}
+                  onPress={() => setSearchQuery('desserts')}
+                >
+                  <Text
+                    style={[
+                      searchQuery === 'desserts' && { color: '#F6FCDF' },
+                      { textAlign: 'center', fontWeight: 500, fontFamily: 'Karla Medium' }
+                    ]}
+                  >
+                    Desserts
+                  </Text>
+                </Pressable>
               </View>
-            </KeyboardAvoidingView>
-            <View style={{
-              flexDirection: 'row',
-              justifyContent: 'center',
-              alignItems: 'center',
-              textAlign: 'center',
-              marginVertical: 20,
-              paddingHorizontal: 20,
-              marginTop: 20,
-              gap: 10
-            }}>
-              <Pressable
-                style={[styles.menuSelector, searchQuery === '' && { backgroundColor: '#31511E' }]}
-                onPress={() => setSearchQuery('')}
-              >
-                <Text
-                  style={[
-                    searchQuery === '' && { color: '#F6FCDF' },
-                    { textAlign: 'center', fontWeight: 500, fontFamily: 'Karla Medium' }
-                  ]}
-                >
-                  All
-                </Text>
-              </Pressable>
-              <Pressable
-                style={[styles.menuSelector, searchQuery === 'starters' && { backgroundColor: '#31511E' }]}
-                onPress={() => setSearchQuery('starters')}
-              >
-                <Text
-                  style={[
-                    searchQuery === 'starters' && { color: '#F6FCDF' },
-                    { textAlign: 'center', fontWeight: 500, fontFamily: 'Karla Medium' }
-                  ]}
-                >
-                  Starters
-                </Text>
-              </Pressable>
-              <Pressable
-                style={[styles.menuSelector, searchQuery === 'mains' && { backgroundColor: '#31511E' }]}
-                onPress={() => setSearchQuery('mains')}
-              >
-                <Text
-                  style={[
-                    searchQuery === 'mains' && { color: '#F6FCDF' },
-                    { textAlign: 'center', fontWeight: 500, fontFamily: 'Karla Medium' }
-                  ]}
-                >
-                  Mains
-                </Text>
-              </Pressable>
-              <Pressable
-                style={[styles.menuSelector, searchQuery === 'desserts' && { backgroundColor: '#31511E' }]}
-                onPress={() => setSearchQuery('desserts')}
-              >
-                <Text
-                  style={[
-                    searchQuery === 'desserts' && { color: '#F6FCDF' },
-                    { textAlign: 'center', fontWeight: 500, fontFamily: 'Karla Medium' }
-                  ]}
-                >
-                  Desserts
-                </Text>
-              </Pressable>
             </View>
-          </View>
-        }
-        ListFooterComponent={menuFooter}
-      />
-
+          }
+          ListFooterComponent={menuFooter}
+        />
+      )}
     </View>
   )
 }
