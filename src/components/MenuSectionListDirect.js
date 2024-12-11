@@ -7,22 +7,18 @@ import {
   ActivityIndicator,
   Pressable,
 } from 'react-native'
-import { useEffect, useState, useContext } from 'react'
-import { GlobalContext } from '../GlobalState'
+import { useEffect, useState } from 'react'
 
 const MenuSectionListDirect = () => {
 
   const [isLoading, setLoading] = useState(true)
   const [menuList, setMenuList] = useState([])
-
-  const {
-    searchQuery, setSearchQuery
-  } = useContext(GlobalContext);
+  const [searchQuery, setSearchQuery] = useState('')
 
   const getMenu = async () => {
     try {
       const response = await fetch(
-        'https://raw.githubusercontent.com/Meta-Mobile-Developer-PC/Working-With-Data-API/main/capstone.json'
+        'https://raw.githubusercontent.com/saaqi/react-native-capstone-saaqi/refs/heads/main/src/menu.json'
       )
       const json = await response.json()
       setMenuList(json.menu.map((item, index) => {
@@ -152,7 +148,7 @@ const MenuSectionListDirect = () => {
             <Text
               style={[
                 searchQuery === '' && { color: '#F6FCDF' },
-                { textAlign: 'center', fontWeight: 500, fontFamily: 'Karla Medium' }
+                { textAlign: 'center', fontWeight: 500 }
               ]}
             >
               All
@@ -165,7 +161,7 @@ const MenuSectionListDirect = () => {
             <Text
               style={[
                 searchQuery === 'starters' && { color: '#F6FCDF' },
-                { textAlign: 'center', fontWeight: 500, fontFamily: 'Karla Medium' }
+                { textAlign: 'center', fontWeight: 500 }
               ]}
             >
               Starters
@@ -178,7 +174,7 @@ const MenuSectionListDirect = () => {
             <Text
               style={[
                 searchQuery === 'mains' && { color: '#F6FCDF' },
-                { textAlign: 'center', fontWeight: 500, fontFamily: 'Karla Medium' }
+                { textAlign: 'center', fontWeight: 500 }
               ]}
             >
               Mains
@@ -191,7 +187,7 @@ const MenuSectionListDirect = () => {
             <Text
               style={[
                 searchQuery === 'desserts' && { color: '#F6FCDF' },
-                { textAlign: 'center', fontWeight: 500, fontFamily: 'Karla Medium' }
+                { textAlign: 'center', fontWeight: 500 }
               ]}
             >
               Desserts
@@ -254,7 +250,6 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     borderColor: '#333',
     borderWidth: 1,
-    fontFamily: 'Markazi Text Regular',
     flex: .25,
     borderRadius: 40
   },
@@ -281,7 +276,7 @@ const styles = StyleSheet.create({
 
   headingText: {
     fontSize: 60,
-    fontFamily: "Markazi Text Medium",
+    fontFamily: "Markazi-Text",
     fontWeight: 500,
     color: "#ffff00",
     marginBottom: 20

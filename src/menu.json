@@ -1,6 +1,13 @@
 {
   "menu": [
     {
+      "name": "Test Item",
+      "price": 0.00,
+      "description": "Our delicious salad is served with Feta cheese and peeled cucumber. Includes tomatoes, onions, olives, salt and oregano in the ingredients.",
+      "image": "greekSalad.webp",
+      "category": "starters"
+    },
+    {
       "name": "Greek Salad",
       "price": 12.99,
       "description": "Our delicious salad is served with Feta cheese and peeled cucumber. Includes tomatoes, onions, olives, salt and oregano in the ingredients.",

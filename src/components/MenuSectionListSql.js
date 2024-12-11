@@ -9,27 +9,31 @@ import {
   KeyboardAvoidingView,
   Platform,
   TextInput,
-  // Alert
+  Alert
 } from 'react-native'
 import * as SQLite from 'expo-sqlite'
-import React, { useState, useEffect, useContext } from 'react'
-import { GlobalContext } from '../GlobalState'
+import React, { useState, useEffect } from 'react'
 import Ionicons from '@expo/vector-icons/Ionicons'
+import { useFonts } from 'expo-font'
+
 
 const MenuSectionListSql = () => {
   const [isLoading, setLoading] = useState(true)
   const [menuItems, setMenuItems] = useState([])
   const [inputQuery, setInputQuery] = useState('')
+  const [searchQuery, setSearchQuery] = useState('')
 
-  const {
-    searchQuery, setSearchQuery
-  } = useContext(GlobalContext)
+  useFonts({
+    'Markazi-Text': require('../../assets/fonts/MarkaziText-Medium.ttf'),
+  })
 
   useEffect(() => {
+    // Debounce the search query input to avoid excessive updates
     const debounceTimeout = setTimeout(() => {
       setSearchQuery(inputQuery)
     }, 300)
 
+    // Cleanup the timeout on component unmount or when inputQuery changes
     return () => {
       clearTimeout(debounceTimeout)
     }
@@ -38,6 +42,7 @@ const MenuSectionListSql = () => {
   const dbName = 'little_lemon'
 
   const initDatabase = async () => {
+    // Open the SQLite database
     const db = await SQLite.openDatabaseAsync(dbName)
     // Create table if not exists
     try {
@@ -141,23 +146,27 @@ const MenuSectionListSql = () => {
       const storedMenuItems = await retrieveMenuItems()
       const onlineItems = await fetchMenuFromServer()
       const isEmpty = await isDatabaseEmpty()
-      if (isEmpty) {
+      if (!isEmpty) {
+        // Use locally stored items from the database
+        setMenuItems(storedMenuItems)
+        setLoading(false)
+        Alert.alert('Menu Data Loaded', `Loaded ${storedMenuItems.length} items from the database.`)
+
+        // Fetch from server and store in database if server has more or less items
+        if (storedMenuItems.length !== onlineItems.length) {
+          await db.runAsync('DELETE FROM menu')
+          await insertMenuItems(onlineItems)
+          setMenuItems(onlineItems)
+          setLoading(false)
+          Alert.alert('Menu Data Loaded', `Updated ${onlineItems.length} items online.`)
+        }
+      } else {
         // Fetch from server and store in database
         await insertMenuItems(onlineItems)
         setMenuItems(onlineItems)
-        // Alert.alert('Menu Data Loaded', `Loaded ${onlineItems.length} items from the server.`)
-      } else if (storedMenuItems.length !== onlineItems.length) {
-        // Fetch from server and store in database if server has more items
-        await db.execAsync('DELETE FROM menu')
-        await insertMenuItems(onlineItems)
-        setMenuItems(onlineItems)
-        // Alert.alert('Menu Data Updated', `Updated ${onlineItems.length} items from the server.`)
-      } else {
-        // Use locally stored items from the database
-        setMenuItems(storedMenuItems)
-        // Alert.alert('Menu Data Loaded', `Loaded ${storedMenuItems.length} items from local storage.`)
+        setLoading(false)
+        Alert.alert('Menu Data Loaded', `Loaded ${onlineItems.length} items online.`)
       }
-
     } catch (error) {
       console.error('Setting Menu List:', error)
     } finally {
@@ -181,7 +190,7 @@ const MenuSectionListSql = () => {
         gap: 10
       }}>
         <View style={{ flex: 1 }}>
-          <Text style={{ fontSize: 18, fontWeight: 700, marginBottom: 10 }}>{name}</Text>
+          <Text style={{ fontSize: 20, fontWeight: 700, marginBottom: 10 }}>{name}</Text>
           <Text style={{ fontSize: 16, marginBottom: 10 }}>{description}</Text>
           <Text style={{ fontSize: 18, fontWeight: 500, marginTop: 'auto' }}>{price}</Text>
         </View>
@@ -318,7 +327,7 @@ const MenuSectionListSql = () => {
                   <Text
                     style={[
                       searchQuery === '' && { color: '#F6FCDF' },
-                      { textAlign: 'center', fontWeight: 500, fontFamily: 'Karla Medium' }
+                      { textAlign: 'center', fontWeight: 500 }
                     ]}
                   >
                     All
@@ -331,7 +340,7 @@ const MenuSectionListSql = () => {
                   <Text
                     style={[
                       searchQuery === 'starters' && { color: '#F6FCDF' },
-                      { textAlign: 'center', fontWeight: 500, fontFamily: 'Karla Medium' }
+                      { textAlign: 'center', fontWeight: 500 }
                     ]}
                   >
                     Starters
@@ -344,7 +353,7 @@ const MenuSectionListSql = () => {
                   <Text
                     style={[
                       searchQuery === 'mains' && { color: '#F6FCDF' },
-                      { textAlign: 'center', fontWeight: 500, fontFamily: 'Karla Medium' }
+                      { textAlign: 'center', fontWeight: 500 }
                     ]}
                   >
                     Mains
@@ -357,7 +366,7 @@ const MenuSectionListSql = () => {
                   <Text
                     style={[
                       searchQuery === 'desserts' && { color: '#F6FCDF' },
-                      { textAlign: 'center', fontWeight: 500, fontFamily: 'Karla Medium' }
+                      { textAlign: 'center', fontWeight: 500 }
                     ]}
                   >
                     Desserts
@@ -382,10 +391,9 @@ const styles = StyleSheet.create({
 
   sectionHeader: {
     fontWeight: 500,
-    fontFamily: 'Markazi Text Medium',
-    fontSize: 20,
+    fontFamily: 'Markazi-Text',
+    fontSize: 40,
     textAlign: 'center',
-    paddingBottom: 10,
     borderBottomColor: '#31511E',
     borderBottomWidth: 1,
   },
@@ -395,7 +403,6 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     borderColor: '#333',
     borderWidth: 1,
-    fontFamily: 'Markazi Text Regular',
     flex: .25,
     borderRadius: 40
   },
@@ -420,19 +427,19 @@ const styles = StyleSheet.create({
   },
 
   headingText: {
-    fontSize: 60,
-    fontFamily: "Markazi Text Medium",
-    fontWeight: 500,
+    fontSize: 70,
+    fontFamily: "Markazi-Text",
     color: "#ffff00",
-    marginBottom: 20
+    textAlign: 'center'
   },
 
   subHeadingText: {
-    fontSize: 36,
-    fontFamily: "Karla Medium",
-    fontWeight: 500,
+    fontSize: 40,
+    fontFamily: "Markazi-Text",
     color: "#E1E9C8",
-    marginBottom: 40
+    textAlign: 'center',
+    marginBottom: 20,
+    marginTop: -10
   },
 
   heroBodyText: {
@@ -464,7 +471,6 @@ const styles = StyleSheet.create({
 
   inputField: {
     fontSize: 18,
-    fontFamily: 'Markazi Text Regular',
     outlineStyle: 'none',
     height: '100%',
     width: "100%",
