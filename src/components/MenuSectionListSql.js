@@ -8,8 +8,7 @@ import {
   ActivityIndicator,
   KeyboardAvoidingView,
   Platform,
-  TextInput,
-  Alert
+  TextInput
 } from 'react-native'
 import * as SQLite from 'expo-sqlite'
 import React, { useState, useEffect } from 'react'
@@ -144,7 +143,6 @@ const MenuSectionListSql = () => {
         // Use locally stored items from the database
         setMenuItems(storedMenuItems)
         setLoading(false)
-        Alert.alert('Menu Data Loaded', `Loaded ${storedMenuItems.length} items from the database.`)
 
         // Fetch from server and store in database if server has more or less items
         if (storedMenuItems.length !== onlineItems.length) {
@@ -152,14 +150,12 @@ const MenuSectionListSql = () => {
           await insertMenuItems(onlineItems)
           setMenuItems(onlineItems)
           setLoading(false)
-          Alert.alert('Menu Data Loaded', `Updated ${onlineItems.length} items online.`)
         }
       } else {
         // Fetch from server and store in database
         await insertMenuItems(onlineItems)
         setMenuItems(onlineItems)
         setLoading(false)
-        Alert.alert('Menu Data Loaded', `Loaded ${onlineItems.length} items online.`)
       }
     } catch (error) {
       console.error('Setting Menu List:', error)
