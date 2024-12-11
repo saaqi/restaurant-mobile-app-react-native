@@ -76,13 +76,6 @@
       "description": "Warm chocolate cake with a molten chocolate center, served with vanilla ice cream.",
       "image": "chocolateLavaCake.webp",
       "category": "desserts"
-    },
-    {
-      "name": "Test Items",
-      "price": 7.99,
-      "description": "Warm chocolate cake with a molten chocolate center, served with vanilla ice cream.",
-      "image": "chocolateLavaCake.webp",
-      "category": "desserts"
     }
   ]
 }
