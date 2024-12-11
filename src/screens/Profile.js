@@ -105,7 +105,7 @@ export default function Profile({ navigation }) {
 
   return (
     <ScrollView style={styles.container}>
-      <Text style={[styles.headingText, { textAlign: 'center' }]}>
+      <Text style={styles.headingText}>
         Welcome {userName.split(' ')[0]}, It is nice to have you.
       </Text>
       <View style={{
@@ -196,7 +196,7 @@ export default function Profile({ navigation }) {
       </KeyboardAvoidingView>
 
       <View style={{ marginBottom: 30 }}>
-        <Text style={styles.headingText}>Select the notifications you would like to receive:</Text>
+        <Text style={styles.headingText}>Select notifications</Text>
 
         <View style={styles.switchList}>
           <Text style={styles.bodyText}>Order Delivery Status</Text>
@@ -290,7 +290,8 @@ const styles = StyleSheet.create({
     fontFamily: 'Markazi-Medium',
     fontSize: 26,
     color: "#1A1A19",
-    marginBottom: 20
+    marginBottom: 10,
+    textAlign: 'center'
   },
 
   inputField: {
