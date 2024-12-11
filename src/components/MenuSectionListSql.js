@@ -64,7 +64,7 @@ const MenuSectionListSql = () => {
   const fetchMenuFromServer = async () => {
     try {
       const response = await fetch(
-        'https://raw.githubusercontent.com/Meta-Mobile-Developer-PC/Working-With-Data-API/main/capstone.json'
+        'https://raw.githubusercontent.com/saaqi/react-native-capstone-saaqi/refs/heads/main/src/menu.json'
       )
       const data = await response.json()
       return data.menu.map((item, index) => {
@@ -83,15 +83,6 @@ const MenuSectionListSql = () => {
   const insertMenuItems = async (items) => {
     try {
       const db = await SQLite.openDatabaseAsync(dbName)
-      // const result = await db.runAsync(
-      //   'INSERT INTO menu (name, price, description, image, category) VALUES (?, ?, ?, ?, ?)', ['aaa', 100]);
-      // const entryData = items.map(item =>
-      //   `("${item.name}", ${item.price}, "${item.description}", "${item.image}", "${item.category}")`
-      // ).join(', ')
-      // await db.runAsync(
-      //   `INSERT INTO menu (name, price, description, image, category) VALUES ` +
-      //   `${entryData};`
-      // )
       const entryData = items.map(() => '(?, ?, ?, ?, ?)').join(', ')
       const values = items.flatMap(item => [
         item.name,
@@ -172,33 +163,36 @@ const MenuSectionListSql = () => {
   const Separator = () => <View style={styles.separator}></View>
   const Foods = ({ name, price, description, image }) => {
     return (
+
       <View style={{
         flex: 1,
         padding: 20,
         flexDirection: 'row',
         gap: 10
       }}>
-        <View style={{ flex: 1 }}>
-          <Text style={{ fontSize: 18, fontWeight: 700, marginBottom: 10 }}>{name}</Text>
-          <Text style={{ fontSize: 16, marginBottom: 10 }}>{description}</Text>
-          <Text style={{ fontSize: 18, fontWeight: 500, marginTop: 'auto' }}>{price}</Text>
-        </View>
-        <View style={{}}>
-          <Image
-            source={{ uri: `https://github.com/Meta-Mobile-Developer-PC/Working-With-Data-API/blob/main/images/${image}?raw=true` }}
-            style={{
-              height: 150,
-              width: 150,
-              borderRadius: 10,
-              borderWidth: 1,
-              borderColor: '#31511e',
-              alignSelf: 'flex-end'
-            }}
-            resizeMode={'cover'}
-            accessible={true}
-            accessibilityLabel={name}
-          />
-        </View>
+        {isLoading ? (<ActivityIndicator style={{ flex: 1 }} />) : ( <>
+            <View style={{ flex: 1 }}>
+              <Text style={{ fontSize: 18, fontWeight: 700, marginBottom: 10 }}>{name}</Text>
+              <Text style={{ fontSize: 16, marginBottom: 10 }}>{description}</Text>
+              <Text style={{ fontSize: 18, fontWeight: 500, marginTop: 'auto' }}>{price}</Text>
+            </View>
+            <View style={{}}>
+              <Image
+              source={{ uri: `https://raw.githubusercontent.com/saaqi/react-native-capstone-saaqi/refs/heads/main/assets/menu/${image}` }}
+                style={{
+                  height: 150,
+                  width: 150,
+                  borderRadius: 10,
+                  borderWidth: 1,
+                  borderColor: '#31511e',
+                  alignSelf: 'flex-end'
+                }}
+                resizeMode={'cover'}
+                accessible={true}
+                accessibilityLabel={name}
+              />
+            </View>
+          </> )}
       </View>
     )
   }
@@ -261,112 +255,111 @@ const MenuSectionListSql = () => {
 
   return (
     <View style={styles.listContainer}>
-      {isLoading ? (<ActivityIndicator style={{ flex: 1 }} />) : (
-        <SectionList
-          keyboardDismissMode={'on-drag'}
-          sections={filteredSectionMenu}
-          keyExtractor={(item, index) => item.name + index}
-          renderItem={({ item }) => (
-            <Foods
-              name={item.name}
-              description={item.description}
-              price={'$' + item.price}
-              image={item.image}
-            />
-          )}
-          renderSectionHeader={({ section: { title } }) => (
-            <Text style={styles.sectionHeader}>
-              {title}
-            </Text>
-          )}
-          ItemSeparatorComponent={Separator}
-          ListHeaderComponent={
-            <View>
-              <MenuHeader />
-              <KeyboardAvoidingView
-                style={styles.searchOuterContainer}
-                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-              >
-                <View style={styles.searchContainer}>
-                  <Ionicons style={styles.icon} name="search-circle-outline" />
-                  <TextInput
-                    style={styles.inputField}
-                    onChangeText={setInputQuery}
-                    placeholder='Search for dishes'
-                    secureTextEntry={false}
-                    keyboardType='default'
-                    value={inputQuery}
-                  />
-                </View>
-              </KeyboardAvoidingView>
-              <View style={{
-                flexDirection: 'row',
-                justifyContent: 'center',
-                alignItems: 'center',
-                textAlign: 'center',
-                marginVertical: 20,
-                paddingHorizontal: 20,
-                marginTop: 20,
-                gap: 10
-              }}>
-                <Pressable
-                  style={[styles.menuSelector, searchQuery === '' && { backgroundColor: '#31511E' }]}
-                  onPress={() => setSearchQuery('')}
-                >
-                  <Text
-                    style={[
-                      searchQuery === '' && { color: '#F6FCDF' },
-                      { textAlign: 'center', fontWeight: 500, fontFamily: 'Karla Medium' }
-                    ]}
-                  >
-                    All
-                  </Text>
-                </Pressable>
-                <Pressable
-                  style={[styles.menuSelector, searchQuery === 'starters' && { backgroundColor: '#31511E' }]}
-                  onPress={() => setSearchQuery('starters')}
-                >
-                  <Text
-                    style={[
-                      searchQuery === 'starters' && { color: '#F6FCDF' },
-                      { textAlign: 'center', fontWeight: 500, fontFamily: 'Karla Medium' }
-                    ]}
-                  >
-                    Starters
-                  </Text>
-                </Pressable>
-                <Pressable
-                  style={[styles.menuSelector, searchQuery === 'mains' && { backgroundColor: '#31511E' }]}
-                  onPress={() => setSearchQuery('mains')}
-                >
-                  <Text
-                    style={[
-                      searchQuery === 'mains' && { color: '#F6FCDF' },
-                      { textAlign: 'center', fontWeight: 500, fontFamily: 'Karla Medium' }
-                    ]}
-                  >
-                    Mains
-                  </Text>
-                </Pressable>
-                <Pressable
-                  style={[styles.menuSelector, searchQuery === 'desserts' && { backgroundColor: '#31511E' }]}
-                  onPress={() => setSearchQuery('desserts')}
-                >
-                  <Text
-                    style={[
-                      searchQuery === 'desserts' && { color: '#F6FCDF' },
-                      { textAlign: 'center', fontWeight: 500, fontFamily: 'Karla Medium' }
-                    ]}
-                  >
-                    Desserts
-                  </Text>
-                </Pressable>
+      <SectionList
+        keyboardDismissMode={'on-drag'}
+        sections={filteredSectionMenu}
+        keyExtractor={(item, index) => item.name + index}
+        renderItem={({ item }) => (
+          <Foods
+            name={item.name}
+            description={item.description}
+            price={'$' + item.price}
+            image={item.image}
+          />
+        )}
+        renderSectionHeader={({ section: { title } }) => (
+          <Text style={styles.sectionHeader}>
+            {title}
+          </Text>
+        )}
+        ItemSeparatorComponent={Separator}
+        ListHeaderComponent={
+          <View>
+            <MenuHeader />
+            <KeyboardAvoidingView
+              style={styles.searchOuterContainer}
+              behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            >
+              <View style={styles.searchContainer}>
+                <Ionicons style={styles.icon} name="search-circle-outline" />
+                <TextInput
+                  style={styles.inputField}
+                  onChangeText={setInputQuery}
+                  placeholder='Search for dishes'
+                  secureTextEntry={false}
+                  keyboardType='default'
+                  value={inputQuery}
+                />
               </View>
+            </KeyboardAvoidingView>
+            <View style={{
+              flexDirection: 'row',
+              justifyContent: 'center',
+              alignItems: 'center',
+              textAlign: 'center',
+              marginVertical: 20,
+              paddingHorizontal: 20,
+              marginTop: 20,
+              gap: 10
+            }}>
+              <Pressable
+                style={[styles.menuSelector, searchQuery === '' && { backgroundColor: '#31511E' }]}
+                onPress={() => setSearchQuery('')}
+              >
+                <Text
+                  style={[
+                    searchQuery === '' && { color: '#F6FCDF' },
+                    { textAlign: 'center', fontWeight: 500, fontFamily: 'Karla Medium' }
+                  ]}
+                >
+                  All
+                </Text>
+              </Pressable>
+              <Pressable
+                style={[styles.menuSelector, searchQuery === 'starters' && { backgroundColor: '#31511E' }]}
+                onPress={() => setSearchQuery('starters')}
+              >
+                <Text
+                  style={[
+                    searchQuery === 'starters' && { color: '#F6FCDF' },
+                    { textAlign: 'center', fontWeight: 500, fontFamily: 'Karla Medium' }
+                  ]}
+                >
+                  Starters
+                </Text>
+              </Pressable>
+              <Pressable
+                style={[styles.menuSelector, searchQuery === 'mains' && { backgroundColor: '#31511E' }]}
+                onPress={() => setSearchQuery('mains')}
+              >
+                <Text
+                  style={[
+                    searchQuery === 'mains' && { color: '#F6FCDF' },
+                    { textAlign: 'center', fontWeight: 500, fontFamily: 'Karla Medium' }
+                  ]}
+                >
+                  Mains
+                </Text>
+              </Pressable>
+              <Pressable
+                style={[styles.menuSelector, searchQuery === 'desserts' && { backgroundColor: '#31511E' }]}
+                onPress={() => setSearchQuery('desserts')}
+              >
+                <Text
+                  style={[
+                    searchQuery === 'desserts' && { color: '#F6FCDF' },
+                    { textAlign: 'center', fontWeight: 500, fontFamily: 'Karla Medium' }
+                  ]}
+                >
+                  Desserts
+                </Text>
+              </Pressable>
             </View>
-          }
-          ListFooterComponent={menuFooter}
-        />
-      )}
+          </View>
+        }
+        ListFooterComponent={menuFooter}
+      />
+
     </View>
   )
 }
