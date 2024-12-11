@@ -200,6 +200,8 @@ const Home = () => {
       </View>
     )
   }
+
+  // Setup Sections
   const sections = [
     {
       title: "Starters",
@@ -226,6 +228,8 @@ const Home = () => {
 
     return null
   }).filter(Boolean)
+
+  // Setup Hero Section
   const MenuHeader = () => {
     return (
       <View style={styles.container}>

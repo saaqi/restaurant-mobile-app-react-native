@@ -1,6 +1,5 @@
 import { GlobalStateProvider } from './src/GlobalState'
 import { Index } from './src/Index'
-import { StatusBar } from 'expo-status-bar'
 import { useFonts } from 'expo-font'
 
 
@@ -25,7 +24,6 @@ export default function App() {
   return (
     <GlobalStateProvider>
       <Index />
-      <StatusBar style="auto" />
     </GlobalStateProvider>
   )
 }

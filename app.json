@@ -1,10 +1,10 @@
 {
   "expo": {
-    "name": "react-native-capstone-saaqi",
-    "slug": "react-native-capstone-saaqi",
+    "name": "Little Lemon",
+    "slug": "little-lemon",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/favicon.png",
+    "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {
@@ -17,7 +17,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/favicon.png",
+        "foregroundImage": "./assets/icon.png",
         "backgroundColor": "#ffffff"
       },
       "package": "com.saqibtech.littlelemon"
@@ -43,7 +43,7 @@
     ],
     "extra": {
       "eas": {
-        "projectId": "1cde46b7-e564-4bf4-80d0-ca8679632e59"
+        "projectId": "0c41aec0-cd35-4b4e-b282-0051921bff90"
       }
     }
   }

@@ -4,7 +4,6 @@ import Navigation from './Navigation'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useContext, useEffect } from 'react'
 import { GlobalContext } from './GlobalState'
-import { StatusBar } from 'expo-status-bar'
 // import AsyncStorageRenderAllItems from './validators/AsyncStorageRenderAllItems'
 
 export const Index = () => {
@@ -48,7 +47,6 @@ export const Index = () => {
       const newsLetterRecorded = await AsyncStorage.getItem('newsLetter')
       newsLetterRecorded && newsLetterRecorded === 'true' ?
         setNewsLetter(true) : setNewsLetter(false)
-
     } catch (error) {
       console.error('Error retrieving User Data:', error);
     }
@@ -64,7 +62,6 @@ export const Index = () => {
       <NavigationContainer>
         <Navigation />
       </NavigationContainer>
-      <StatusBar style="auto" />
     </SafeAreaView>
   );
 }
