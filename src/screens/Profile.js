@@ -106,7 +106,7 @@ export default function Profile({ navigation }) {
   return (
     <ScrollView style={styles.container}>
       <Text style={[styles.headingText, { textAlign: 'center' }]}>
-        Welcome {userName}, It is nice to have you.
+        Welcome {userName.split(' ')[0]}, It is nice to have you.
       </Text>
       <View style={{
         flexDirection: 'row',
@@ -284,17 +284,18 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: "#F6FCDF"
   },
 
   headingText: {
-    fontSize: 20,
-    fontWeight: 500,
+    fontFamily: 'Markazi-Medium',
+    fontSize: 26,
     color: "#1A1A19",
     marginBottom: 20
   },
 
   inputField: {
+    fontFamily: 'Karla-Medium',
+    fontSize: 16,
     borderColor: '#999',
     borderWidth: 1,
     borderRadius: 5,
@@ -303,6 +304,8 @@ const styles = StyleSheet.create({
   },
 
   alert: {
+    fontFamily: 'Karla-Medium',
+    fontSize: 16,
     color: '#842029',
     backgroundColor: '#f8d7da',
     borderColor: '#f5c2c7',
@@ -315,6 +318,7 @@ const styles = StyleSheet.create({
   },
 
   bodyText: {
+    fontFamily: 'Karla-Medium',
     fontSize: 18,
     color: "#1A1A19",
     marginBottom: 10
@@ -343,15 +347,15 @@ const styles = StyleSheet.create({
   },
 
   darkButtonText: {
+    fontFamily: 'Karla-Medium',
+    fontSize: 16,
     color: 'white',
-    fontWeight: 500,
-    fontSize: 16
   },
 
   dangerButtonText: {
+    fontFamily: 'Karla-Medium',
+    fontSize: 16,
     color: '#F8D7DA',
-    fontWeight: 500,
-    fontSize: 16
   },
 
   subButtonDisabled: {

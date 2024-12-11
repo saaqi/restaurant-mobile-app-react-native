@@ -125,11 +125,12 @@ export default function Login({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F6FCDF",
     padding: 20,
   },
 
   inputField: {
+    fontFamily: 'Karla-Medium',
+    fontSize: 16,
     borderColor: '#999',
     borderWidth: 1,
     borderRadius: 5,
@@ -139,13 +140,15 @@ const styles = StyleSheet.create({
   },
 
   bodyText: {
+    fontFamily: 'Karla-Medium',
     fontSize: 16,
-    fontWeight: '400',
     textAlign: 'center',
     marginTop: 10
   },
 
   alert: {
+    fontFamily: 'Karla-Medium',
+    fontSize: 16,
     color: '#842029',
     backgroundColor: '#f8d7da',
     borderColor: '#f5c2c7',
@@ -176,16 +179,19 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginBottom: 10,
   },
+
   buttonText: {
+    fontFamily: 'Karla-Medium',
+    fontSize: 18,
     color: 'white',
-    fontWeight: 500,
-    fontSize: 18
   },
+
   signUpbuttonText: {
+    fontFamily: 'Markazi-Medium',
+    fontSize: 25,
     color: '#31511E',
-    fontWeight: 500,
-    fontSize: 18
   },
+
   iconStyle: {
     flexDirection: 'row',
     alignItems: 'center',

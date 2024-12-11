@@ -61,17 +61,16 @@ export default function Welcome({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F6FCDF",
     padding: 20,
     justifyContent: 'center',
   },
 
   bodyText: {
-    fontSize: 26,
+    fontSize: 30,
     fontWeight: '500',
     textAlign: 'center',
     flex: .5,
-    fontFamily: 'Markazi Text Medium'
+    fontFamily: 'Markazi-Medium'
   },
 
   loginButton: {
