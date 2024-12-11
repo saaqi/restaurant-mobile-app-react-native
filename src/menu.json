@@ -4,77 +4,77 @@
       "name": "Greek Salad",
       "price": 12.99,
       "description": "Our delicious salad is served with Feta cheese and peeled cucumber. Includes tomatoes, onions, olives, salt and oregano in the ingredients.",
-      "image": "greekSalad.jpg",
+      "image": "greekSalad.webp",
       "category": "starters"
     },
     {
       "name": "Bruschetta",
       "price": 7.99,
       "description": "Delicious grilled bread rubbed with garlic and topped with olive oil and salt. Our Bruschetta includes tomato and cheese.",
-      "image": "bruschetta.jpg",
+      "image": "bruschetta.webp",
       "category": "starters"
     },
     {
       "name": "Garlic Bread",
       "price": 5.99,
       "description": "Warm, crusty bread topped with garlic butter.",
-      "image": "garlicBread.jpg",
+      "image": "garlicBread.webp",
       "category": "starters"
     },
     {
       "name": "Calamari",
       "price": 14.99,
       "description": "Crispy fried calamari served with marinara sauce.",
-      "image": "calamari.jpg",
+      "image": "calamari.webp",
       "category": "starters"
     },
     {
       "name": "Grilled Fish",
       "price": 20.0,
       "description": "Fantastic grilled fish seasoned with salt.",
-      "image": "grilledFish.jpg",
+      "image": "grilledFish.webp",
       "category": "mains"
     },
     {
       "name": "Pasta",
       "price": 6.99,
       "description": "Delicious pasta for your delight.",
-      "image": "pasta.jpg",
+      "image": "pasta.webp",
       "category": "mains"
     },
     {
       "name": "Pizza Margherita",
       "price": 12.99,
       "description": "Classic pizza with tomato sauce, mozzarella, and fresh basil.",
-      "image": "pizzaMargherita.jpg",
+      "image": "pizzaMargherita.webp",
       "category": "mains"
     },
     {
       "name": "Chicken Parmesan",
       "price": 18.99,
       "description": "Crispy breaded chicken topped with marinara sauce and melted mozzarella cheese, served over pasta.",
-      "image": "chickenParmesan.jpg",
+      "image": "chickenParmesan.webp",
       "category": "mains"
     },
     {
       "name": "Lemon Dessert",
       "price": 4.99,
       "description": "You can't go wrong with this delicious lemon dessert!",
-      "image": "lemonDessert.jpg",
+      "image": "lemonDessert.webp",
       "category": "desserts"
     },
     {
       "name": "Tiramisu",
       "price": 6.99,
       "description": "Classic Italian dessert with coffee-soaked ladyfingers and mascarpone cream.",
-      "image": "tiramisu.jpg",
+      "image": "tiramisu.webp",
       "category": "desserts"
     },
     {
       "name": "Chocolate Lava Cake",
       "price": 7.99,
       "description": "Warm chocolate cake with a molten chocolate center, served with vanilla ice cream.",
-      "image": "chocolateLavaCake.jpg",
+      "image": "chocolateLavaCake.webp",
       "category": "desserts"
     }
   ]
