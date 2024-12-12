@@ -1,4 +1,4 @@
-import { View } from 'react-native';
+import { SafeAreaView, StatusBar } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native'
 import Navigation from './Navigation'
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -63,12 +63,18 @@ export const Index = () => {
   }, [])
 
   return (
-    <View style={{ flex: 1, justifyContent: 'center' }}>
+    <SafeAreaView style={{ flex: 1, justifyContent: 'center' }}>
       {/* <AsyncStorageRenderAllItems /> */}
+      <StatusBar
+        barStyle="dark-content"
+        hidden={false}
+        backgroundColor="#F6FCDF"
+        translucent={true}
+      />
       <NavigationContainer>
         <Navigation />
       </NavigationContainer>
-    </View>
+    </SafeAreaView>
   );
 }
 
