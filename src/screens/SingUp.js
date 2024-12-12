@@ -18,7 +18,7 @@ import Ionicons from '@expo/vector-icons/Ionicons'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
-export default function SingUp({ navigation }) {
+export default function SingUp() {
 
   const deviceWidth = Dimensions.get('window').width
 
@@ -116,8 +116,7 @@ export default function SingUp({ navigation }) {
             <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
               <Pressable
                 onPress={() => {
-                  handleLogin();
-                  navigation.navigate('Profile');
+                  handleLogin()
                 }}
                 disabled={
                   userName === '' || !ValidateEmailField(userEmail) || !ValidatePasswordField(userPassword) || userPassword !== userPasswordConfirm
