@@ -1,4 +1,4 @@
-import { SafeAreaView } from 'react-native';
+import { View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native'
 import Navigation from './Navigation'
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -20,49 +20,55 @@ export const Index = () => {
     setPasswordChanges,
   } = useContext(GlobalContext);
 
+
+  // Set initial user data from AsyncStorage
+  const getStoredItem = async (key, defaultValue, setState) => {
+    try {
+      const value = await AsyncStorage.getItem(key);
+      if (value !== null && value !== '') {
+        setState(value === 'true' ? true : value === 'false' ? false : value);
+      } else if (defaultValue !== undefined) {
+        setState(defaultValue)
+      }
+    } catch (error) {
+      console.error(`Error retrieving ${key}:`, error);
+    }
+  }
   const setInitialUserData = async () => {
     try {
-      const userNameRecorded = await AsyncStorage.getItem('userName')
-      userNameRecorded && userNameRecorded !== '' && setUserName(userNameRecorded)
-      const userEmailRecorded = await AsyncStorage.getItem('userEmail')
-      userEmailRecorded && userEmailRecorded !== '' && setUserEmail(userEmailRecorded)
-      const userPhoneRecorded = await AsyncStorage.getItem('userPhone')
-      userPhoneRecorded && userPhoneRecorded !== '' && setUserPhone(userPhoneRecorded)
-      const userAvatarRecorded = await AsyncStorage.getItem('userAvatar')
-      userAvatarRecorded && userAvatarRecorded !== '' && setUserAvatar(userAvatarRecorded)
-
-      const userLoggedInRecorded = await AsyncStorage.getItem('userLoggedIn')
-      userLoggedInRecorded && userLoggedInRecorded === 'true' ?
-        setUserLoggedIn(true) : setUserLoggedIn(false)
-
-      const deliveryStatusRecorded = await AsyncStorage.getItem('deliveryStatus')
-      deliveryStatusRecorded && deliveryStatusRecorded === 'false' ?
-        setDeliveryStatus(false) : setDeliveryStatus(true)
-      const passwordChangesRecorded = await AsyncStorage.getItem('passwordChanges')
-      passwordChangesRecorded && passwordChangesRecorded === 'false' ?
-        setPasswordChanges(false) : setPasswordChanges(true)
-      const specialOffersRecorded = await AsyncStorage.getItem('specialOffers')
-      specialOffersRecorded && specialOffersRecorded === 'true' ?
-        setSpecialOffers(true) : setSpecialOffers(false)
-      const newsLetterRecorded = await AsyncStorage.getItem('newsLetter')
-      newsLetterRecorded && newsLetterRecorded === 'true' ?
-        setNewsLetter(true) : setNewsLetter(false)
+      const stateMappings = [
+        { key: 'userName', setState: setUserName },
+        { key: 'userEmail', setState: setUserEmail },
+        { key: 'userPhone', setState: setUserPhone },
+        { key: 'userAvatar', setState: setUserAvatar },
+        { key: 'userLoggedIn', setState: setUserLoggedIn, defaultValue: false },
+        { key: 'deliveryStatus', setState: setDeliveryStatus, defaultValue: true },
+        { key: 'passwordChanges', setState: setPasswordChanges, defaultValue: true },
+        { key: 'specialOffers', setState: setSpecialOffers, defaultValue: false },
+        { key: 'newsLetter', setState: setNewsLetter, defaultValue: false },
+      ]
+      await Promise.all(
+        stateMappings.map(({ key, setState, defaultValue }) =>
+          getStoredItem(key, defaultValue, setState)
+        )
+      )
     } catch (error) {
       console.error('Error retrieving User Data:', error);
     }
   }
+
 
   useEffect(() => {
     setInitialUserData()
   }, [])
 
   return (
-    <SafeAreaView style={{ flex: 1, justifyContent: 'center' }}>
+    <View style={{ flex: 1, justifyContent: 'center' }}>
       {/* <AsyncStorageRenderAllItems /> */}
       <NavigationContainer>
         <Navigation />
       </NavigationContainer>
-    </SafeAreaView>
+    </View>
   );
 }
 

@@ -13,6 +13,7 @@ import {
 import * as SQLite from 'expo-sqlite'
 import React, { useState, useEffect } from 'react'
 import Ionicons from '@expo/vector-icons/Ionicons'
+import NetInfo from '@react-native-community/netinfo'
 
 const Home = () => {
   const [isLoading, setLoading] = useState(true)
@@ -139,15 +140,19 @@ const Home = () => {
       const offlineMenu = await retrieveMenuItems()
       const onlineMenu = await fetchMenuFromServer()
       const isEmpty = await isDatabaseEmpty()
+      const netInfo = await NetInfo.fetch()
+
       if (!isEmpty) {
         // Use locally stored items from the database
         setMenuItems(offlineMenu)
 
         // Fetch from server and store in database if server has more or less items
-        if (offlineMenu.length !== onlineMenu.length) {
-          await db.runAsync('DELETE FROM menu')
-          await insertMenuItems(onlineMenu)
-          setMenuItems(onlineMenu)
+        if (netInfo.isConnected && netInfo.isInternetReachable) {
+          if (offlineMenu.length !== onlineMenu.length) {
+            await db.runAsync('DELETE FROM menu')
+            await insertMenuItems(onlineMenu)
+            setMenuItems(onlineMenu)
+          }
         }
       } else {
         // Fetch from server and store in database
@@ -179,7 +184,7 @@ const Home = () => {
         <View style={{ flex: 1 }}>
           <Text style={styles.listHeading}>{name}</Text>
           <Text style={styles.listBody}>{description}</Text>
-          <Text style={styles.listPrice }>{price}</Text>
+          <Text style={styles.listPrice}>{price}</Text>
         </View>
         <View style={{}}>
           <Image
@@ -202,20 +207,10 @@ const Home = () => {
   }
 
   // Setup Sections
-  const sections = [
-    {
-      title: "Starters",
-      data: menuItems.filter((item) => item.category === "starters"),
-    },
-    {
-      title: "Mains",
-      data: menuItems.filter((item) => item.category === "mains"),
-    },
-    {
-      title: "Desserts",
-      data: menuItems.filter((item) => item.category === "desserts"),
-    },
-  ]
+  const sections = [...new Set(menuItems.map((item) => item.category))].map((category) => ({
+    title: category.charAt(0).toUpperCase() + category.slice(1), // Capitalize category name
+    data: menuItems.filter((item) => item.category === category), // Filter items by category
+  }))
   const filteredSectionMenu = sections.map((section) => {
     const filteredData = section.data.filter((item) =>
       Object.values(item).some((value) =>
@@ -225,7 +220,6 @@ const Home = () => {
     if (filteredData.length > 0) {
       return { ...section, data: filteredData }
     }
-
     return null
   }).filter(Boolean)
 
@@ -286,10 +280,18 @@ const Home = () => {
             <View>
               <MenuHeader />
               <KeyboardAvoidingView
-                style={styles.searchOuterContainer}
                 behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+                style={styles.searchContainer}
               >
-                <View style={styles.searchContainer}>
+                <View style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  backgroundColor: '#fff',
+                  borderRadius: 50,
+                  paddingHorizontal: 10,
+                  paddingVertical: 2.5
+                 }}>
                   <Ionicons style={styles.icon} name="search-circle-outline" />
                   <TextInput
                     style={styles.inputField}
@@ -349,7 +351,7 @@ const Home = () => {
           ListFooterComponent={menuFooter}
         />
       )}
-    </View>
+    </View >
   )
 }
 
@@ -426,33 +428,24 @@ const styles = StyleSheet.create({
     color: "#F6FCDF",
   },
 
-  searchOuterContainer: {
-    backgroundColor: "#31511E",
-    paddingHorizontal: 10,
-    paddingBottom: 30
-  },
 
   searchContainer: {
-    backgroundColor: "#fff",
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderRadius: 10,
-    paddingHorizontal: 10,
+    backgroundColor: "#31511E",
+    paddingHorizontal: 20,
+    paddingBottom: 20
   },
 
   icon: {
     fontSize: 24,
-    borderRightWidth: 1,
-    marginRight: 10,
-    paddingRight: 10
+    flex: .1,
+    textAlign: 'center',
   },
 
   inputField: {
     fontFamily: 'Karla-Medium',
     fontSize: 18,
     outlineStyle: 'none',
-    height: '100%',
-    width: "100%",
+    flex: .9
   },
 
   listHeading: {
