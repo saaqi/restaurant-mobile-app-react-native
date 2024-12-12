@@ -37,10 +37,10 @@ export const Index = () => {
   const setInitialUserData = async () => {
     try {
       const stateMappings = [
-        { key: 'userName', setState: setUserName },
-        { key: 'userEmail', setState: setUserEmail },
-        { key: 'userPhone', setState: setUserPhone },
-        { key: 'userAvatar', setState: setUserAvatar },
+        { key: 'userName', setState: setUserName, defaultValue: '' },
+        { key: 'userEmail', setState: setUserEmail, defaultValue: '' },
+        { key: 'userPhone', setState: setUserPhone, defaultValue: '' },
+        { key: 'userAvatar', setState: setUserAvatar, defaultValue: '' },
         { key: 'userLoggedIn', setState: setUserLoggedIn, defaultValue: false },
         { key: 'deliveryStatus', setState: setDeliveryStatus, defaultValue: true },
         { key: 'passwordChanges', setState: setPasswordChanges, defaultValue: true },
