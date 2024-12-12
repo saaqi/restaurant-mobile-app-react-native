@@ -10,7 +10,7 @@
     "splash": {
       "image": "./assets/favicon.png",
       "resizeMode": "contain",
-      "backgroundColor": "#F6FCDF"
+      "backgroundColor": "#FFFFFF"
     },
     "ios": {
       "supportsTablet": true
@@ -18,7 +18,7 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/icon.png",
-        "backgroundColor": "#F6FCDF"
+        "backgroundColor": "#FFFFFF"
       },
       "package": "com.saqibtech.littlelemon"
     },
