@@ -15,7 +15,6 @@ import { useState, useEffect, useContext } from 'react'
 import { GlobalContext } from '../GlobalState'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import NetInfo from '@react-native-community/netinfo'
-import md5 from 'md5'
 
 const Home = () => {
   const [isLoading, setLoading] = useState(true)

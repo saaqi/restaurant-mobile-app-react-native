@@ -28,12 +28,6 @@ export default function Login({ navigation }) {
     setUserName,
     userEmail,
     setUserEmail,
-    setUserPhone,
-    setUserAvatar,
-    setNewsLetter,
-    setSpecialOffers,
-    setDeliveryStatus,
-    setPasswordChanges,
     dbName
   } = useContext(GlobalContext);
 
