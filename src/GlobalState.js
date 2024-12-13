@@ -1,8 +1,7 @@
-import React, { createContext, useState } from 'react';
-export const GlobalContext = createContext();
+import { createContext, useState } from 'react'
 
+export const GlobalContext = createContext()
 export const GlobalStateProvider = ({ children }) => {
-
   const [userName, setUserName] = useState('')
   const [userEmail, setUserEmail] = useState('')
   const [userPhone, setUserPhone] = useState('')
@@ -12,7 +11,7 @@ export const GlobalStateProvider = ({ children }) => {
   const [deliveryStatus, setDeliveryStatus] = useState(true)
   const [passwordChanges, setPasswordChanges] = useState(true)
   const [specialOffers, setSpecialOffers] = useState(false)
-
+  const dbName = 'little_lemon'
 
   return (
     <GlobalContext.Provider value={{
@@ -25,8 +24,9 @@ export const GlobalStateProvider = ({ children }) => {
       specialOffers, setSpecialOffers,
       deliveryStatus, setDeliveryStatus,
       passwordChanges, setPasswordChanges,
+      dbName
     }}>
       {children}
     </GlobalContext.Provider>
-  );
-};
+  )
+}

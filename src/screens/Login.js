@@ -9,12 +9,15 @@ import {
   Pressable,
   Image,
   Dimensions,
+  Alert
 } from 'react-native'
 import { useState, useContext } from 'react'
 import { ValidateEmailField } from '../validators/ValidateEmailField'
 import { GlobalContext } from '../GlobalState'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as SQLite from 'expo-sqlite'
+import md5 from 'md5'
 
 export default function Login({ navigation }) {
 
@@ -22,22 +25,51 @@ export default function Login({ navigation }) {
 
   const {
     setUserLoggedIn,
-    userEmail, setUserEmail,
+    setUserName,
+    userEmail,
+    setUserEmail,
+    setUserPhone,
+    setUserAvatar,
+    setNewsLetter,
+    setSpecialOffers,
+    setDeliveryStatus,
+    setPasswordChanges,
+    dbName
   } = useContext(GlobalContext);
 
   const [userPassword, setUserPassword] = useState('')
 
   const handleLogin = async () => {
     try {
-      setUserLoggedIn(true)
-      await AsyncStorage.multiSet([
-        ['userLoggedIn', 'true'],
-        ['userEmail', userEmail]
-      ]);
+      // Open the database
+      const db = await SQLite.openDatabaseAsync(dbName)
+      // Query to check if the username and password match
+      const checkLoginResult = await db.getFirstAsync(
+        `SELECT * FROM users WHERE userEmail = ? AND userPassword = ?`,
+        // Hash the password before comparison
+        [userEmail, md5(userPassword)]
+      )
+
+      if (checkLoginResult) {
+        // If a match is found, set the user as logged in
+        setUserLoggedIn(true)
+        // Set Details of the user
+        setUserName(checkLoginResult.userName)
+
+        await AsyncStorage.multiSet([
+          ['userLoggedIn', 'true'],
+          ['userName', checkLoginResult.userName],
+          ['userEmail', checkLoginResult.userEmail]
+        ])
+      } else {
+        // If no match, show an alert
+        Alert.alert('Login failed', 'Invalid username or password.')
+      }
     } catch (error) {
-      console.error('Error storing userLoggedIn:', error)
+      console.error('Error logging in:', error)
     }
   };
+
 
   return (
     <View style={styles.container}>

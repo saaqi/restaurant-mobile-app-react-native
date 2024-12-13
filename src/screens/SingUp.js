@@ -9,40 +9,56 @@ import {
   Pressable,
   Image,
   Dimensions,
+  Alert
 } from 'react-native'
 import { useState, useContext } from 'react'
 import { GlobalContext } from '../GlobalState'
 import { ValidateEmailField } from '../validators/ValidateEmailField'
 import { ValidatePasswordField } from '../validators/ValidatePasswordField'
 import Ionicons from '@expo/vector-icons/Ionicons'
+import * as SQLite from 'expo-sqlite'
+import md5 from 'md5'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-
-export default function SingUp() {
+export default function SingUp({navigation}) {
 
   const deviceWidth = Dimensions.get('window').width
 
   const {
     userEmail, setUserEmail,
     userName, setUserName,
-    setUserLoggedIn
+    setUserLoggedIn,
+    dbName
   } = useContext(GlobalContext);
 
   const [userPassword, setUserPassword] = useState('')
   const [userPasswordConfirm, setUserPasswordConfirm] = useState('')
 
-  const handleLogin = async () => {
+  const handleSignUp = async () => {
     try {
-      setUserLoggedIn(true)
-      await AsyncStorage.multiSet([
-        ['userLoggedIn', 'true'],
-        ['userName', userName],
-        ['userEmail', userEmail]
-      ]);
+      const db = await SQLite.openDatabaseAsync(dbName)
+      const checkEmailResult = await db.getFirstAsync(
+        `SELECT * FROM users WHERE userEmail = ?`,
+        [userEmail]
+      )
+      if (!checkEmailResult) {
+        await db.runAsync(
+          `INSERT INTO users (userEmail, userPassword, userName) VALUES (?, ?, ?)`,
+          [userEmail, md5(userPassword), userName]
+        )
+        await AsyncStorage.multiSet([
+          ['userLoggedIn', 'true'],
+          ['userName', userName],
+          ['userEmail', userEmail]
+        ])
+        setUserLoggedIn(true)
+      } else {
+        Alert.alert('User already exists', 'Please login instead.')
+      }
     } catch (error) {
       console.error('Error storing user data:', error);
     }
-  };
+  }
 
   return (
     <View style={styles.container}>
@@ -116,7 +132,7 @@ export default function SingUp() {
             <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
               <Pressable
                 onPress={() => {
-                  handleLogin()
+                  handleSignUp()
                 }}
                 disabled={
                   userName === '' || !ValidateEmailField(userEmail) || !ValidatePasswordField(userPassword) || userPassword !== userPasswordConfirm

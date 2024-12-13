@@ -8,12 +8,14 @@ import {
   ActivityIndicator,
   KeyboardAvoidingView,
   Platform,
-  TextInput
+  TextInput,
 } from 'react-native'
 import * as SQLite from 'expo-sqlite'
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
+import { GlobalContext } from '../GlobalState'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import NetInfo from '@react-native-community/netinfo'
+import md5 from 'md5'
 
 const Home = () => {
   const [isLoading, setLoading] = useState(true)
@@ -21,44 +23,18 @@ const Home = () => {
   const [inputQuery, setInputQuery] = useState('')
   const [searchQuery, setSearchQuery] = useState('')
 
+  const { dbName } = useContext(GlobalContext)
+
+  // Debounce the search query input to avoid excessive updates
   useEffect(() => {
-    // Debounce the search query input to avoid excessive updates
     const debounceTimeout = setTimeout(() => {
       setSearchQuery(inputQuery)
     }, 300)
-
     // Cleanup the timeout on component unmount or when inputQuery changes
     return () => {
       clearTimeout(debounceTimeout)
     }
   }, [inputQuery])
-
-  const dbName = 'little_lemon'
-
-  const initDatabase = async () => {
-    // Open the SQLite database
-    const db = await SQLite.openDatabaseAsync(dbName)
-    // Create table if not exists
-    try {
-      await db.execAsync(
-        `PRAGMA journal_mode = WAL;
-        CREATE TABLE IF NOT EXISTS menu (
-          id integer PRIMARY KEY AUTOINCREMENT NOT NULL,
-          name text NOT NULL,
-          price real NOT NULL,
-          description text NOT NULL,
-          image text NOT NULL,
-          category text NOT NULL
-        );`
-      )
-    } catch (error) {
-      console.error('Creating table:', error)
-    }
-  }
-
-  useEffect(() => {
-    initDatabase()
-  }, [])
 
   // Fetch menu data from remote server
   const fetchMenuFromServer = async () => {
@@ -91,7 +67,6 @@ const Home = () => {
         item.image,
         item.category,
       ])
-
       await db.runAsync(
         `INSERT INTO menu (name, price, description, image, category) VALUES ${entryData};`,
         values

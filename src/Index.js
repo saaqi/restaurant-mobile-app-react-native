@@ -4,6 +4,7 @@ import Navigation from './Navigation'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useContext, useEffect } from 'react'
 import { GlobalContext } from './GlobalState'
+import * as SQLite from 'expo-sqlite'
 // import AsyncStorageRenderAllItems from './validators/AsyncStorageRenderAllItems'
 
 export const Index = () => {
@@ -18,7 +19,43 @@ export const Index = () => {
     setSpecialOffers,
     setDeliveryStatus,
     setPasswordChanges,
-  } = useContext(GlobalContext);
+    dbName,
+  } = useContext(GlobalContext)
+
+  // Open the SQLite database
+  const initDatabase = async () => {
+    const db = await SQLite.openDatabaseAsync(dbName)
+    // Create table if not exists
+    try {
+      await db.execAsync(
+        `PRAGMA journal_mode = WAL;
+          CREATE TABLE IF NOT EXISTS menu (
+            id integer PRIMARY KEY AUTOINCREMENT NOT NULL,
+            name TEXT NOT NULL,
+            price REAL NOT NULL,
+            description TEXT NOT NULL,
+            image TEXT NOT NULL,
+            category TEXT NOT NULL
+          );
+          CREATE TABLE IF NOT EXISTS users (
+            userPassword TEXT NOT NULL CHECK (length(userPassword) = 32 AND userPassword GLOB '[0-9A-Fa-f]*'),
+            userName TEXT NOT NULL,
+            userEmail TEXT PRIMARY KEY NOT NULL,
+            userPhone INTEGER,
+            userAvatar TEXT,
+            deliveryStatus BOOLEAN,
+            passwordChanges BOOLEAN,
+            specialOffers BOOLEAN,
+            newsLetter BOOLEAN
+          );`
+      )
+    } catch (error) {
+      console.error('Creating table:', error)
+    }
+  }
+  useEffect(() => {
+    initDatabase()
+  }, [])
 
 
   // Set initial user data from AsyncStorage
@@ -56,7 +93,6 @@ export const Index = () => {
       console.error('Error retrieving User Data:', error);
     }
   }
-
 
   useEffect(() => {
     setInitialUserData()
