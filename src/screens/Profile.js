@@ -17,6 +17,7 @@ import { GlobalContext } from '../GlobalState'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import * as ImagePicker from 'expo-image-picker'
+import * as SQLite from 'expo-sqlite'
 
 export default function Profile({ navigation }) {
 
@@ -29,7 +30,8 @@ export default function Profile({ navigation }) {
     passwordChanges, setPasswordChanges,
     specialOffers, setSpecialOffers,
     newsLetter, setNewsLetter,
-    setUserLoggedIn
+    setUserLoggedIn,
+    dbName
   } = useContext(GlobalContext);
 
   const pickImage = async () => {
@@ -44,11 +46,25 @@ export default function Profile({ navigation }) {
 
   const handleUserDetails = async () => {
     try {
+      const db = await SQLite.openDatabaseAsync(dbName);
+      // Insert Data Into Database
+      await db.runAsync(
+        `UPDATE users SET userAvatar = ?, userPhone = ?, deliveryStatus = ?, passwordChanges = ?, specialOffers = ?, newsLetter = ? WHERE userEmail = ?`,
+        [
+          userAvatar,
+          userPhone,
+          deliveryStatus ? true : false,
+          passwordChanges ? true : false,
+          specialOffers ? true : false,
+          newsLetter ? true : false,
+          userEmail,  // Ensure you're updating the correct user's record
+        ]
+      )
       await AsyncStorage.multiSet([
-        ['userAvatar', userAvatar],
         ['userName', userName],
         ['userEmail', userEmail],
         ['userPhone', userPhone],
+        ['userAvatar', userAvatar],
         ['deliveryStatus', deliveryStatus ? 'true' : 'false'],
         ['passwordChanges', passwordChanges ? 'true' : 'false'],
         ['specialOffers', specialOffers ? 'true' : 'false'],
@@ -155,6 +171,15 @@ export default function Profile({ navigation }) {
           keyboardDismissMode={'on-drag'}
         >
           <TextInput
+            style={styles.inputFieldDisabled}
+            onChangeText={setUserEmail}
+            editable={false}
+            placeholder='Your Email'
+            secureTextEntry={false}
+            keyboardType='email-address'
+            value={userEmail}
+          />
+          <TextInput
             style={styles.inputField}
             onChangeText={setUserName}
             placeholder='Your Name'
@@ -162,14 +187,7 @@ export default function Profile({ navigation }) {
             keyboardType='default'
             value={userName}
           />
-          <TextInput
-            style={styles.inputField}
-            onChangeText={setUserEmail}
-            placeholder='Your Email'
-            secureTextEntry={false}
-            keyboardType='email-address'
-            value={userEmail}
-          />
+
           <TextInput
             style={styles.inputField}
             onChangeText={setUserPhone}
@@ -302,6 +320,17 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     padding: 10,
     marginBottom: 10,
+  },
+
+  inputFieldDisabled: {
+    fontFamily: 'Karla-Medium',
+    fontSize: 16,
+    borderColor: '#999',
+    borderWidth: 1,
+    borderRadius: 5,
+    padding: 10,
+    marginBottom: 10,
+    backgroundColor: '#cecece',
   },
 
   alert: {

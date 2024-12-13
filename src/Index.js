@@ -28,26 +28,26 @@ export const Index = () => {
     // Create table if not exists
     try {
       await db.execAsync(
-        `PRAGMA journal_mode = WAL;
-          CREATE TABLE IF NOT EXISTS menu (
-            id integer PRIMARY KEY AUTOINCREMENT NOT NULL,
-            name TEXT NOT NULL,
-            price REAL NOT NULL,
-            description TEXT NOT NULL,
-            image TEXT NOT NULL,
-            category TEXT NOT NULL
-          );
-          CREATE TABLE IF NOT EXISTS users (
-            userPassword TEXT NOT NULL CHECK (length(userPassword) = 32 AND userPassword GLOB '[0-9A-Fa-f]*'),
-            userName TEXT NOT NULL,
-            userEmail TEXT PRIMARY KEY NOT NULL,
-            userPhone INTEGER,
-            userAvatar TEXT,
-            deliveryStatus BOOLEAN,
-            passwordChanges BOOLEAN,
-            specialOffers BOOLEAN,
-            newsLetter BOOLEAN
-          );`
+      `PRAGMA journal_mode = WAL;
+        CREATE TABLE IF NOT EXISTS menu (
+          id integer PRIMARY KEY AUTOINCREMENT NOT NULL,
+          name TEXT NOT NULL,
+          price REAL NOT NULL,
+          description TEXT NOT NULL,
+          image TEXT NOT NULL,
+          category TEXT NOT NULL
+        );
+        CREATE TABLE IF NOT EXISTS users (
+          userPassword TEXT NOT NULL CHECK (length(userPassword) = 32 AND userPassword GLOB '[0-9A-Fa-f]*'),
+          userName TEXT NOT NULL,
+          userEmail TEXT PRIMARY KEY NOT NULL,
+          userPhone INTEGER,
+          userAvatar TEXT,
+          deliveryStatus BOOLEAN,
+          passwordChanges BOOLEAN,
+          specialOffers BOOLEAN,
+          newsLetter BOOLEAN
+        );`
       )
     } catch (error) {
       console.error('Creating table:', error)
