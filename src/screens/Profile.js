@@ -30,7 +30,6 @@ export default function Profile({ navigation }) {
     passwordChanges, setPasswordChanges,
     specialOffers, setSpecialOffers,
     newsLetter, setNewsLetter,
-    userToken, setUserToken,
     setUserLoggedIn,
     dbName
   } = useContext(GlobalContext);
@@ -52,10 +51,10 @@ export default function Profile({ navigation }) {
 
       setUserName(dbDetails.userName || '')
       setUserPhone(dbDetails.userPhone || '')
-      setDeliveryStatus(dbDetails.deliveryStatus ? true : false)
-      setPasswordChanges(dbDetails.passwordChanges ? true : false)
-      setSpecialOffers(dbDetails.specialOffers ? true : false)
-      setNewsLetter(dbDetails.newsLetter ? true : false)
+      setDeliveryStatus(!dbDetails.deliveryStatus ? false : true)
+      setPasswordChanges(!dbDetails.passwordChanges ? false : true)
+      setSpecialOffers(!dbDetails.specialOffers ? false : true)
+      setNewsLetter(!dbDetails.newsLetter ? false : true)
     } catch (error) {
       console.error(`Error retrieving from SQLite database:`, error);
     }
@@ -68,7 +67,7 @@ export default function Profile({ navigation }) {
   const handleUserDetails = async () => {
     try {
       const db = await SQLite.openDatabaseAsync(dbName);
-      if (userToken === md5(userEmail)) {
+  
         // Insert Data Into Database
         await db.runAsync(
           `UPDATE users SET
@@ -92,9 +91,7 @@ export default function Profile({ navigation }) {
           ]
         )
         navigation.navigate('Home')
-      } else {
-        Alert.alert('Invalid User', 'Please login again to continue.')
-      }
+      
     } catch (error) {
       console.error('Error storing user data:', error);
     }
@@ -133,7 +130,6 @@ export default function Profile({ navigation }) {
               setUserName('');
               setUserEmail('');
               setUserPhone('');
-              setUserToken('');
               setDeliveryStatus(true);
               setPasswordChanges(true);
               setSpecialOffers(false);
@@ -156,8 +152,7 @@ export default function Profile({ navigation }) {
       setUserToken('')
       setUserLoggedIn(false)
       await AsyncStorage.multiSet([
-        ['userLoggedIn', 'false'],
-        ['userToken', '']
+        ['userLoggedIn', 'false']
       ]);
     } catch (error) {
       console.error('Error retrieving User Data:', error);
