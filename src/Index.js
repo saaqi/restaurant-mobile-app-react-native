@@ -10,7 +10,6 @@ import * as SQLite from 'expo-sqlite'
 export const Index = () => {
 
   const {
-    setUserToken,
     setUserEmail,
     setUserLoggedIn,
     dbName,
@@ -57,10 +56,8 @@ export const Index = () => {
     try {
       const asUserStatus = await AsyncStorage.getItem('userLoggedIn')
       const asUserEmail = await AsyncStorage.getItem('userEmail')
-      const asUserToken = await AsyncStorage.getItem('userToken')
       setUserLoggedIn(asUserStatus === 'true' ? true : false)
       setUserEmail(asUserEmail ? asUserEmail : '')
-      setUserToken(asUserToken ? asUserToken : '')
     } catch (error) {
       console.error(`Error retrieving from AsyncStorage:`, error)
     }

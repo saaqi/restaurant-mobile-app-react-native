@@ -67,10 +67,9 @@ export default function Profile({ navigation }) {
   const handleUserDetails = async () => {
     try {
       const db = await SQLite.openDatabaseAsync(dbName);
-  
-        // Insert Data Into Database
-        await db.runAsync(
-          `UPDATE users SET
+      // Insert Data Into Database
+      await db.runAsync(
+        `UPDATE users SET
             userName = ?,
             userAvatar = ?,
             userPhone = ?,
@@ -79,19 +78,18 @@ export default function Profile({ navigation }) {
             specialOffers = ?,
             newsLetter = ?
             WHERE userEmail = ?`,
-          [
-            userName,
-            userAvatar,
-            userPhone,
-            deliveryStatus ? 1 : 0,
-            passwordChanges ? 1 : 0,
-            specialOffers ? 1 : 0,
-            newsLetter ? 1 : 0,
-            userEmail
-          ]
-        )
-        navigation.navigate('Home')
-      
+        [
+          userName,
+          userAvatar,
+          userPhone,
+          deliveryStatus ? 1 : 0,
+          passwordChanges ? 1 : 0,
+          specialOffers ? 1 : 0,
+          newsLetter ? 1 : 0,
+          userEmail
+        ]
+      )
+      navigation.navigate('Home')
     } catch (error) {
       console.error('Error storing user data:', error);
     }
@@ -149,7 +147,6 @@ export default function Profile({ navigation }) {
 
   const setLogout = async () => {
     try {
-      setUserToken('')
       setUserLoggedIn(false)
       await AsyncStorage.multiSet([
         ['userLoggedIn', 'false']
