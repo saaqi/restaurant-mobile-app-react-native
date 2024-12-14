@@ -1,13 +1,6 @@
 {
   "menu": [
     {
-      "name": "Test Dish",
-      "price": 0.99,
-      "description": "This is a test dish to see if the app pulls the latest update automatically when connected to the internet.",
-      "image": "greekSalad.webp",
-      "category": "starters"
-    },
-    {
       "name": "Greek Salad",
       "price": 12.99,
       "description": "Our delicious salad is served with Feta cheese and peeled cucumber. Includes tomatoes, onions, olives, salt and oregano in the ingredients.",
