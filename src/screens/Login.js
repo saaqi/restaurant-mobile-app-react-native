@@ -25,8 +25,8 @@ export default function Login({ navigation }) {
 
   const {
     setUserLoggedIn,
-    userEmail,
-    setUserEmail,
+    userEmail, setUserEmail,
+    userToken, setUserToken,
     dbName
   } = useContext(GlobalContext);
 
@@ -45,12 +45,13 @@ export default function Login({ navigation }) {
 
       if (checkLoginResult) {
         // If a match is found, set the user as logged in
-        setUserLoggedIn(true)
-
         await AsyncStorage.multiSet([
           ['userLoggedIn', 'true'],
-          ['userEmail', userEmail]
+          ['userEmail', userEmail],
+          ['userToken', userToken],
         ])
+        setUserToken(md5(userEmail))
+        setUserLoggedIn(true)
       } else {
         // If no match, show an alert
         Alert.alert('Login failed', 'Invalid username or password.')

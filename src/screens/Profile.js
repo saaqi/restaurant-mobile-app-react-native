@@ -8,7 +8,8 @@ import {
   Platform,
   Switch,
   Pressable,
-  Image
+  Image,
+  Alert
 } from 'react-native'
 import { useContext, useEffect } from 'react'
 import { GlobalContext } from '../GlobalState'
@@ -16,6 +17,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import * as ImagePicker from 'expo-image-picker'
 import * as SQLite from 'expo-sqlite'
+import md5 from 'md5'
 
 export default function Profile({ navigation }) {
 
@@ -28,8 +30,8 @@ export default function Profile({ navigation }) {
     passwordChanges, setPasswordChanges,
     specialOffers, setSpecialOffers,
     newsLetter, setNewsLetter,
+    userToken, setUserToken,
     setUserLoggedIn,
-    setUserToken,
     dbName
   } = useContext(GlobalContext);
 
@@ -66,21 +68,25 @@ export default function Profile({ navigation }) {
   const handleUserDetails = async () => {
     try {
       const db = await SQLite.openDatabaseAsync(dbName);
-      // Insert Data Into Database
-      await db.runAsync(
-        `UPDATE users SET userName = ?, userAvatar = ?, userPhone = ?, deliveryStatus = ?, passwordChanges = ?, specialOffers = ?, newsLetter = ? WHERE userEmail = ?`,
-        [
-          userName,
-          userAvatar,
-          userPhone,
-          deliveryStatus ? 1 : 0,
-          passwordChanges ? 1 : 0,
-          specialOffers ? 1 : 0,
-          newsLetter ? 1 : 0,
-          userEmail
-        ]
-      )
-      navigation.navigate('Home')
+      if (userToken === md5(userEmail)) {
+        // Insert Data Into Database
+        await db.runAsync(
+          `UPDATE users SET userName = ?, userAvatar = ?, userPhone = ?, deliveryStatus = ?, passwordChanges = ?, specialOffers = ?, newsLetter = ? WHERE userEmail = ?`,
+          [
+            userName,
+            userAvatar,
+            userPhone,
+            deliveryStatus ? 1 : 0,
+            passwordChanges ? 1 : 0,
+            specialOffers ? 1 : 0,
+            newsLetter ? 1 : 0,
+            userEmail
+          ]
+        )
+        navigation.navigate('Home')
+      } else {
+        Alert.alert('Invalid User', 'Please login again to continue.')
+      }
     } catch (error) {
       console.error('Error storing user data:', error);
     }
@@ -91,28 +97,51 @@ export default function Profile({ navigation }) {
   }
 
   const removeUserData = async () => {
-    try {
-      const db = await SQLite.openDatabaseAsync(dbName);
-      // Insert Data Into Database
-      await db.runAsync(`DELETE FROM users WHERE userEmail = ?`, [userEmail])
-      await AsyncStorage.multiSet([
-        ['userEmail', ''],
-        ['userLoggedIn', 'false'],
-      ]);
-      setUserAvatar('')
-      setUserName('')
-      setUserEmail('')
-      setUserPhone('')
-      setUserToken('')
-      setDeliveryStatus(true)
-      setPasswordChanges(true)
-      setSpecialOffers(false)
-      setNewsLetter(false)
-      setUserLoggedIn(false)
-    } catch (error) {
-      console.error('Error retrieving User Data:', error);
-    }
-  }
+    // Show confirmation alert
+    Alert.alert(
+      'Confirm',
+      'Are you sure you want to remove your account?',
+      [
+        {
+          text: 'Cancel', // Button to cancel the operation
+          style: 'cancel',
+        },
+        {
+          text: 'OK', // Button to proceed with removing data
+          onPress: async () => {
+            try {
+              const db = await SQLite.openDatabaseAsync(dbName);
+              // Delete from the database
+              await db.runAsync(`DELETE FROM users WHERE userEmail = ?`, [userEmail]);
+
+              // Clear user data from AsyncStorage
+              await AsyncStorage.multiSet([
+                ['userEmail', ''],
+                ['userLoggedIn', 'false'],
+              ]);
+
+              // Reset state variables
+              setUserAvatar('');
+              setUserName('');
+              setUserEmail('');
+              setUserPhone('');
+              setUserToken('');
+              setDeliveryStatus(true);
+              setPasswordChanges(true);
+              setSpecialOffers(false);
+              setNewsLetter(false);
+              setUserLoggedIn(false);
+
+              console.log('User data removed successfully.');
+            } catch (error) {
+              console.error('Error retrieving User Data:', error);
+            }
+          },
+        },
+      ],
+      { cancelable: false }
+    );
+  };
 
   const setLogout = async () => {
     try {
@@ -206,7 +235,7 @@ export default function Profile({ navigation }) {
           />
           {(userName === '') && (
             <Text style={styles.alert}>
-              { userName === '' ? 'Please Enter your full name to contiue.' : '' }
+              {userName === '' ? 'Please Enter your full name to contiue.' : ''}
             </Text>
           )}
         </ScrollView>
@@ -256,7 +285,7 @@ export default function Profile({ navigation }) {
       }}>
         <Pressable
           onPress={() => handleUserDetails()}
-          disabled={ userName === '' }
+          disabled={userName === ''}
           style={[
             userName === '' ? styles.subButtonDisabled : styles.primaryButton,
             { flexBasis: '100%' }
