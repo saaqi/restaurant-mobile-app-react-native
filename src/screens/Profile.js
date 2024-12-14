@@ -71,7 +71,15 @@ export default function Profile({ navigation }) {
       if (userToken === md5(userEmail)) {
         // Insert Data Into Database
         await db.runAsync(
-          `UPDATE users SET userName = ?, userAvatar = ?, userPhone = ?, deliveryStatus = ?, passwordChanges = ?, specialOffers = ?, newsLetter = ? WHERE userEmail = ?`,
+          `UPDATE users SET
+            userName = ?,
+            userAvatar = ?,
+            userPhone = ?,
+            deliveryStatus = ?,
+            passwordChanges = ?,
+            specialOffers = ?,
+            newsLetter = ?
+            WHERE userEmail = ?`,
           [
             userName,
             userAvatar,

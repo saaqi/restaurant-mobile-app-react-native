@@ -20,7 +20,7 @@ import * as SQLite from 'expo-sqlite'
 import md5 from 'md5'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export default function SingUp({navigation}) {
+export default function SingUp({ navigation }) {
 
   const deviceWidth = Dimensions.get('window').width
 
@@ -118,8 +118,11 @@ export default function SingUp({navigation}) {
               keyboardType='default'
               value={userPasswordConfirm}
             />
-            {
-              (!ValidateEmailField(userEmail) || !ValidatePasswordField(userPassword) || userName === '' || userPassword !== userPasswordConfirm) && (
+            {(
+              !ValidateEmailField(userEmail) ||
+              !ValidatePasswordField(userPassword) ||
+              userName === '' ||
+              userPassword !== userPasswordConfirm) && (
                 <Text style={styles.alert}>
                   {
                     userName === '' ? 'Please Enter your full name to contiue.' :
@@ -128,18 +131,23 @@ export default function SingUp({navigation}) {
                           userPassword !== userPasswordConfirm ? 'Passwords do not match' : ''
                   }
                 </Text>
-              )
-            }
+              )}
             <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
               <Pressable
                 onPress={() => {
                   handleSignUp()
                 }}
                 disabled={
-                  userName === '' || !ValidateEmailField(userEmail) || !ValidatePasswordField(userPassword) || userPassword !== userPasswordConfirm
+                  userName === '' ||
+                  !ValidateEmailField(userEmail) ||
+                  !ValidatePasswordField(userPassword) ||
+                  userPassword !== userPasswordConfirm
                 }
                 style={[
-                  userName === '' || !ValidateEmailField(userEmail) || !ValidatePasswordField(userPassword) || userPassword !== userPasswordConfirm ?
+                  userName === '' ||
+                    !ValidateEmailField(userEmail) ||
+                    !ValidatePasswordField(userPassword) ||
+                    userPassword !== userPasswordConfirm ?
                     styles.subButtonDisabled : styles.subButton,
                   { flex: 1, alignSelf: 'end' }
                 ]}
@@ -154,9 +162,7 @@ export default function SingUp({navigation}) {
         </KeyboardAvoidingView>
         <Text style={styles.bodyText}>Already have an account? Login instead! </Text>
         <Pressable
-          onPress={() => {
-            navigation.navigate('Login')
-          }}
+          onPress={() => { navigation.navigate('Login') }}
           style={styles.singUpButton}
         >
           <View style={styles.iconStyle}>
