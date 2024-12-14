@@ -430,7 +430,7 @@ const styles = StyleSheet.create({
 
   inputField: {
     fontFamily: 'Karla-Medium',
-    fontSize: 24,
+    fontSize: 18,
     outlineStyle: 'none',
     flex: .9
   },
