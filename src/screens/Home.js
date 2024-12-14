@@ -278,7 +278,6 @@ const Home = () => {
                   backgroundColor: '#fff',
                   borderRadius: 50,
                   paddingHorizontal: 10,
-                  paddingVertical: 2.5
                 }}>
                   <Ionicons style={styles.icon} name="search-circle-outline" />
                   <TextInput
@@ -431,7 +430,7 @@ const styles = StyleSheet.create({
 
   inputField: {
     fontFamily: 'Karla-Medium',
-    fontSize: 18,
+    fontSize: 24,
     outlineStyle: 'none',
     flex: .9
   },

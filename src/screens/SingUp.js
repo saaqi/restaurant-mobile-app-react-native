@@ -64,7 +64,7 @@ export default function SingUp({navigation}) {
 
   return (
     <View style={styles.container}>
-      <ScrollView>
+      <ScrollView style={styles.innerContainer}>
         <Image
           source={require('../../assets/littleLemonLogo.png')}
           style={{
@@ -79,7 +79,6 @@ export default function SingUp({navigation}) {
         />
 
         <KeyboardAvoidingView
-          style={styles.innerContainer}
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         >
           <ScrollView
@@ -173,8 +172,12 @@ export default function SingUp({navigation}) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
     justifyContent: 'center',
+  },
+
+  innerContainer: {
+    flex: 1,
+    padding: 20,
   },
 
   inputField: {

@@ -64,14 +64,14 @@ export default function Login({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <ScrollView>
+      <ScrollView style={styles.innerContainer}>
         <Image
           source={require('../../assets/littleLemonLogo.png')}
           style={{
             alignSelf: 'center',
             height: 100,
             maxWidth: deviceWidth - 40,
-            marginBottom: 20
+            marginBottom: 40
           }}
           resizeMode={'contain'}
           accessible={true}
@@ -79,7 +79,6 @@ export default function Login({ navigation }) {
         />
 
         <KeyboardAvoidingView
-          style={styles.innerContainer}
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         >
           <ScrollView
@@ -147,6 +146,10 @@ export default function Login({ navigation }) {
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
+  },
+
+  innerContainer: {
     flex: 1,
     padding: 20,
   },
