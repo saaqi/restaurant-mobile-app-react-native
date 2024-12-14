@@ -10,9 +10,7 @@ import {
   Pressable,
   Image
 } from 'react-native'
-import { useContext } from 'react'
-import { ValidateEmailField } from '../validators/ValidateEmailField'
-import { ValidatePhoneNumberField } from '../validators/ValidatePhoneNumberField'
+import { useContext, useEffect } from 'react'
 import { GlobalContext } from '../GlobalState'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import Ionicons from '@expo/vector-icons/Ionicons'
@@ -31,6 +29,7 @@ export default function Profile({ navigation }) {
     specialOffers, setSpecialOffers,
     newsLetter, setNewsLetter,
     setUserLoggedIn,
+    setUserToken,
     dbName
   } = useContext(GlobalContext);
 
@@ -44,32 +43,43 @@ export default function Profile({ navigation }) {
     !result.canceled && setUserAvatar(result.assets[0].uri)
   }
 
+  const getStoredItemFromDatabase = async () => {
+    try {
+      const db = await SQLite.openDatabaseAsync(dbName)
+      const dbDetails = await db.getFirstAsync(`SELECT * FROM users WHERE userEmail = ?`, [userEmail])
+
+      setUserName(dbDetails.userName || '')
+      setUserPhone(dbDetails.userPhone || '')
+      setDeliveryStatus(dbDetails.deliveryStatus ? true : false)
+      setPasswordChanges(dbDetails.passwordChanges ? true : false)
+      setSpecialOffers(dbDetails.specialOffers ? true : false)
+      setNewsLetter(dbDetails.newsLetter ? true : false)
+    } catch (error) {
+      console.error(`Error retrieving from SQLite database:`, error);
+    }
+  }
+
+  useEffect(() => {
+    getStoredItemFromDatabase()
+  }, [])
+
   const handleUserDetails = async () => {
     try {
       const db = await SQLite.openDatabaseAsync(dbName);
       // Insert Data Into Database
       await db.runAsync(
-        `UPDATE users SET userAvatar = ?, userPhone = ?, deliveryStatus = ?, passwordChanges = ?, specialOffers = ?, newsLetter = ? WHERE userEmail = ?`,
+        `UPDATE users SET userName = ?, userAvatar = ?, userPhone = ?, deliveryStatus = ?, passwordChanges = ?, specialOffers = ?, newsLetter = ? WHERE userEmail = ?`,
         [
+          userName,
           userAvatar,
           userPhone,
-          deliveryStatus ? true : false,
-          passwordChanges ? true : false,
-          specialOffers ? true : false,
-          newsLetter ? true : false,
-          userEmail,  // Ensure you're updating the correct user's record
+          deliveryStatus ? 1 : 0,
+          passwordChanges ? 1 : 0,
+          specialOffers ? 1 : 0,
+          newsLetter ? 1 : 0,
+          userEmail
         ]
       )
-      await AsyncStorage.multiSet([
-        ['userName', userName],
-        ['userEmail', userEmail],
-        ['userPhone', userPhone],
-        ['userAvatar', userAvatar],
-        ['deliveryStatus', deliveryStatus ? 'true' : 'false'],
-        ['passwordChanges', passwordChanges ? 'true' : 'false'],
-        ['specialOffers', specialOffers ? 'true' : 'false'],
-        ['newsLetter', newsLetter ? 'true' : 'false'],
-      ])
       navigation.navigate('Home')
     } catch (error) {
       console.error('Error storing user data:', error);
@@ -82,26 +92,23 @@ export default function Profile({ navigation }) {
 
   const removeUserData = async () => {
     try {
+      const db = await SQLite.openDatabaseAsync(dbName);
+      // Insert Data Into Database
+      await db.runAsync(`DELETE FROM users WHERE userEmail = ?`, [userEmail])
       await AsyncStorage.multiSet([
-        ['userAvatar', ''],
-        ['userName', ''],
         ['userEmail', ''],
-        ['userPhone', ''],
-        ['deliveryStatus', 'true'],
-        ['passwordChanges', 'true'],
-        ['specialOffers', 'false'],
-        ['newsLetter', 'false'],
+        ['userLoggedIn', 'false'],
       ]);
       setUserAvatar('')
       setUserName('')
       setUserEmail('')
       setUserPhone('')
-
+      setUserToken('')
       setDeliveryStatus(true)
       setPasswordChanges(true)
       setSpecialOffers(false)
       setNewsLetter(false)
-
+      setUserLoggedIn(false)
     } catch (error) {
       console.error('Error retrieving User Data:', error);
     }
@@ -109,10 +116,11 @@ export default function Profile({ navigation }) {
 
   const setLogout = async () => {
     try {
-      // removeUserData()
+      setUserToken('')
       setUserLoggedIn(false)
       await AsyncStorage.multiSet([
         ['userLoggedIn', 'false'],
+        ['userToken', '']
       ]);
     } catch (error) {
       console.error('Error retrieving User Data:', error);
@@ -172,7 +180,7 @@ export default function Profile({ navigation }) {
         >
           <TextInput
             style={styles.inputFieldDisabled}
-            onChangeText={setUserEmail}
+            // onChangeText={setUserEmail}
             editable={false}
             placeholder='Your Email'
             secureTextEntry={false}
@@ -196,20 +204,11 @@ export default function Profile({ navigation }) {
             keyboardType='number-pad'
             value={userPhone}
           />
-          {(
-            !ValidateEmailField(userEmail) ||
-            !ValidatePhoneNumberField(userPhone) ||
-            userName === ''
-          ) && (
-              <Text style={styles.alert}>
-                {
-                  userName === '' ? 'Please Enter your full name to contiue.' :
-                    !ValidateEmailField(userEmail) ? 'Please Enter your Email to continue' :
-                      !ValidatePhoneNumberField(userPhone) ? 'Please enter your phone number in the eg: (123) 456-7890 or +1 (123) 456-7890.' :
-                        ''
-                }
-              </Text>
-            )}
+          {(userName === '') && (
+            <Text style={styles.alert}>
+              { userName === '' ? 'Please Enter your full name to contiue.' : '' }
+            </Text>
+          )}
         </ScrollView>
       </KeyboardAvoidingView>
 
@@ -257,16 +256,10 @@ export default function Profile({ navigation }) {
       }}>
         <Pressable
           onPress={() => handleUserDetails()}
-          disabled={
-            userName === '' ||
-            !ValidateEmailField(userEmail) ||
-            !ValidatePhoneNumberField(userPhone)
-          }
+          disabled={ userName === '' }
           style={[
-            userName === '' ||
-              !ValidateEmailField(userEmail) ||
-              !ValidatePhoneNumberField(userPhone) ?
-              styles.subButtonDisabled : styles.primaryButton, { flexBasis: '100%' }
+            userName === '' ? styles.subButtonDisabled : styles.primaryButton,
+            { flexBasis: '100%' }
           ]}
         >
           <View style={styles.iconStyle}>
@@ -289,7 +282,7 @@ export default function Profile({ navigation }) {
         >
           <View style={styles.iconStyle}>
             <Ionicons style={styles.dangerButtonText} name="trash-outline" />
-            <Text style={styles.dangerButtonText}>Discard Details</Text>
+            <Text style={styles.dangerButtonText}>Delete Account!</Text>
           </View>
         </Pressable>
       </View>

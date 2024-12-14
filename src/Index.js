@@ -10,15 +10,9 @@ import * as SQLite from 'expo-sqlite'
 export const Index = () => {
 
   const {
-    setUserName,
+    setUserToken,
     setUserEmail,
-    setUserPhone,
-    setUserAvatar,
-    setNewsLetter,
     setUserLoggedIn,
-    setSpecialOffers,
-    setDeliveryStatus,
-    setPasswordChanges,
     dbName,
   } = useContext(GlobalContext)
 
@@ -41,12 +35,12 @@ export const Index = () => {
           userPassword TEXT NOT NULL CHECK (length(userPassword) = 32 AND userPassword GLOB '[0-9A-Fa-f]*'),
           userName TEXT NOT NULL,
           userEmail TEXT PRIMARY KEY NOT NULL,
-          userPhone INTEGER,
+          userPhone TEXT,
           userAvatar TEXT,
-          deliveryStatus BOOLEAN,
-          passwordChanges BOOLEAN,
-          specialOffers BOOLEAN,
-          newsLetter BOOLEAN
+          deliveryStatus INTEGER,
+          passwordChanges INTEGER,
+          specialOffers INTEGER,
+          newsLetter INTEGER
         );`
       )
     } catch (error) {
@@ -58,44 +52,22 @@ export const Index = () => {
   }, [])
 
 
-  // Set initial user data from AsyncStorage
-  const getStoredItem = async (key, defaultValue, setState) => {
+
+  const setInitialUserDataAsync = async () => {
     try {
-      const value = await AsyncStorage.getItem(key);
-      if (value !== null && value !== '') {
-        setState(value === 'true' ? true : value === 'false' ? false : value);
-      } else if (defaultValue !== undefined) {
-        setState(defaultValue)
-      }
+      const asUserStatus = await AsyncStorage.getItem('userLoggedIn')
+      const asUserEmail = await AsyncStorage.getItem('userEmail')
+      const asUserToken = await AsyncStorage.getItem('userToken')
+      setUserLoggedIn(asUserStatus === 'true' ? true : false)
+      setUserEmail(asUserEmail ? asUserEmail : '')
+      setUserToken(asUserToken ? asUserToken : '')
     } catch (error) {
-      console.error(`Error retrieving ${key}:`, error);
-    }
-  }
-  const setInitialUserData = async () => {
-    try {
-      const stateMappings = [
-        { key: 'userName', setState: setUserName, defaultValue: '' },
-        { key: 'userEmail', setState: setUserEmail, defaultValue: '' },
-        { key: 'userPhone', setState: setUserPhone, defaultValue: '' },
-        { key: 'userAvatar', setState: setUserAvatar, defaultValue: '' },
-        { key: 'userLoggedIn', setState: setUserLoggedIn, defaultValue: false },
-        { key: 'deliveryStatus', setState: setDeliveryStatus, defaultValue: true },
-        { key: 'passwordChanges', setState: setPasswordChanges, defaultValue: true },
-        { key: 'specialOffers', setState: setSpecialOffers, defaultValue: false },
-        { key: 'newsLetter', setState: setNewsLetter, defaultValue: false },
-      ]
-      await Promise.all(
-        stateMappings.map(({ key, setState, defaultValue }) =>
-          getStoredItem(key, defaultValue, setState)
-        )
-      )
-    } catch (error) {
-      console.error('Error retrieving User Data:', error);
+      console.error(`Error retrieving from AsyncStorage:`, error)
     }
   }
 
   useEffect(() => {
-    setInitialUserData()
+    setInitialUserDataAsync()
   }, [])
 
   return (

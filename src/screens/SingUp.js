@@ -27,6 +27,7 @@ export default function SingUp({navigation}) {
   const {
     userEmail, setUserEmail,
     userName, setUserName,
+    userToken, setUserToken,
     setUserLoggedIn,
     dbName
   } = useContext(GlobalContext);
@@ -48,9 +49,10 @@ export default function SingUp({navigation}) {
         )
         await AsyncStorage.multiSet([
           ['userLoggedIn', 'true'],
-          ['userName', userName],
-          ['userEmail', userEmail]
+          ['userEmail', userEmail],
+          ['userToken', userToken],
         ])
+        setUserToken(md5(userEmail))
         setUserLoggedIn(true)
       } else {
         Alert.alert('User already exists', 'Please login instead.')

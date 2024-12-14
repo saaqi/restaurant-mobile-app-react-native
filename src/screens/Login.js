@@ -25,7 +25,6 @@ export default function Login({ navigation }) {
 
   const {
     setUserLoggedIn,
-    setUserName,
     userEmail,
     setUserEmail,
     dbName
@@ -37,7 +36,7 @@ export default function Login({ navigation }) {
     try {
       // Open the database
       const db = await SQLite.openDatabaseAsync(dbName)
-      // Query to check if the username and password match
+      // Query to check if the userEmail and userPassword match
       const checkLoginResult = await db.getFirstAsync(
         `SELECT * FROM users WHERE userEmail = ? AND userPassword = ?`,
         // Hash the password before comparison
@@ -47,13 +46,10 @@ export default function Login({ navigation }) {
       if (checkLoginResult) {
         // If a match is found, set the user as logged in
         setUserLoggedIn(true)
-        // Set Details of the user
-        setUserName(checkLoginResult.userName)
 
         await AsyncStorage.multiSet([
           ['userLoggedIn', 'true'],
-          ['userName', checkLoginResult.userName],
-          ['userEmail', checkLoginResult.userEmail]
+          ['userEmail', userEmail]
         ])
       } else {
         // If no match, show an alert

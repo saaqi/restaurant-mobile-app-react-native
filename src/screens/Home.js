@@ -22,7 +22,21 @@ const Home = () => {
   const [inputQuery, setInputQuery] = useState('')
   const [searchQuery, setSearchQuery] = useState('')
 
-  const { dbName } = useContext(GlobalContext)
+  const { dbName, userEmail, setUserAvatar } = useContext(GlobalContext)
+
+  const getStoredItemFromDatabase = async () => {
+    try {
+      const db = await SQLite.openDatabaseAsync(dbName)
+      const dbDetails = await db.getFirstAsync(`SELECT userAvatar FROM users WHERE userEmail = ?`, [userEmail])
+      setUserAvatar(dbDetails.userAvatar || '')
+    } catch (error) {
+      console.error(`Error retrieving from SQLite database:`, error);
+    }
+  }
+
+  useEffect(() => {
+    getStoredItemFromDatabase()
+  }, [])
 
   // Debounce the search query input to avoid excessive updates
   useEffect(() => {
@@ -265,7 +279,7 @@ const Home = () => {
                   borderRadius: 50,
                   paddingHorizontal: 10,
                   paddingVertical: 2.5
-                 }}>
+                }}>
                   <Ionicons style={styles.icon} name="search-circle-outline" />
                   <TextInput
                     style={styles.inputField}

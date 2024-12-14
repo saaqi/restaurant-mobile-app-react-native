@@ -4,6 +4,7 @@ export const GlobalContext = createContext()
 export const GlobalStateProvider = ({ children }) => {
   const [userName, setUserName] = useState('')
   const [userEmail, setUserEmail] = useState('')
+  const [userToken, setUserToken] = useState('')
   const [userPhone, setUserPhone] = useState('')
   const [userAvatar, setUserAvatar] = useState('')
   const [newsLetter, setNewsLetter] = useState(false)
@@ -17,6 +18,7 @@ export const GlobalStateProvider = ({ children }) => {
     <GlobalContext.Provider value={{
       userName, setUserName,
       userEmail, setUserEmail,
+      userToken, setUserToken,
       userPhone, setUserPhone,
       userAvatar, setUserAvatar,
       newsLetter, setNewsLetter,
