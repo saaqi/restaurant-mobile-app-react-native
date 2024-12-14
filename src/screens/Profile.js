@@ -17,7 +17,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import * as ImagePicker from 'expo-image-picker'
 import * as SQLite from 'expo-sqlite'
-import md5 from 'md5'
 
 export default function Profile({ navigation }) {
 
