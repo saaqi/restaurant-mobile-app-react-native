@@ -1,19 +1,17 @@
-import { SafeAreaView, StatusBar } from 'react-native';
+import { SafeAreaView, StatusBar, ActivityIndicator } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native'
 import Navigation from './Navigation'
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useContext, useEffect } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { GlobalContext } from './GlobalState'
 import * as SQLite from 'expo-sqlite'
 // import AsyncStorageRenderAllItems from './validators/AsyncStorageRenderAllItems'
 
+
 export const Index = () => {
 
-  const {
-    setUserEmail,
-    setUserLoggedIn,
-    dbName,
-  } = useContext(GlobalContext)
+  const { setUserEmail, setUserLoggedIn, dbName } = useContext(GlobalContext)
+  const [isLoading, setIsLoading] = useState(true)
 
   // Open the SQLite database
   const initDatabase = async () => {
@@ -21,7 +19,7 @@ export const Index = () => {
     // Create table if not exists
     try {
       await db.execAsync(
-      `PRAGMA journal_mode = WAL;
+        `PRAGMA journal_mode = WAL;
         CREATE TABLE IF NOT EXISTS menu (
           id integer PRIMARY KEY AUTOINCREMENT NOT NULL,
           name TEXT NOT NULL,
@@ -58,6 +56,7 @@ export const Index = () => {
       const asUserEmail = await AsyncStorage.getItem('userEmail')
       setUserLoggedIn(asUserStatus === 'true' ? true : false)
       setUserEmail(asUserEmail ? asUserEmail : '')
+      setIsLoading(false)
     } catch (error) {
       console.error(`Error retrieving from AsyncStorage:`, error)
     }
@@ -76,10 +75,12 @@ export const Index = () => {
         backgroundColor="#F6FCDF"
         translucent={true}
       />
-      <NavigationContainer>
-        <Navigation />
-      </NavigationContainer>
+      {isLoading ? (<ActivityIndicator style={{ flex: 1 }} size={'large'} />) : (
+        <NavigationContainer>
+          <Navigation />
+        </NavigationContainer>
+      )}
     </SafeAreaView>
-  );
+  )
 }
 

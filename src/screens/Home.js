@@ -245,7 +245,7 @@ const Home = () => {
 
   return (
     <View style={styles.listContainer}>
-      {isLoading ? (<ActivityIndicator style={{ flex: 1 }} />) : (
+      {isLoading ? (<ActivityIndicator style={{ flex: 1 }} size={'large'} />) : (
         <SectionList
           keyboardDismissMode={'on-drag'}
           sections={filteredSectionMenu}
