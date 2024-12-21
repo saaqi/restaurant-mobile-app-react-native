@@ -43,12 +43,12 @@ export default function SingUp({ navigation }) {
       )
       if (!checkEmailResult) {
         await db.runAsync(
-          `INSERT INTO users (userEmail, userPassword, userName) VALUES (?, ?, ?)`,
-          [userEmail, md5(userPassword), userName]
+          `INSERT INTO users (userEmail, userPassword, userName, deliveryStatus, passwordChanges, specialOffers, newsLetter ) VALUES (?, ?, ?, ?, ?, ?, ?)`,
+          [userEmail, md5(userPassword), userName, 1, 1, 1, 1]
         )
         await AsyncStorage.multiSet([
           ['userLoggedIn', 'true'],
-          ['userEmail', userEmail],
+          ['userEmail', userEmail]
         ])
         setUserLoggedIn(true)
       } else {

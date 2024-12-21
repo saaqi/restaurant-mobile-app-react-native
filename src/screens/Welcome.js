@@ -4,37 +4,40 @@ import {
   View,
   Pressable,
   Image,
-  Dimensions
 } from 'react-native'
 import Ionicons from '@expo/vector-icons/Ionicons'
 
 export default function Welcome({ navigation }) {
 
-  const deviceWidth = Dimensions.get('window').width
-
   return (
     <View style={styles.container}>
-      <View style={{ flex: .8 }}>
-        <Image
-          source={require('../../assets/littleLemonLogo.png')}
-          style={{
-            alignSelf: 'center',
-            height: 546,
-            width: deviceWidth / 1.5,
-            flex: .5,
-          }}
-          resizeMode={'contain'}
-          accessible={true}
-          accessibilityLabel={"Saaqi's Logo"}
-        />
-        <Text style={styles.bodyText}>Let us get to know you!</Text>
-      </View>
+      <View style={styles.heroSection}>
+        <Text style={styles.headingText}>Little Lemon</Text>
+        <Text style={styles.subHeadingText}>Chicago</Text>
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <Text style={[styles.heroBodyText, { flex: .5 }]}>
+            We are a family owned Mediterranean restaurant, focused on traditional recipes served with a modern twist.
+          </Text>
+          <View style={{ borderRadius: 20, flex: .5 }}>
+            <Image
+              source={require('../../assets/hero.png')}
+              style={{
+                alignSelf: 'flex-end',
+                height: 200,
+                width: 132,
+                borderRadius: 10,
 
-      <View style={{ flex: .2, flexDirection: 'column' }}>
+              }}
+              resizeMode={'cover'}
+              accessible={true}
+              accessibilityLabel={"Hero Section Image"}
+            />
+          </View>
+        </View>
+      </View>
+      <View style={styles.buttonContainer}>
         <Pressable
-          onPress={() => {
-            navigation.navigate('Login')
-          }}
+          onPress={() => { navigation.navigate('Login') }}
           style={styles.loginButton}
         >
           <View style={styles.iconStyle}>
@@ -43,9 +46,7 @@ export default function Welcome({ navigation }) {
           </View>
         </Pressable>
         <Pressable
-          onPress={() => {
-            navigation.navigate('Signup')
-          }}
+          onPress={() => { navigation.navigate('Signup') }}
           style={styles.signupButton}
         >
           <View style={styles.iconStyle}>
@@ -61,48 +62,77 @@ export default function Welcome({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
-    justifyContent: 'center',
+    backgroundColor: "#31511E",
+    justifyContent: 'space-around',
   },
 
-  bodyText: {
-    fontSize: 30,
-    fontWeight: '500',
+  heroSection: {
+    paddingVertical: 30,
+    paddingHorizontal: 20
+  },
+
+  headingText: {
+    fontSize: 70,
+    fontFamily: "Markazi-Medium",
+    color: "#ffff00",
+    textAlign: 'center'
+  },
+
+  subHeadingText: {
+    fontSize: 40,
+    fontFamily: "Markazi-Medium",
+    color: "#E1E9C8",
     textAlign: 'center',
-    flex: .5,
-    fontFamily: 'Markazi-Medium'
+    marginBottom: 20,
+    marginTop: -10
+  },
+
+  heroBodyText: {
+    fontFamily: 'Karla-Medium',
+    fontSize: 20,
+    color: "#F6FCDF",
+  },
+
+  buttonContainer: {
+    flexDirection: 'column',
+    paddingHorizontal: 20,
+    gap: 10
   },
 
   loginButton: {
-    backgroundColor: '#31511E',
+    backgroundColor: '#F6FCDF',
     paddingVertical: 10,
     paddingHorizontal: 50,
-    borderRadius: 5,
+    borderRadius: 10,
     marginBottom: 10,
-  },
-
-  signupButton: {
-    borderWidth: 1,
-    borderColor: '#31511E',
-    paddingVertical: 10,
-    paddingHorizontal: 50,
-    borderRadius: 5,
+    borderWidth: 2,
+    borderColor: '#859F3D'
   },
 
   loginButtonText: {
-    color: 'white',
-    fontWeight: 500,
-    fontSize: 18,
-  },
-  singupButtonText: {
     color: '#31511E',
     fontWeight: 500,
     fontSize: 18,
   },
+
+  signupButton: {
+    borderWidth: 1,
+    borderColor: '#fff',
+    paddingVertical: 10,
+    paddingHorizontal: 50,
+    borderRadius: 10,
+  },
+
+  singupButtonText: {
+    color: '#fff',
+    fontWeight: 500,
+    fontSize: 18,
+  },
+
   iconStyle: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     gap: 5
-  },
+  }
 })

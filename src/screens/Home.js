@@ -212,40 +212,9 @@ const Home = () => {
   }).filter(Boolean)
 
   // Setup Hero Section
-  const MenuHeader = () => {
-    return (
-      <View style={styles.container}>
-        <View style={styles.heroSection}>
-          <Text style={styles.headingText}>Little Lemon</Text>
-          <Text style={styles.subHeadingText}>Chicago</Text>
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Text style={[styles.heroBodyText, { flex: .5 }]}>
-              We are a family owned Mediterranean restaurant, focused on traditional recipes served with a modern twist.
-            </Text>
-            <View style={{ borderRadius: 20, flex: .5 }}>
-              <Image
-                source={require('../../assets/hero.png')}
-                style={{
-                  alignSelf: 'flex-end',
-                  height: 200,
-                  width: 132,
-                  borderRadius: 10,
-
-                }}
-                resizeMode={'cover'}
-                accessible={true}
-                accessibilityLabel={"Hero Section Image"}
-              />
-            </View>
-          </View>
-        </View>
-      </View>
-    )
-  }
-
   return (
-    <View style={styles.listContainer}>
-      {isLoading ? (<ActivityIndicator style={{ flex: 1 }} size={'large'} />) : (
+    isLoading ? (<ActivityIndicator style={{ flex: 1 }} size={'large'} />) : (
+      <View style={styles.listContainer}>
         <SectionList
           keyboardDismissMode={'on-drag'}
           sections={filteredSectionMenu}
@@ -266,7 +235,6 @@ const Home = () => {
           ItemSeparatorComponent={Separator}
           ListHeaderComponent={
             <View>
-              <MenuHeader />
               <KeyboardAvoidingView
                 behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
                 style={styles.searchContainer}
@@ -278,6 +246,7 @@ const Home = () => {
                   backgroundColor: '#fff',
                   borderRadius: 50,
                   paddingHorizontal: 10,
+                  borderWidth: 1,
                 }}>
                   <Ionicons style={styles.icon} name="search-circle-outline" />
                   <TextInput
@@ -290,16 +259,8 @@ const Home = () => {
                   />
                 </View>
               </KeyboardAvoidingView>
-              <View style={{
-                flexDirection: 'row',
-                justifyContent: 'center',
-                alignItems: 'center',
-                textAlign: 'center',
-                marginVertical: 20,
-                paddingHorizontal: 20,
-                marginTop: 20,
-                gap: 10
-              }}>
+
+              <View style={styles.catSelectorContainer}>
                 <Pressable
                   style={[styles.menuSelector, searchQuery === '' && { backgroundColor: '#31511E' }]}
                   onPress={() => setSearchQuery('')}
@@ -337,8 +298,9 @@ const Home = () => {
           }
           ListFooterComponent={menuFooter}
         />
-      )}
-    </View >
+      </View >
+    )
+
   )
 }
 
@@ -347,6 +309,32 @@ const styles = StyleSheet.create({
 
   listContainer: {
     flex: 1,
+  },
+
+  searchContainer: {
+    padding: 20
+  },
+
+  icon: {
+    fontSize: 30,
+    flex: .1,
+  },
+
+  inputField: {
+    fontFamily: 'Karla-Medium',
+    fontSize: 18,
+    outlineStyle: 'none',
+    flex: .9
+  },
+
+  catSelectorContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    textAlign: 'center',
+    marginVertical: 10,
+    paddingHorizontal: 20,
+    gap: 10,
   },
 
   sectionHeader: {
@@ -387,54 +375,6 @@ const styles = StyleSheet.create({
     borderStyle: 'dashed'
   },
 
-  heroSection: {
-    backgroundColor: "#31511E",
-    paddingVertical: 30,
-    paddingHorizontal: 20
-  },
-
-  headingText: {
-    fontSize: 70,
-    fontFamily: "Markazi-Medium",
-    color: "#ffff00",
-    textAlign: 'center'
-  },
-
-  subHeadingText: {
-    fontSize: 40,
-    fontFamily: "Markazi-Medium",
-    color: "#E1E9C8",
-    textAlign: 'center',
-    marginBottom: 20,
-    marginTop: -10
-  },
-
-  heroBodyText: {
-    fontFamily: 'Karla-Medium',
-    fontSize: 20,
-    color: "#F6FCDF",
-  },
-
-
-  searchContainer: {
-    backgroundColor: "#31511E",
-    paddingHorizontal: 20,
-    paddingBottom: 20
-  },
-
-  icon: {
-    fontSize: 24,
-    flex: .1,
-    textAlign: 'center',
-  },
-
-  inputField: {
-    fontFamily: 'Karla-Medium',
-    fontSize: 18,
-    outlineStyle: 'none',
-    flex: .9
-  },
-
   listHeading: {
     fontFamily: 'Karla-Bold',
     fontSize: 24,
@@ -453,7 +393,6 @@ const styles = StyleSheet.create({
     color: '#31511E',
     marginTop: 'auto'
   },
-
 
 })
 
