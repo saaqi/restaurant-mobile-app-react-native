@@ -44,22 +44,16 @@ export default function SingUp({ navigation }) {
         `SELECT * FROM users WHERE userEmail = ?`,
         [userEmail]
       )
-      if (
-        userName === '' ||
-        !ValidateEmailField(userEmail) ||
-        !ValidatePasswordField(userPassword) ||
-        userPassword !== userPasswordConfirm) {
-        if (!checkEmailResult) {
-          await db.runAsync(
-            `INSERT INTO users (userEmail, userPassword, userName, deliveryStatus, passwordChanges, specialOffers, newsLetter ) VALUES (?, ?, ?, ?, ?, ?, ?)`,
-            [userEmail, md5(userPassword), userName, 1, 1, 1, 1]
-          )
-          await AsyncStorage.multiSet([
-            ['userLoggedIn', 'true'],
-            ['userEmail', userEmail]
-          ])
-          setUserLoggedIn(true)
-        }
+      if (!checkEmailResult) {
+        await db.runAsync(
+          `INSERT INTO users (userEmail, userPassword, userName, deliveryStatus, passwordChanges, specialOffers, newsLetter ) VALUES (?, ?, ?, ?, ?, ?, ?)`,
+          [userEmail, md5(userPassword), userName, 1, 1, 1, 1]
+        )
+        await AsyncStorage.multiSet([
+          ['userLoggedIn', 'true'],
+          ['userEmail', userEmail]
+        ])
+        setUserLoggedIn(true)
       } else {
         Alert.alert('User already exists', 'Please login instead.')
       }
@@ -131,7 +125,6 @@ export default function SingUp({ navigation }) {
               secureTextEntry={true}
               keyboardType='default'
               value={userPasswordConfirm}
-              onSubmitEditing={handleSignUp}
               ref={passConfirmInputRef}
             />
             {(
@@ -150,9 +143,7 @@ export default function SingUp({ navigation }) {
               )}
             <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
               <Pressable
-                onPress={() => {
-                  handleSignUp()
-                }}
+                onPress={handleSignUp}
                 disabled={
                   userName === '' ||
                   !ValidateEmailField(userEmail) ||

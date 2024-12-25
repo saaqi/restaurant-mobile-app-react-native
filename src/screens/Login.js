@@ -42,15 +42,14 @@ export default function Login({ navigation }) {
         // Hash the password before comparison
         [userEmail, md5(userPassword)]
       )
-      if (userPassword === '' || !ValidateEmailField(userEmail)) {
-        if (checkLoginResult) {
-          // If a match is found, set the user as logged in
-          await AsyncStorage.multiSet([
-            ['userLoggedIn', 'true'],
-            ['userEmail', userEmail]
-          ])
-          setUserLoggedIn(true)
-        }
+
+      if (checkLoginResult) {
+        // If a match is found, set the user as logged in
+        await AsyncStorage.multiSet([
+          ['userLoggedIn', 'true'],
+          ['userEmail', userEmail]
+        ])
+        setUserLoggedIn(true)
       } else {
         // If no match, show an alert
         Alert.alert('Login failed', 'Invalid username or password.')
@@ -101,7 +100,7 @@ export default function Login({ navigation }) {
               secureTextEntry={true}
               keyboardType='default'
               value={userPassword}
-              onSubmitEditing={() => handleLogin()}
+              onSubmitEditing={handleLogin}
               ref={passInputRef}
             />
             {
@@ -113,7 +112,7 @@ export default function Login({ navigation }) {
             }
             <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
               <Pressable
-                onPress={() => handleLogin()}
+                onPress={handleLogin}
                 disabled={userPassword === '' || !ValidateEmailField(userEmail)}
                 style={[
                   userPassword === '' || !ValidateEmailField(userEmail) ?
