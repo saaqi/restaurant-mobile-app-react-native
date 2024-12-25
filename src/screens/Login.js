@@ -11,7 +11,7 @@ import {
   Dimensions,
   Alert
 } from 'react-native'
-import { useState, useContext } from 'react'
+import { useState, useContext, useRef } from 'react'
 import { ValidateEmailField } from '../validators/ValidateEmailField'
 import { GlobalContext } from '../GlobalState'
 import Ionicons from '@expo/vector-icons/Ionicons'
@@ -22,6 +22,7 @@ import md5 from 'md5'
 export default function Login({ navigation }) {
 
   const deviceWidth = Dimensions.get('window').width
+  const passInputRef = useRef(null)
 
   const {
     setUserLoggedIn,
@@ -41,14 +42,15 @@ export default function Login({ navigation }) {
         // Hash the password before comparison
         [userEmail, md5(userPassword)]
       )
-
-      if (checkLoginResult) {
-        // If a match is found, set the user as logged in
-        await AsyncStorage.multiSet([
-          ['userLoggedIn', 'true'],
-          ['userEmail', userEmail]
-        ])
-        setUserLoggedIn(true)
+      if (userPassword === '' || !ValidateEmailField(userEmail)) {
+        if (checkLoginResult) {
+          // If a match is found, set the user as logged in
+          await AsyncStorage.multiSet([
+            ['userLoggedIn', 'true'],
+            ['userEmail', userEmail]
+          ])
+          setUserLoggedIn(true)
+        }
       } else {
         // If no match, show an alert
         Alert.alert('Login failed', 'Invalid username or password.')
@@ -90,6 +92,7 @@ export default function Login({ navigation }) {
               secureTextEntry={false}
               keyboardType='email-address'
               value={userEmail}
+              onSubmitEditing={() => passInputRef.current.focus()}
             />
             <TextInput
               style={styles.inputField}
@@ -98,6 +101,8 @@ export default function Login({ navigation }) {
               secureTextEntry={true}
               keyboardType='default'
               value={userPassword}
+              onSubmitEditing={() => handleLogin()}
+              ref={passInputRef}
             />
             {
               (!ValidateEmailField(userEmail) || userPassword === '') && (

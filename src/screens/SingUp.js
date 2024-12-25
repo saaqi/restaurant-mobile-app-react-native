@@ -11,7 +11,7 @@ import {
   Dimensions,
   Alert
 } from 'react-native'
-import { useState, useContext } from 'react'
+import { useState, useContext, useRef } from 'react'
 import { GlobalContext } from '../GlobalState'
 import { ValidateEmailField } from '../validators/ValidateEmailField'
 import { ValidatePasswordField } from '../validators/ValidatePasswordField'
@@ -23,6 +23,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 export default function SingUp({ navigation }) {
 
   const deviceWidth = Dimensions.get('window').width
+  const emailInputRef = useRef(null)
+  const passInputRef = useRef(null)
+  const passConfirmInputRef = useRef(null)
 
   const {
     userEmail, setUserEmail,
@@ -41,16 +44,22 @@ export default function SingUp({ navigation }) {
         `SELECT * FROM users WHERE userEmail = ?`,
         [userEmail]
       )
-      if (!checkEmailResult) {
-        await db.runAsync(
-          `INSERT INTO users (userEmail, userPassword, userName, deliveryStatus, passwordChanges, specialOffers, newsLetter ) VALUES (?, ?, ?, ?, ?, ?, ?)`,
-          [userEmail, md5(userPassword), userName, 1, 1, 1, 1]
-        )
-        await AsyncStorage.multiSet([
-          ['userLoggedIn', 'true'],
-          ['userEmail', userEmail]
-        ])
-        setUserLoggedIn(true)
+      if (
+        userName === '' ||
+        !ValidateEmailField(userEmail) ||
+        !ValidatePasswordField(userPassword) ||
+        userPassword !== userPasswordConfirm) {
+        if (!checkEmailResult) {
+          await db.runAsync(
+            `INSERT INTO users (userEmail, userPassword, userName, deliveryStatus, passwordChanges, specialOffers, newsLetter ) VALUES (?, ?, ?, ?, ?, ?, ?)`,
+            [userEmail, md5(userPassword), userName, 1, 1, 1, 1]
+          )
+          await AsyncStorage.multiSet([
+            ['userLoggedIn', 'true'],
+            ['userEmail', userEmail]
+          ])
+          setUserLoggedIn(true)
+        }
       } else {
         Alert.alert('User already exists', 'Please login instead.')
       }
@@ -83,6 +92,9 @@ export default function SingUp({ navigation }) {
             indicatorStyle={'#333'}
             keyboardDismissMode="on-drag"
           >
+            {/* const emailInputRef = useRef(null)
+            const passInputRef = useRef(null)
+            const passConfirmInputRef = useRef(null) */}
             <TextInput
               style={styles.inputField}
               onChangeText={setUserName}
@@ -90,6 +102,7 @@ export default function SingUp({ navigation }) {
               secureTextEntry={false}
               keyboardType='default'
               value={userName}
+              onSubmitEditing={() => emailInputRef.current.focus()}
             />
             <TextInput
               style={styles.inputField}
@@ -98,6 +111,8 @@ export default function SingUp({ navigation }) {
               secureTextEntry={false}
               keyboardType='email-address'
               value={userEmail}
+              onSubmitEditing={() => passInputRef.current.focus()}
+              ref={emailInputRef}
             />
             <TextInput
               style={styles.inputField}
@@ -106,6 +121,8 @@ export default function SingUp({ navigation }) {
               secureTextEntry={true}
               keyboardType='default'
               value={userPassword}
+              onSubmitEditing={() => passConfirmInputRef.current.focus()}
+              ref={passInputRef}
             />
             <TextInput
               style={styles.inputField}
@@ -114,6 +131,8 @@ export default function SingUp({ navigation }) {
               secureTextEntry={true}
               keyboardType='default'
               value={userPasswordConfirm}
+              onSubmitEditing={handleSignUp}
+              ref={passConfirmInputRef}
             />
             {(
               !ValidateEmailField(userEmail) ||
