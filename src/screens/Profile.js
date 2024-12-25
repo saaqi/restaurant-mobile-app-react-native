@@ -218,7 +218,6 @@ export default function Profile({ navigation }) {
             value={userName}
             onSubmitEditing={() => phoneInputRef.current.focus()}
           />
-
           <TextInput
             style={styles.inputField}
             onChangeText={setUserPhone}
