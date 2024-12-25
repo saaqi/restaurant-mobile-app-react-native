@@ -130,9 +130,7 @@ export default function Login({ navigation }) {
         </KeyboardAvoidingView>
         <Text style={styles.bodyText}>Don't have an account yet? Sing up instead! </Text>
         <Pressable
-          onPress={() => {
-            navigation.navigate('Signup')
-          }}
+          onPress={() => navigation.navigate('Signup')}
           style={styles.singUpButton}
         >
           <View style={styles.iconStyle}>

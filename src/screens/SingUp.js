@@ -169,7 +169,7 @@ export default function SingUp({ navigation }) {
         </KeyboardAvoidingView>
         <Text style={styles.bodyText}>Already have an account? Login instead! </Text>
         <Pressable
-          onPress={() => { navigation.navigate('Login') }}
+          onPress={() => navigation.navigate('Login') }
           style={styles.singUpButton}
         >
           <View style={styles.iconStyle}>

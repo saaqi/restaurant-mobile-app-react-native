@@ -37,7 +37,7 @@ export default function Welcome({ navigation }) {
       </View>
       <View style={styles.buttonContainer}>
         <Pressable
-          onPress={() => { navigation.navigate('Login') }}
+          onPress={() => navigation.navigate('Login')}
           style={styles.loginButton}
         >
           <View style={styles.iconStyle}>
@@ -46,7 +46,7 @@ export default function Welcome({ navigation }) {
           </View>
         </Pressable>
         <Pressable
-          onPress={() => { navigation.navigate('Signup') }}
+          onPress={() => navigation.navigate('Signup')}
           style={styles.signupButton}
         >
           <View style={styles.iconStyle}>
@@ -105,7 +105,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 50,
     borderRadius: 10,
     marginBottom: 10,
-    boxShadow: "2px 2px 2px rgba(3, 3, 3, 0.2)"
+    borderWidth: 2,
+    borderColor: '#859F3D'
   },
 
   loginButtonText: {
@@ -117,7 +118,6 @@ const styles = StyleSheet.create({
   signupButton: {
     borderWidth: 1,
     borderColor: '#fff',
-    boxShadow: "2px 2px 2px rgba(3, 3, 3, 0.2)",
     paddingVertical: 10,
     paddingHorizontal: 50,
     borderRadius: 10,

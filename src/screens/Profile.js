@@ -11,7 +11,7 @@ import {
   Image,
   Alert
 } from 'react-native'
-import { useContext, useEffect } from 'react'
+import { useContext, useEffect, useRef } from 'react'
 import { GlobalContext } from '../GlobalState'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import Ionicons from '@expo/vector-icons/Ionicons'
@@ -19,6 +19,8 @@ import * as ImagePicker from 'expo-image-picker'
 import * as SQLite from 'expo-sqlite'
 
 export default function Profile({ navigation }) {
+
+  const phoneInputRef = useRef(null)
 
   const {
     userAvatar, setUserAvatar,
@@ -206,15 +208,7 @@ export default function Profile({ navigation }) {
           horizontal={false}
           keyboardDismissMode={'on-drag'}
         >
-          <TextInput
-            style={styles.inputFieldDisabled}
-            // onChangeText={setUserEmail}
-            editable={false}
-            placeholder='Your Email'
-            secureTextEntry={false}
-            keyboardType='email-address'
-            value={userEmail}
-          />
+          <Text style={styles.inputFieldDisabled}>{userEmail}</Text>
           <TextInput
             style={styles.inputField}
             onChangeText={setUserName}
@@ -222,6 +216,7 @@ export default function Profile({ navigation }) {
             secureTextEntry={false}
             keyboardType='default'
             value={userName}
+            onSubmitEditing={() => phoneInputRef.current.focus()}
           />
 
           <TextInput
@@ -231,6 +226,8 @@ export default function Profile({ navigation }) {
             secureTextEntry={false}
             keyboardType='number-pad'
             value={userPhone}
+            onSubmitEditing={handleUserDetails}
+            ref={phoneInputRef}
           />
           {(userName === '') && (
             <Text style={styles.alert}>
@@ -283,7 +280,7 @@ export default function Profile({ navigation }) {
         marginBottom: 40
       }}>
         <Pressable
-          onPress={() => handleUserDetails()}
+          onPress={handleUserDetails}
           disabled={userName === ''}
           style={[
             userName === '' ? styles.subButtonDisabled : styles.primaryButton,
@@ -297,7 +294,7 @@ export default function Profile({ navigation }) {
         </Pressable>
         <Pressable
           style={[styles.darkButton, { flex: .5 }]}
-          onPress={() => setLogout()}
+          onPress={setLogout}
         >
           <View style={styles.iconStyle}>
             <Ionicons style={styles.darkButtonText} name="log-out-outline" />
@@ -305,7 +302,7 @@ export default function Profile({ navigation }) {
           </View>
         </Pressable>
         <Pressable
-          onPress={() => removeUserData()}
+          onPress={removeUserData}
           style={[styles.dangerButton, { flex: .5 }]}
         >
           <View style={styles.iconStyle}>
