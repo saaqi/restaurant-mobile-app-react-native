@@ -226,7 +226,6 @@ export default function Profile({ navigation }) {
             secureTextEntry={false}
             keyboardType='number-pad'
             value={userPhone}
-            onSubmitEditing={handleUserDetails}
             ref={phoneInputRef}
           />
           {(userName === '') && (
