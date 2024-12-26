@@ -217,6 +217,7 @@ export default function Profile({ navigation }) {
             keyboardType='default'
             value={userName}
             onSubmitEditing={() => phoneInputRef.current.focus()}
+            onEndEditing={() => setUserName(userName.trim())}
           />
           <TextInput
             style={styles.inputField}
@@ -226,6 +227,7 @@ export default function Profile({ navigation }) {
             keyboardType='number-pad'
             value={userPhone}
             ref={phoneInputRef}
+            onEndEditing={() => setUserPhone(userPhone.trim())}
           />
           {(userName === '') && (
             <Text style={styles.alert}>

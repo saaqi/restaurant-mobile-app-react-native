@@ -86,9 +86,7 @@ export default function SingUp({ navigation }) {
             indicatorStyle={'#333'}
             keyboardDismissMode="on-drag"
           >
-            {/* const emailInputRef = useRef(null)
-            const passInputRef = useRef(null)
-            const passConfirmInputRef = useRef(null) */}
+            <Text>{userEmail}, {userName}</Text>
             <TextInput
               style={styles.inputField}
               onChangeText={setUserName}
@@ -97,6 +95,7 @@ export default function SingUp({ navigation }) {
               keyboardType='default'
               value={userName}
               onSubmitEditing={() => emailInputRef.current.focus()}
+              onEndEditing={() => setUserName(userName.trim())}
             />
             <TextInput
               style={styles.inputField}
@@ -107,6 +106,7 @@ export default function SingUp({ navigation }) {
               value={userEmail}
               onSubmitEditing={() => passInputRef.current.focus()}
               ref={emailInputRef}
+              onEndEditing={() => setUserEmail(userEmail.trim().toLowerCase())}
             />
             <TextInput
               style={styles.inputField}
@@ -169,7 +169,7 @@ export default function SingUp({ navigation }) {
         </KeyboardAvoidingView>
         <Text style={styles.bodyText}>Already have an account? Login instead! </Text>
         <Pressable
-          onPress={() => navigation.navigate('Login') }
+          onPress={() => navigation.navigate('Login')}
           style={styles.singUpButton}
         >
           <View style={styles.iconStyle}>

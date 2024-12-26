@@ -92,6 +92,9 @@ export default function Login({ navigation }) {
               keyboardType='email-address'
               value={userEmail}
               onSubmitEditing={() => passInputRef.current.focus()}
+              onEndEditing={() => {
+                setUserEmail(userEmail.trim().toLowerCase())
+              }}
             />
             <TextInput
               style={styles.inputField}
